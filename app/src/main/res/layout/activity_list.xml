@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start"
+    tools:context="tcn.com.englishbigger.ListActivity">
+
+    <include
+        layout="@layout/app_bar_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view_left"
+        android:background="@color/colorApp"
+        android:layout_width="300dp"
+        app:itemTextColor="@color/colorWhite"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true">
+
+        <android.support.constraint.ConstraintLayout
+            android:orientation="horizontal"
+            android:id="@+id/layoutCoverImage"
+            android:background="#fcfde4"
+            android:layout_width="match_parent"
+            android:layout_height="110dp">
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:textColor="#000000"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/hi"
+                android:textSize="18dp"
+                tools:ignore="HardcodedText,SpUsage"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/layoutA"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginStart="16dp" />
+
+            <TextView
+                android:id="@+id/txtNameMax"
+                android:layout_width="wrap_content"
+                android:textColor="#000000"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,SpUsage"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/text"
+                android:layout_marginLeft="4dp"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:layout_marginStart="4dp" />
+
+
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutA"
+                android:layout_width="63dp"
+                android:layout_height="63dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="16dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imgAvatarMax"
+                    android:layout_width="63dp"
+                    android:layout_height="63dp"
+                    android:background="@drawable/ic_avatar"
+                    app:civ_border_color="@color/colorWhite"
+                    app:civ_border_width="2dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:ignore="ContentDescription"/>
+
+                <ProgressBar
+                    android:visibility="gone"
+                    android:id="@+id/pbLoadingMax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutLoginFB"
+                android:layout_width="128dp"
+                android:layout_marginLeft="8dp"
+                app:layout_constraintLeft_toLeftOf="@+id/text"
+                app:layout_constraintTop_toBottomOf="@+id/text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/loginfb"
+                android:layout_height="20dp"
+                android:layout_marginStart="8dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/text22"
+                    android:text="f"
+                    android:textStyle="bold"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginLeft="11dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@color/colorWhite"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="@string/loginWithFacebook"
+                    android:textStyle="bold"
+                    android:textSize="16px"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/text22"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textColor="@color/colorWhite"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="11dp" />
+
+
+            </android.support.constraint.ConstraintLayout>
+
+            <com.facebook.login.widget.LoginButton
+                android:visibility="gone"
+                android:id="@+id/login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                tools:layout_editor_absoluteY="125dp"
+                tools:layout_editor_absoluteX="0dp" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_marginTop="120dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ListView
+                android:id="@+id/lvLeftDrawer"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                android:choiceMode="singleChoice"
+                android:divider="@android:color/transparent"
+                android:layout_marginBottom="32dp" />
+
+            <ImageView
+                android:id="@+id/logo_fb"
+                app:layout_constraintRight_toLeftOf="@+id/txtInviteFriends"
+                android:layout_marginRight="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/lvLeftDrawer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/fb"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/txtInviteFriends"
+                app:layout_constraintRight_toLeftOf="@+id/txtSP"
+                android:layout_marginRight="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/lvLeftDrawer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textStyle="italic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorLink"
+                android:textSize="28px"
+                android:text="@string/inviteFriends"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/txtSP"
+                app:layout_constraintRight_toLeftOf="@+id/txtShare"
+                android:layout_marginRight="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/lvLeftDrawer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textStyle="italic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorLink"
+                android:textSize="28px"
+                android:text="|"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/txtShare"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginRight="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/lvLeftDrawer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textStyle="italic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorLink"
+                android:textSize="28px"
+                android:text="@string/share"
+                android:layout_marginEnd="4dp" />
+        </android.support.constraint.ConstraintLayout>
+
+
+
+    </android.support.design.widget.NavigationView>
+
+
+
+</android.support.v4.widget.DrawerLayout>

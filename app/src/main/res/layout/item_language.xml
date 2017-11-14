@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="83dp"
+    android:orientation="vertical"
+    android:layout_height="29dp">
+
+    <TextView
+        android:id="@+id/txtLanguage"
+        android:layout_width="83dp"
+        android:layout_height="29dp"
+        android:textColor="#039ce9"
+        android:textSize="32px"
+        android:gravity="center"
+        android:spinnerMode="dropdown"
+        android:text="English"
+        android:background="@drawable/bgr_item_language"/>
+
+</LinearLayout>
