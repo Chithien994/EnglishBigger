@@ -73,6 +73,7 @@
     <string name="yes">是的</string>
     <string name="failure">失敗！</string>
     <string name="successfullyAdded">成功添加！</string>
+    <string name="nothingToAdd">没什么可添加的！</string>
     <string name="success">成功！</string>
     <string name="changedSuccessfully">更改成功！</string>
     <string name="deletedSuccessfully">刪除成功！</string>

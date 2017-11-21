@@ -1,6 +1,5 @@
 package tcn.com.englishbigger;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -46,14 +45,13 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.facebook.share.model.AppInviteContent;
-import com.facebook.share.widget.AppInviteDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import tcn.com.adapters.DrawerAdapter;
 import tcn.com.adapters.LocaleAdapter;
+import tcn.com.handle.Constants;
 import tcn.com.handle.Handle;
 import tcn.com.handle.HandleIntent;
 import tcn.com.handle.Language;
@@ -168,14 +166,14 @@ public class ListActivity extends AppCompatActivity {
         txtInviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                serverAPI.getLink(ListActivity.this, "invite");
+                serverAPI.getLink(ListActivity.this, Constants.INVITE);
             }
         });
 
         txtShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                serverAPI.getLink(ListActivity.this, "share");
+                serverAPI.getLink(ListActivity.this, Constants.SHARE);
             }
         });
     }
@@ -540,7 +538,7 @@ public class ListActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         Log.d("length",accessToken.length()+"");
-        serverAPI.postUsers(ListActivity.this,jsonObject,"log");
+        serverAPI.postUsers(ListActivity.this,jsonObject,Constants.LOGIN);
 
         usersFB.setIdUser(id);
         usersFB.setAccessToken(accessToken);

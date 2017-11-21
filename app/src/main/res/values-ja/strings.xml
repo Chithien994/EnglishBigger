@@ -73,6 +73,7 @@
     <string name="yes">はい</string>
     <string name="failure">失敗！</string>
     <string name="successfullyAdded">正常に追加されました！</string>
+    <string name="nothingToAdd">追加するものはありません！</string>
     <string name="success">成功！</string>
     <string name="changedSuccessfully">変更に成功しました！</string>
     <string name="deletedSuccessfully">正常に削除されました！</string>

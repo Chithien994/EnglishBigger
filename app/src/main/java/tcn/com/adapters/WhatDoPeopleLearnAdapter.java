@@ -40,7 +40,7 @@ import java.util.List;
 
 import tcn.com.englishbigger.R;
 import tcn.com.englishbigger.TopicActivity;
-import tcn.com.handle.UsersFB;
+import tcn.com.handle.Constants;
 import tcn.com.models.DrawerModels;
 import tcn.com.models.TopicModels;
 
@@ -134,7 +134,7 @@ public class WhatDoPeopleLearnAdapter extends ArrayAdapter<DrawerModels> {
                 JSONObject object = new JSONObject();
                 try {
                     object.put("idUser", topicActivity.usersFB.getIdUser());
-                    topicActivity.serverAPI.getAllTopic(topicActivity, object);
+                    topicActivity.serverAPI.getTopic(topicActivity, object, Constants.GET_ALL_TOPIC);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -191,7 +191,7 @@ public class WhatDoPeopleLearnAdapter extends ArrayAdapter<DrawerModels> {
                                     try {
 
                                         object.put("allIDUsers", id);
-                                        topicActivity.serverAPI.getTopicFriends(topicActivity, object);
+                                        topicActivity.serverAPI.getTopic(topicActivity, object, Constants.GET_TOPIC_FRIENDS);
 
                                     } catch (JSONException e) {
                                         dialog.dismiss();
@@ -205,7 +205,7 @@ public class WhatDoPeopleLearnAdapter extends ArrayAdapter<DrawerModels> {
                                             .setPositiveButton(context.getString(R.string.inviteFriends), new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                                    topicActivity.serverAPI.getLink(topicActivity, "invite");
+                                                    topicActivity.serverAPI.getLink(topicActivity, Constants.INVITE);
                                                 }
                                             }).show();
                                 }
@@ -227,16 +227,16 @@ public class WhatDoPeopleLearnAdapter extends ArrayAdapter<DrawerModels> {
 
     private void handleShowTopic(ArrayList<TopicModels> topicModels) {
         Log.d("SIZE_TOPIC", topicModels.size() +"");
-        AllTopicAdapter allTopicAdapter;
+        BackupTopicAdapter backupTopicAdapter;
         rvItem = v.findViewById(R.id.rvItem);
         rvItem.setBackgroundResource(R.drawable.bgr_list_ac);
         rvItem.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        allTopicAdapter = new AllTopicAdapter(
+        backupTopicAdapter = new BackupTopicAdapter(
                 context,
                 R.layout.item_topic_of_everyone,
                 topicModels
         );
-        rvItem.setAdapter(allTopicAdapter);
+        rvItem.setAdapter(backupTopicAdapter);
     }
 
     public void myIntentFilter(){

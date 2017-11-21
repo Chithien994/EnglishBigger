@@ -37,9 +37,11 @@ public class ServerAPI {
 
     Handle handle = new  Handle();
     ProgressDialog dialog;
+    boolean cfErr = true;
+
     public ServerAPI(){}
 
-    public void post(final Activity activity, JSONObject object, final String type, String url){
+    public void post(final Activity activity, JSONObject object, final int type, String url){
 
         Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
 
@@ -55,68 +57,72 @@ public class ServerAPI {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("Response", response.toString());
+
+                        try {
+                            dialog.cancel();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                         try {
 
                             switch (type){
 
-                                case "insert_vocabulary":
+                                case Constants.INSERT_VOCABULARY:
                                     specifyNotify(activity,response.getString("message"));
                                     break;
 
-                                case "edit_vocabulary":
-                                    handle.sendBroadCastToNoteAdapter(activity, type);
+                                case Constants.EDIT_VOCABULARY:
                                     specifyNotify(activity,response.getString("message"));
-                                    dialog.cancel();
+                                    handle.sendBroadCastToNoteAdapter(activity, type, cfErr);
                                     break;
 
-                                case "getvocabulary":
-                                    dialog.cancel();
+                                case Constants.GET_VOCABULARY:
                                     setVocabulary(activity, response, type);
                                     break;
 
-                                case "learn":
-                                    dialog.cancel();
+                                case Constants.LEARN:
                                     setVocabulary(activity, response, type);
                                     break;
 
-                                case "deletenote":
-                                    dialog.cancel();
+                                case Constants.DELETE_NOTE:
                                     handleResponseDelete(activity, response, type);
                                     break;
 
-                                case "deletetopic":
-                                    dialog.cancel();
+                                case Constants.DELETE_TOPIC:
                                     handleResponseDelete(activity, response, type);
                                     break;
 
-                                case "getnametopic":
-                                    dialog.cancel();
+                                case Constants.GET_NAME_TOPIC:
                                     setTopic(activity, response, type);
                                     break;
 
-                                case "gettopic":
-                                    dialog.cancel();
+                                case Constants.GET_TOPIC:
                                     setTopic(activity, response, type);
                                     break;
 
-                                case "log":
+                                case Constants.LOGIN:
                                     getInfoUsers(activity);
                                     break;
 
-                                case "getinfo":
-                                    dialog.cancel();
+                                case Constants.GET_INFO_USER:
                                     saveInfo(activity,response);
                                     break;
 
-                                case "TOPIC_FRIENDS":
+                                case Constants.GET_TOPIC_FRIENDS:
                                     setTopic(activity, response, type);
                                     break;
 
 
-                                case "ALL_TOPIC":
-                                    dialog.cancel();
+                                case Constants.GET_ALL_TOPIC:
                                     setTopic(activity, response, type);
+                                    break;
+
+                                case Constants.BACKUP_TOPIC:
+                                    specifyNotify(activity,response.getString("message"));
+                                    break;
+
+                                case Constants.BACKUP_VOCABULARY:
+                                    specifyNotify(activity,response.getString("message"));
                                     break;
 
                                 default:{
@@ -125,7 +131,7 @@ public class ServerAPI {
                             }
 
 
-
+                            Log.d("Response", response.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -135,24 +141,69 @@ public class ServerAPI {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
 
+                try {
+                    dialog.cancel();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
 
                 try {
+                    switch (type){
 
-                    if (type.equals("insert_vocabulary")){
-                        handle.sendBroadCastToAddFragment(activity);
+                        case Constants.INSERT_VOCABULARY:
+                            handle.sendBroadCastToAddFragment(activity);
+                            break;
 
-                    }else if(type.equals("log") || type.equals("getinfo")){
-                        dialog.cancel();
-                        handle.sendBroadCastToListActivity(activity, false);
-                        return;
+                        case Constants.EDIT_VOCABULARY:
+                            break;
 
-                    }else if (type.equals("gettopic") || type.equals("getnametopic")){
-                        activity.finish();
+                        case Constants.GET_VOCABULARY:
+                            break;
 
-                    }else if (type.equals("TOPIC_FRIENDS")){
-                        handle.sendBroadCastToWhatDoPeopleLearnAdapter(activity, true);
-                        return;
+                        case Constants.LEARN:
+                            break;
+
+                        case Constants.DELETE_NOTE:
+                            break;
+
+                        case Constants.DELETE_TOPIC:
+                            break;
+
+                        case Constants.GET_NAME_TOPIC:
+                            activity.finish();
+                            break;
+
+                        case Constants.GET_TOPIC:
+                            activity.finish();
+                            break;
+
+                        case Constants.LOGIN:
+                            handle.sendBroadCastToListActivity(activity, false);
+                            return;
+
+                        case Constants.GET_INFO_USER:
+                            handle.sendBroadCastToListActivity(activity, false);
+                            return;
+
+                        case Constants.GET_TOPIC_FRIENDS:
+                            handle.sendBroadCastToWhatDoPeopleLearnAdapter(activity, true);
+                            return;
+
+                        case Constants.GET_ALL_TOPIC:
+                            break;
+
+                        case Constants.BACKUP_TOPIC:
+                            break;
+
+                        case Constants.BACKUP_VOCABULARY:
+                            break;
+
+                        default:{
+                            break;
+                        }
                     }
+
 
                     if (error.toString()!= null){
 
@@ -161,14 +212,12 @@ public class ServerAPI {
                                 || error.toString().equalsIgnoreCase("java.net.UnknownHostException: Unable to resolve host \"mybigger.ga\": No address associated with hostname")){
 
                             Toast.makeText(activity,activity.getString(R.string.errorInternetConnectionProblems),Toast.LENGTH_LONG).show();
-                            dialog.cancel();
                             return;
 
                         }
                     }
 
-                    dialog.cancel();
-                    Toast.makeText(activity,error.getMessage(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity,activity.getString(R.string.failure),Toast.LENGTH_LONG).show();
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -182,7 +231,7 @@ public class ServerAPI {
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)));
     }
 
-    public void get(final Activity activity, final String type, String url){
+    public void get(final Activity activity, final int type, String url){
         final UsersFB usersFB = new UsersFB(activity);
         final Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
 
@@ -197,19 +246,17 @@ public class ServerAPI {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("Response",response.toString());
-                        dialog.cancel();
                         try {
-                            Log.d("TYPE",type);
+                            Log.d("TYPE",type +"");
                             String urlApp;
                             switch (type){
-                                case "share":
+                                case Constants.SHARE:
                                     urlApp = response.getString("url_app");
                                     String name = response.getString("name");
                                     usersFB.shareLink(urlApp, name);
                                     break;
 
-                                case "invite":
+                                case Constants.INVITE:
                                     urlApp = response.getString("url_app");
                                     String imageUrl = response.getString("image_url");
                                     usersFB.inviteFriends(urlApp, imageUrl);
@@ -219,6 +266,8 @@ public class ServerAPI {
                                     break;
                                 }
                             }
+                            Log.d("Response",response.toString());
+                            dialog.cancel();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -239,19 +288,21 @@ public class ServerAPI {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)));
     }
 
-    private void handleResponseDelete(Activity activity, JSONObject response, String type) {
+    private void handleResponseDelete(Activity activity, JSONObject response, int type) {
         try {
             if (response.getString("message").equals("Deleted successfully")){
 
+                cfErr = false;
+
                 Toast.makeText(activity, activity.getString(R.string.deletedSuccessfully), Toast.LENGTH_LONG).show();
 
-                if (type.equals("deletetopic")){
+                if (type == Constants.DELETE_TOPIC){
 
                     handle.sendBroadCastToTopicAdapter(activity);
 
-                }else if (type.equals("deletenote")) {
+                }else if (type == Constants.DELETE_NOTE) {
 
-                    handle.sendBroadCastToNoteAdapter(activity, type);
+                    handle.sendBroadCastToNoteAdapter(activity, type, cfErr);
                 }
 
 
@@ -263,17 +314,35 @@ public class ServerAPI {
         }
     }
 
-
     private void specifyNotify(Activity activity, String message) {
         handle.sendBroadCastToAddFragment(activity);
-        if (message.equals("This word or phrase already exists")){
-            Toast.makeText(activity,activity.getString(R.string.msgVocabularyAlreadyExists),Toast.LENGTH_LONG).show();
-        }else if (message.equals("Successfully added")){
-            Toast.makeText(activity,activity.getString(R.string.successfullyAdded),Toast.LENGTH_LONG).show();
-        }else if (message.equals("Changed successfully")){
-            Toast.makeText(activity,activity.getString(R.string.changedSuccessfully),Toast.LENGTH_LONG).show();
-        }else if (message.equals("Error input parameters")){
-            Toast.makeText(activity,activity.getString(R.string.errorInputParameters),Toast.LENGTH_LONG).show();
+        switch (message){
+            case "This word or phrase already exists":
+                Toast.makeText(activity,activity.getString(R.string.msgVocabularyAlreadyExists),Toast.LENGTH_LONG).show();
+                break;
+
+            case "Successfully added":
+                Toast.makeText(activity,activity.getString(R.string.successfullyAdded),Toast.LENGTH_LONG).show();
+                cfErr = false;
+                break;
+
+            case "Changed successfully":
+                Toast.makeText(activity,activity.getString(R.string.changedSuccessfully),Toast.LENGTH_LONG).show();
+                cfErr = false;
+                break;
+
+            case "Error input parameters":
+                Toast.makeText(activity,activity.getString(R.string.errorInputParameters),Toast.LENGTH_LONG).show();
+                break;
+
+            case "Nothing to add":
+                Toast.makeText(activity,activity.getString(R.string.nothingToAdd),Toast.LENGTH_LONG).show();
+                break;
+
+            default:{
+                Toast.makeText(activity,activity.getString(R.string.failure),Toast.LENGTH_LONG).show();
+                break;
+            }
         }
     }
 
@@ -298,17 +367,17 @@ public class ServerAPI {
     }
 
     public void postVocabulary(Activity activity, JSONObject object){
-        post(activity, object, "insert_vocabulary", Constants.VOCABULARY_URL);
+        post(activity, object, Constants.INSERT_VOCABULARY, Constants.VOCABULARY_URL);
     }
 
     public void postEditVocabulary(Activity activity, JSONObject object){
         showDialog(activity);
 
-        post(activity, object, "edit_vocabulary", Constants.VOCABULARY_URL);
+        post(activity, object, Constants.EDIT_VOCABULARY, Constants.VOCABULARY_URL);
     }
 
     //Require the server to test the registered account? If not then register.
-    public void postUsers(Activity activity, JSONObject object, String type){
+    public void postUsers(Activity activity, JSONObject object, int type){
         showDialog(activity);
         post(activity, object, type, Constants.USER_URL);
     }
@@ -324,63 +393,19 @@ public class ServerAPI {
             object.put("type","Social");
 
             //Login and get info user
-            post(activity, object, "getinfo", Constants.USER_INFO_URL);
+            post(activity, object, Constants.GET_INFO_USER, Constants.USER_INFO_URL);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public void getTopic(Activity activity, JSONObject object, String type){
-        showDialog(activity);
-
-        post(activity, object, type, Constants.TOPIC_URL);
-    }
-
-    private void setTopic(Activity activity, JSONObject response, String type) {
-        ArrayList<TopicModels> topicModes = new ArrayList<>();
-        try {
-            JSONArray json = response.getJSONArray("topic");
-            for (int i = 0; i < json.length(); i++){
-                JSONObject object = json.getJSONObject(i);
-                String name = "";
-                try {
-                    name = object.getString("nameUser");
-                }catch (Exception e){
-                    Log.e("NAME_USER", "No name");
-                }
-                topicModes.add(new TopicModels(
-                        object.getInt("id"),
-                        object.getString("name"),
-                        object.getString("url"),
-                        object.getInt("percent"),
-                        object.getInt("total"),
-                        name));
-
-            }
-
-            if (type.equals("gettopic")){
-                handle.sendBroadCastTopicActivity(activity, topicModes);
-
-            }else if (type.equals("getnametopic")){
-                handle.sendBroadCastNameTopicToLearnActivity(activity, topicModes);
-
-            }else if (type.equals("ALL_TOPIC") || type.equals("TOPIC_FRIENDS")){
-                handle.sendBroadCastToWhatDoPeopleLearnAdapter(activity, topicModes);
-
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void getVocabulary(Activity activity, JSONObject object, String type){
+    public void getVocabulary(Activity activity, JSONObject object, int type){
         showDialog(activity);
 
         post(activity, object, type, Constants.VOCABULARY_URL);
     }
 
-    private void setVocabulary(Activity activity, JSONObject response, String type) {
+    private void setVocabulary(Activity activity, JSONObject response, int type) {
 
         try {
             ArrayList<NoteModels> noteModels = new ArrayList<>();
@@ -389,7 +414,7 @@ public class ServerAPI {
                 //empty
                 Toast.makeText(activity, activity.getString(R.string.empty), Toast.LENGTH_LONG).show();
 
-                if (type.equals("learn")){
+                if (type == Constants.LEARN){
                     activity.finish();
                 }
             }else {
@@ -413,22 +438,26 @@ public class ServerAPI {
         }
     }
 
-    public void handleDeleteTopic(Activity activity, JSONObject object, String type){
+    public void handleDeleteTopic(Activity activity, JSONObject object, int type){
         showDialog(activity);
 
         String url = null;
 
-        if (type.equals("deletenote")){
-            url = Constants.VOCABULARY_URL;
+        switch (type){
+            case Constants.DELETE_NOTE:
+                url = Constants.VOCABULARY_URL;
+                break;
 
-        }else if (type.equals("deletetopic")){
-
-            url = Constants.DELETE_URL;
+            default:{
+                //Constants.DELETE_TOPIC
+                url = Constants.DELETE_URL;
+                break;
+            }
         }
         post(activity, object, type, url);
     }
 
-    public void getVocabulary(Activity activity, int id, String type) {
+    public void getVocabulary(Activity activity, int id, int type) {
 
         JSONObject object = new JSONObject();
         try {
@@ -447,25 +476,104 @@ public class ServerAPI {
         try {
             object.put("id", id);
             object.put("learned",b);
-            post(activity, object, "learned", Constants.LEARNED_URL);
+            post(activity, object, Constants.LEARNED, Constants.LEARNED_URL);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public void getLink(Activity activity, String type){
+    public void getLink(Activity activity, int type){
         showDialog(activity);
         get(activity, type, Constants.GET_LINK_APP_URL);
     }
 
-    public void getAllTopic(Activity activity, JSONObject object){
-        showDialog(activity);
-        post(activity, object, "ALL_TOPIC", Constants.ALL_TOPIC_URL);
+    public void getTopic(Activity activity, JSONObject object, int type){
+        switch (type){
+            case Constants.GET_ALL_TOPIC:
+                showDialog(activity);
+                post(activity, object, type, Constants.ALL_TOPIC_URL);
+                break;
+
+            case Constants.GET_TOPIC_FRIENDS:
+                post(activity, object, type, Constants.TOPIC_OF_FRIENDS_URL);
+                break;
+
+            default:{
+                //GET_TOPIC or GET_NAME_TOPIC
+                showDialog(activity);
+                post(activity, object, type, Constants.TOPIC_URL);
+                break;
+            }
+
+        }
     }
 
-    public void getTopicFriends(Activity activity, JSONObject object){
-        post(activity, object, "TOPIC_FRIENDS", Constants.TOPIC_OF_FRIENDS_URL);
+    private void setTopic(Activity activity, JSONObject response, int type) {
+        ArrayList<TopicModels> topicModes = new ArrayList<>();
+        try {
+            JSONArray json = response.getJSONArray("topic");
+            for (int i = 0; i < json.length(); i++){
+                JSONObject object = json.getJSONObject(i);
+                String name = "";
+                String idUser = "";
+                try {
+                    idUser = object.getString("idUser");
+                    name = object.getString("nameUser");
+                }catch (Exception e){
+                    Log.e("NAME_USER", "No name");
+                }
+                topicModes.add(new TopicModels(
+                        object.getInt("id"),
+                        object.getString("name"),
+                        object.getString("url"),
+                        object.getInt("percent"),
+                        object.getInt("total"),
+                        idUser,
+                        name));
+
+            }
+
+            switch (type){
+                case Constants.GET_TOPIC:
+                    handle.sendBroadCastTopicActivity(activity, topicModes);
+                    break;
+
+                case Constants.GET_NAME_TOPIC:
+                    handle.sendBroadCastNameTopicToLearnActivity(activity, topicModes);
+                    break;
+
+                default:{
+                    //GET_TOPIC_FRIENDS or GET_ALL_TOPIC
+                    handle.sendBroadCastToWhatDoPeopleLearnAdapter(activity, topicModes);
+                    break;
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void handleBackup(Activity activity, JSONObject object, int type){
+
+        showDialog(activity);
+
+        switch (type){
+            case Constants.BACKUP_TOPIC:
+                post(activity, object, type, Constants.BACKUP_TOPIC_URL);
+                break;
+
+            case Constants.BACKUP_VOCABULARY:
+                post(activity, object, type, Constants.BACKUP_VOCABULARY_URL);
+                break;
+
+            default:{
+                break;
+            }
+
+        }
+
     }
 
     private void showDialog(Activity activity){

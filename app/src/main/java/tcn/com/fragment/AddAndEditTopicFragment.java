@@ -569,18 +569,31 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
     }
 
     private void specifyNotify(String message) {
-        if (message.equals("Topic already exists")){
-            Toast.makeText(getActivity(),getActivity().getString(R.string.topicAlreadyExists),Toast.LENGTH_LONG).show();
-        }else if (message.equals("Successfully added")){
-            Toast.makeText(getActivity(),getActivity().getString(R.string.successfullyAdded),Toast.LENGTH_LONG).show();
-        }else if (message.equals("Changed successfully")){
-            Toast.makeText(getActivity(),getActivity().getString(R.string.changedSuccessfully),Toast.LENGTH_LONG).show();
-        }else if (message.equals("Error input parameters")){
-            Toast.makeText(getActivity(),getActivity().getString(R.string.errorInputParameters),Toast.LENGTH_LONG).show();
-        }else if (message.equals("Failure")){
-            Toast.makeText(getActivity(),getActivity().getString(R.string.failure),Toast.LENGTH_LONG).show();
-        }else {
-            Toast.makeText(getActivity(),message,Toast.LENGTH_LONG).show();
+        switch (message){
+            case "Topic already exists":
+                Toast.makeText(getActivity(),getActivity().getString(R.string.topicAlreadyExists),Toast.LENGTH_LONG).show();
+                break;
+
+            case "Successfully added":
+                Toast.makeText(getActivity(),getActivity().getString(R.string.successfullyAdded),Toast.LENGTH_LONG).show();
+                break;
+
+            case "Changed successfully":
+                Toast.makeText(getActivity(),getActivity().getString(R.string.changedSuccessfully),Toast.LENGTH_LONG).show();
+                break;
+
+            case "Error input parameters":
+                Toast.makeText(getActivity(),getActivity().getString(R.string.errorInputParameters),Toast.LENGTH_LONG).show();
+                break;
+
+            case "Failure":
+                Toast.makeText(getActivity(),getActivity().getString(R.string.failure),Toast.LENGTH_LONG).show();
+                break;
+
+            default:{
+                Toast.makeText(getActivity(),message,Toast.LENGTH_LONG).show();
+                break;
+            }
         }
     }
 

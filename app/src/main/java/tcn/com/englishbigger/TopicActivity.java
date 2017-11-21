@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import tcn.com.fragment.AddAndEditTopicFragment;
 import tcn.com.fragment.TopicFragment;
 import tcn.com.fragment.WhatDoPeopleLearnFragment;
+import tcn.com.handle.Constants;
 import tcn.com.handle.Handle;
 import tcn.com.handle.HandleIntent;
 import tcn.com.handle.ServerAPI;
@@ -177,7 +178,7 @@ public class TopicActivity extends AppCompatActivity {
         }
         try {
             object.put("idUser", idUser);
-            serverAPI.getTopic(this, object, "gettopic");
+            serverAPI.getTopic(this, object, Constants.GET_TOPIC);
 
         } catch (JSONException e) {
             e.printStackTrace();

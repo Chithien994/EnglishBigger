@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import tcn.com.fragment.AddFragment;
 import tcn.com.fragment.LearnNowFragment;
 import tcn.com.fragment.TopicFragment;
+import tcn.com.handle.Constants;
 import tcn.com.handle.Handle;
 import tcn.com.handle.Language;
 import tcn.com.handle.ServerAPI;
@@ -73,7 +74,7 @@ public class LearnActivity extends AppCompatActivity {
         JSONObject object = new JSONObject();
         try {
             object.put("idUser", users.getIdUser());
-            serverAPI.getTopic(this, object, "getnametopic");
+            serverAPI.getTopic(this, object, Constants.GET_NAME_TOPIC);
 
         } catch (JSONException e) {
             e.printStackTrace();

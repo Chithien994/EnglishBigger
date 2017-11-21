@@ -78,6 +78,7 @@
     <string name="yes">Yes</string>
     <string name="failure">Failure!</string>
     <string name="successfullyAdded">Successfully added!</string>
+    <string name="nothingToAdd">Nothing to add!</string>
     <string name="success">Success!</string>
     <string name="changedSuccessfully">Changed successfully!</string>
     <string name="deletedSuccessfully">Deleted successfully!</string>

@@ -73,6 +73,7 @@
     <string name="yes">Có</string>
     <string name="failure">Thất bại!</string>
     <string name="successfullyAdded">Đã thêm thành công!</string>
+    <string name="nothingToAdd">Không có gì để bổ sung!</string>
     <string name="success">Thành công!</string>
     <string name="changedSuccessfully">Đã thay đổi thành công!</string>
     <string name="deletedSuccessfully">Xóa thành công!</string>

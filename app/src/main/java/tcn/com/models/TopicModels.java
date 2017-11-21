@@ -12,6 +12,7 @@ public class TopicModels implements Serializable{
     String linkImage;
     int percent;
     int total; //%
+    String idUser;
     String nameUser;
 
     public TopicModels(int id, String name, String linkImage, int percent, int total) {
@@ -22,13 +23,22 @@ public class TopicModels implements Serializable{
         this.total = total;
     }
 
-    public TopicModels(int id, String name, String linkImage, int percent, int total, String nameUser) {
+    public TopicModels(int id, String name, String linkImage, int percent, int total, String idUser, String nameUser) {
         this.id = id;
         this.name = name;
         this.linkImage = linkImage;
         this.percent = percent;
         this.total = total;
+        this.idUser = idUser;
         this.nameUser = nameUser;
+    }
+
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
     public String getNameUser() {

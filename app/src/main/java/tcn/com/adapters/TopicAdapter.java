@@ -38,6 +38,7 @@ import tcn.com.englishbigger.TopicActivity;
 import tcn.com.fragment.AddAndEditTopicFragment;
 import tcn.com.fragment.NoteFragment;
 import tcn.com.fragment.TopicFragment;
+import tcn.com.handle.Constants;
 import tcn.com.handle.Handle;
 import tcn.com.models.TopicModels;
 
@@ -252,7 +253,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
                             object.put("id", topicModels.getId());
                             object.put("url", topicModels.getLinkImage());
                             //
-                            topicActivity.serverAPI.handleDeleteTopic(topicActivity, object, "deletetopic");
+                            topicActivity.serverAPI.handleDeleteTopic(topicActivity, object, Constants.DELETE_TOPIC);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

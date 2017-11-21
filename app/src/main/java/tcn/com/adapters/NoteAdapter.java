@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.inputmethodservice.Keyboard;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +38,8 @@ import java.util.List;
 
 import tcn.com.englishbigger.R;
 import tcn.com.englishbigger.TopicActivity;
+import tcn.com.fragment.NoteFragment;
+import tcn.com.handle.Constants;
 import tcn.com.models.NoteModels;
 
 /**
@@ -43,18 +47,22 @@ import tcn.com.models.NoteModels;
  */
 
 public class NoteAdapter extends ArrayAdapter<NoteModels> {
-    Activity context;
-    int resource;
-    List<NoteModels> objects;
-    TopicActivity topicActivity;
+    private Activity context;
+    private int resource;
+    private List<NoteModels> objects;
+    private TopicActivity topicActivity;
+    private NoteFragment noteFragment;
     private int pss;
     private String noteMeaning;
     private String noteSource;
     public static String MY_BRC_NOTE_ADAPTER = "MY_BRC_NOTE_ADAPTER";
+    private AlertDialog alertDialog;
+    private View view;
 
-    public NoteAdapter(@NonNull Activity context, @LayoutRes int resource, @NonNull List<NoteModels> objects) {
+    public NoteAdapter(@NonNull Activity context, NoteFragment noteFragment, @LayoutRes int resource, @NonNull List<NoteModels> objects) {
         super(context, resource, objects);
         this.context = context;
+        this.noteFragment = noteFragment;
         this.resource = resource;
         this.objects = objects;
         topicActivity = (TopicActivity) context;
@@ -121,7 +129,7 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
                             object.put("id", noteModels.getId());
                             object.put("type","_DELETE");
                             //
-                            topicActivity.serverAPI.handleDeleteTopic(topicActivity, object, "deletenote");
+                            topicActivity.serverAPI.handleDeleteTopic(topicActivity, object, Constants.DELETE_NOTE);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -144,25 +152,26 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
             if (intent.getAction().equals(MY_BRC_NOTE_ADAPTER)) {
                 Log.d("unregisterReceiver","Unregister Receiver");
 
-                handleShowListNote(intent.getStringExtra("TYPE"));
+                handleShowListNote(intent.getIntExtra("TYPE",0), intent.getBooleanExtra("CF",false));
                 context.unregisterReceiver(mReceiver);
             }
         }
     };
 
-    private void handleShowListNote(String type) {
+    private void handleShowListNote(int type, boolean cfErr) {
         try {
 
-            Log.i("TYPE", type);
+            Log.i("TYPE", type + "");
 
-            if (type.equals("deletenote")){
+            if (type == Constants.DELETE_NOTE && !cfErr){
 
                 this.objects.remove(pss);
                 topicActivity.size--;
                 Log.i("Add", "Size: " + topicActivity.size);
 
-            }else if (type.equals("edit_vocabulary")){
+            }else if (type == Constants.EDIT_VOCABULARY && !cfErr){
 
+                alertDialog.cancel(); //Close the edit dialog
                 Log.i("noteSource", noteSource + "\n" +"noteMeaning: " +noteMeaning);
                 this.objects.get(pss).setNoteSource(noteSource);
                 this.objects.get(pss).setNoteMeaning(noteMeaning);
@@ -180,7 +189,7 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
         LayoutInflater inflater = context.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.layout_dialog_edit_note, null);
+        final View dialogView = inflater.inflate(R.layout.layout_dialog_edit_note, null);
         dialogBuilder.setView(dialogView);
 
         ImageView imgCloseDialog = dialogView.findViewById(R.id.imgCloseDialog);
@@ -190,7 +199,7 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
         txtNoteSourceDialog.setText(noteModels.getNoteSource());
         txtNoteMeaningDialog.setText(noteModels.getNoteMeaning());
 
-        final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog = dialogBuilder.create();
         alertDialog.setCancelable(false);
         alertDialog.show();
 
@@ -203,11 +212,13 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 myIntentFilter();
                 noteSource = txtNoteSourceDialog.getText().toString();
                 noteMeaning =   txtNoteMeaningDialog.getText().toString();
-                alertDialog.cancel();
+                //check keyboard hide or show
+                //If it's showing then hide it
+                topicActivity.handle.hideKeyboard(topicActivity, noteFragment.view);
                 add(noteModels);
             }
         });
@@ -234,6 +245,7 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
 
             object.put("id", noteModles.getId());
             object.put("type", type);
+            object.put("idTopic",noteFragment.idTopic);
             object.put("content", jsonArrayContent);
 
         } catch (JSONException e) {

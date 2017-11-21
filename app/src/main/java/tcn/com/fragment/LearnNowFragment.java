@@ -52,6 +52,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import tcn.com.englishbigger.TopicActivity;
+import tcn.com.handle.Constants;
 import tcn.com.handle.Database;
 import tcn.com.englishbigger.LearnActivity;
 import tcn.com.englishbigger.R;
@@ -397,7 +398,7 @@ public class LearnNowFragment extends Fragment {
                 try {
                     object.put("idTopic", learnActivity.topicModes.get(0).getId());
                     object.put("type","_SHOW");
-                    learnActivity.serverAPI.getVocabulary(learnActivity, object, "learn");
+                    learnActivity.serverAPI.getVocabulary(learnActivity, object, Constants.LEARN);
 
                 } catch (JSONException ex) {
                     ex.printStackTrace();
@@ -621,7 +622,7 @@ public class LearnNowFragment extends Fragment {
         layoutTrueFalse_2.setVisibility(View.GONE);
 
         myIntentFilter();
-        learnActivity.serverAPI.getVocabulary(learnActivity, learnActivity.handle.getIdTopic(learnActivity), "learn");
+        learnActivity.serverAPI.getVocabulary(learnActivity, learnActivity.handle.getIdTopic(learnActivity), Constants.LEARN);
     }
 
 

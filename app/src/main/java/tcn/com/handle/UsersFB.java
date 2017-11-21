@@ -144,7 +144,8 @@ public class UsersFB {
                 .setContentUrl(Uri.parse(appLinkUrl))
                 .setShareHashtag(new ShareHashtag.Builder()
                         .setHashtag(name)
-                        .build()).build();
+                        .build())
+                .build();
         ShareDialog.show(activity, content);
     }
 

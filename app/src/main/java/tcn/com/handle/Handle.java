@@ -10,6 +10,8 @@ import android.graphics.Rect;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -189,10 +191,18 @@ public class Handle {
         activity.sendBroadcast(broadCastIntent);
     }
 
-    public void sendBroadCastToNoteAdapter(Activity activity, String type) {
+    public void sendBroadCastToNoteAdapter(Activity activity, int type) {
         Intent broadCastIntent = new Intent();
         broadCastIntent.setAction(NoteAdapter.MY_BRC_NOTE_ADAPTER);
         broadCastIntent.putExtra("TYPE", type);
+        activity.sendBroadcast(broadCastIntent);
+    }
+
+    public void sendBroadCastToNoteAdapter(Activity activity, int type, boolean cf) {
+        Intent broadCastIntent = new Intent();
+        broadCastIntent.setAction(NoteAdapter.MY_BRC_NOTE_ADAPTER);
+        broadCastIntent.putExtra("TYPE", type);
+        broadCastIntent.putExtra("CF", cf);
         activity.sendBroadcast(broadCastIntent);
     }
 
@@ -368,6 +378,32 @@ public class Handle {
             canvas.drawText(inText, xPos, yPos, textPaint);
         }
         return bmp;
+    }
+
+    //check keyboard hide or show
+    //If it's showing then hide it
+    public static void hideKeyboard(final Activity activity, final View contentView) {
+
+        Rect r = new Rect();
+        contentView.getWindowVisibleDisplayFrame(r);
+        int screenHeight = contentView.getRootView().getHeight();
+
+        // r.bottom is the position above soft keypad or device button.
+        // if keypad is shown, the r.bottom is smaller than that before.
+        int keypadHeight = screenHeight - r.bottom;
+
+        Log.d("keypadHeight", keypadHeight +"");
+
+        if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is perhaps enough to determine keypad height.
+            // keyboard is opened
+            if (contentView != null) {
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            }
+        }
+        else {
+            // keyboard is closed
+        }
     }
 
 

@@ -24,6 +24,7 @@ import tcn.com.adapters.NoteAdapter;
 import tcn.com.englishbigger.LearnActivity;
 import tcn.com.englishbigger.R;
 import tcn.com.englishbigger.TopicActivity;
+import tcn.com.handle.Constants;
 import tcn.com.handle.HandleIntent;
 import tcn.com.models.NoteModels;
 
@@ -32,14 +33,15 @@ public class NoteFragment extends Fragment {
     TopicActivity topicActivity;
     public static String MY_BRC_NOTE = "MY_BRC_NOTE";
     private ArrayList<NoteModels> noteModels;
-    private String nameTopic;
-    private int pst;
-    private int id;
+    public int pst; //Current topic position
+    public int idTopic; //Current topic id
+    public View view;
 
     private ImageView imgBack;
     private ImageView imgAdd;
     private TextView txtNameTopic;
     private ListView lvNote;
+
     private NoteAdapter noteAdapter;
 
     public NoteFragment() {
@@ -57,7 +59,7 @@ public class NoteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_note, container, false);
+        view = inflater.inflate(R.layout.fragment_note, container, false);
 
         addControls(view);
         addEvents();
@@ -99,13 +101,8 @@ public class NoteFragment extends Fragment {
         imgAdd = v.findViewById(R.id.imgAdd);
         txtNameTopic = v.findViewById(R.id.txtNameTopic);
         lvNote = v.findViewById(R.id.lvNote);
-
         noteModels = new ArrayList<>();
-
-
-
         getInfoOfTopic();
-
     }
 
     private void getInfoOfTopic() {
@@ -113,22 +110,22 @@ public class NoteFragment extends Fragment {
         if (bundle != null){
 
             pst = bundle.getInt("ID");
-            id = topicActivity.topicModes.get(pst).getId();
+            idTopic = topicActivity.topicModes.get(pst).getId();
             txtNameTopic.setText(topicActivity.topicModes.get(pst).getName());
 
-            Log.i("ID_TOPIC", id +"");
+            Log.i("ID_TOPIC", idTopic +"");
 
         }
     }
 
-    private void getVocabulary(int id) {
+    private void getVocabulary(int idTopic) {
         myIntentFilter();
 
         JSONObject object = new JSONObject();
         try {
-            object.put("idTopic", id);
+            object.put("idTopic", idTopic);
             object.put("type","_SHOW");
-            topicActivity.serverAPI.getVocabulary(topicActivity, object, "getvocabulary");
+            topicActivity.serverAPI.getVocabulary(topicActivity, object, Constants.GET_VOCABULARY);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -176,13 +173,13 @@ public class NoteFragment extends Fragment {
     };
 
     private void handleShowListNote() {
-        noteAdapter = new NoteAdapter(topicActivity, R.layout.item_note, noteModels);
+        noteAdapter = new NoteAdapter(topicActivity, this, R.layout.item_note, noteModels);
         lvNote.setAdapter(noteAdapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getVocabulary(id);
+        getVocabulary(idTopic);
     }
 }

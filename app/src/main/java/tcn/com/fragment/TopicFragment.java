@@ -126,11 +126,11 @@ public class TopicFragment extends Fragment {
                 if (scrolledDistance > HIDE_THRESHOLD && controlsVisible) {
                     handleHideAndShowActionBar(true);
                     controlsVisible = false;
-                    scrolledDistance = 0;
+                    scrolledDistance = -1;
                 } else if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisible) {
                     handleHideAndShowActionBar(false);
                     controlsVisible = true;
-                    scrolledDistance = 0;
+                    scrolledDistance = -1;
                 }
 
                 if((controlsVisible && dy>0) || (!controlsVisible && dy<0)) {

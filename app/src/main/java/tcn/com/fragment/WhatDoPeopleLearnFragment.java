@@ -1,7 +1,6 @@
 package tcn.com.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
@@ -12,13 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import tcn.com.adapters.AllTopicAdapter;
+import tcn.com.adapters.BackupTopicAdapter;
 import tcn.com.adapters.WhatDoPeopleLearnAdapter;
 import tcn.com.englishbigger.R;
 import tcn.com.englishbigger.TopicActivity;
@@ -38,7 +36,7 @@ public class WhatDoPeopleLearnFragment extends Fragment {
     private ArrayList<DrawerModels> dsDrawerModels;
     private WhatDoPeopleLearnAdapter adapter;
 
-    private AllTopicAdapter allTopicAdapter;
+    private BackupTopicAdapter backupTopicAdapter;
 
     public WhatDoPeopleLearnFragment() {
         // Required empty public constructor
@@ -94,11 +92,11 @@ public class WhatDoPeopleLearnFragment extends Fragment {
 
     private void showTopicFriend() {
         rvItem.setLayoutManager(new LinearLayoutManager(topicActivity, LinearLayoutManager.VERTICAL, false));
-        allTopicAdapter = new AllTopicAdapter(
+        backupTopicAdapter = new BackupTopicAdapter(
                 topicActivity,
                 R.layout.item_topic_of_everyone,
                 topicActivity.topicModes);
-        rvItem.setAdapter(allTopicAdapter);
+        rvItem.setAdapter(backupTopicAdapter);
 
     }
 
