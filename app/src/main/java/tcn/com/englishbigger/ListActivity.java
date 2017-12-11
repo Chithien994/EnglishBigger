@@ -564,7 +564,7 @@ public class ListActivity extends AppCompatActivity {
     private void checkSelectLanguage() {
 
         Log.d("LAG", language.getLanguage(ListActivity.this)+" : "+language.getCFLanguageDivice(ListActivity.this));
-        if (language.getLanguage(ListActivity.this).equals("") && language.getCFLanguageDivice(ListActivity.this)==false){
+        if (language.getLanguage(ListActivity.this).equals("") && language.getCFLanguageDivice(ListActivity.this)){
             handleSelectLocale();
         }else {
             language.settingLanguage(ListActivity.this);
@@ -649,7 +649,7 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        language.settingLanguage();
+        language.settingLanguage(ListActivity.this);
     }
 
     @Override

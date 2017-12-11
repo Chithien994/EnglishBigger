@@ -67,6 +67,8 @@ public class ServerAPI {
 
                             switch (type){
 
+                                case Constants.BACKUP_TOPIC:
+                                case Constants.BACKUP_VOCABULARY:
                                 case Constants.INSERT_VOCABULARY:
                                     specifyNotify(activity,response.getString("message"));
                                     break;
@@ -77,25 +79,18 @@ public class ServerAPI {
                                     break;
 
                                 case Constants.GET_VOCABULARY:
-                                    setVocabulary(activity, response, type);
-                                    break;
-
                                 case Constants.LEARN:
                                     setVocabulary(activity, response, type);
                                     break;
 
                                 case Constants.DELETE_NOTE:
-                                    handleResponseDelete(activity, response, type);
-                                    break;
-
                                 case Constants.DELETE_TOPIC:
                                     handleResponseDelete(activity, response, type);
                                     break;
 
+                                case Constants.GET_TOPIC_FRIENDS:
+                                case Constants.GET_ALL_TOPIC:
                                 case Constants.GET_NAME_TOPIC:
-                                    setTopic(activity, response, type);
-                                    break;
-
                                 case Constants.GET_TOPIC:
                                     setTopic(activity, response, type);
                                     break;
@@ -108,28 +103,10 @@ public class ServerAPI {
                                     saveInfo(activity,response);
                                     break;
 
-                                case Constants.GET_TOPIC_FRIENDS:
-                                    setTopic(activity, response, type);
-                                    break;
-
-
-                                case Constants.GET_ALL_TOPIC:
-                                    setTopic(activity, response, type);
-                                    break;
-
-                                case Constants.BACKUP_TOPIC:
-                                    specifyNotify(activity,response.getString("message"));
-                                    break;
-
-                                case Constants.BACKUP_VOCABULARY:
-                                    specifyNotify(activity,response.getString("message"));
-                                    break;
-
                                 default:{
                                     break;
                                 }
                             }
-
 
                             Log.d("Response", response.toString());
                         } catch (JSONException e) {
@@ -316,7 +293,9 @@ public class ServerAPI {
 
     private void specifyNotify(Activity activity, String message) {
         handle.sendBroadCastToAddFragment(activity);
+
         switch (message){
+
             case "This word or phrase already exists":
                 Toast.makeText(activity,activity.getString(R.string.msgVocabularyAlreadyExists),Toast.LENGTH_LONG).show();
                 break;
@@ -347,6 +326,16 @@ public class ServerAPI {
     }
 
     private void saveInfo(Activity activity, JSONObject object) {
+        UsersFB usersFB = new UsersFB(activity);
+        try {
+            if (object.getString("message") != null){
+                Toast.makeText(activity, activity.getString(R.string.failure), Toast.LENGTH_LONG).show();
+                usersFB.confirmLogin(false);// Confirm successful login (boolean = true)
+                return;
+            }
+        }catch (Exception e){
+
+        }
         Users users = new Users(activity);
         try {
             users.setIdUser(object.getString("idUser"));
@@ -362,7 +351,7 @@ public class ServerAPI {
         }catch (JSONException e){
             e.printStackTrace();
         }
-        UsersFB usersFB = new UsersFB(activity);
+
         usersFB.confirmLogin(true);// Confirm successful login (boolean = true)
     }
 

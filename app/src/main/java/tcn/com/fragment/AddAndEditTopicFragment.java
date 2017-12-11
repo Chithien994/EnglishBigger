@@ -95,7 +95,7 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
     private String url;
     private String id;
     private int position;
-    private String path;
+    private String path = "";
     private String mySelect;
     private String name;
     private String sDefault; //Define the default image if true
@@ -202,9 +202,9 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
                                 .into(-1, -1) // Width and height
                                 .get();
                     } catch (final ExecutionException e) {
-                        Log.e(TAG, e.getMessage());
+                        Log.e(TAG, e.fillInStackTrace()+"");
                     } catch (final InterruptedException e) {
-                        Log.e(TAG, e.getMessage());
+                        Log.e(TAG, e.fillInStackTrace()+"");
                     }
                     return null;
                 }
@@ -270,9 +270,9 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
             image.compress(Bitmap.CompressFormat.JPEG, 80, fos);
             fos.close();
         } catch (FileNotFoundException e) {
-            Log.d(TAG, "File not found: " + e.getMessage());
+            Log.d(TAG, "File not found: " + e.fillInStackTrace());
         } catch (IOException e) {
-            Log.d(TAG, "Error accessing file: " + e.getMessage());
+            Log.d(TAG, "Error accessing file: " + e.fillInStackTrace());
         }
         return pictureFile.getPath();
     }
@@ -483,6 +483,17 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
             //getting name for the image
             final String name = txtNameTopic.getText().toString().trim();
 
+            //
+            if (path.equals("")){
+                //sDefault = "true";
+                //bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+                try {
+                    path = storeImage(topicActivity.handle.convertTextToBitmap(name));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
             //Uploading code
             try {
                 String uploadId = UUID.randomUUID().toString();
@@ -512,7 +523,7 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
                     public void onCompleted(UploadInfo uploadInfo, ServerResponse serverResponse) {
 
                         Log.i("Completed","serverResponse " +serverResponse.getBodyAsString());
-                        specifyNotify(serverResponse.getBodyAsString());
+                        specifyNotify(handleMessage(serverResponse.getBodyAsString()));
 
                         //Close the dialog and restart TopicActivity, when added successfully
                         //Assign updated position
@@ -568,7 +579,15 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
 
     }
 
+    private String handleMessage(String message){
+        return message.contains("Topic already exists")?"Topic already exists":
+        message.contains("Successfully added")?"Successfully added":
+        message.contains("Changed successfully")?"Changed successfully":
+        message.contains("Error input parameters")?"Error input parameters":
+        message.contains("Failure")?"Failure":message;
+    }
     private void specifyNotify(String message) {
+
         switch (message){
             case "Topic already exists":
                 Toast.makeText(getActivity(),getActivity().getString(R.string.topicAlreadyExists),Toast.LENGTH_LONG).show();
@@ -591,7 +610,7 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
                 break;
 
             default:{
-                Toast.makeText(getActivity(),message,Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),getActivity().getString(R.string.failure),Toast.LENGTH_LONG).show();
                 break;
             }
         }

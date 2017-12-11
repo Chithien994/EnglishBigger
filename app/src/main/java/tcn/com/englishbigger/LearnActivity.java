@@ -110,7 +110,7 @@ public class LearnActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         Language language = new Language(LearnActivity.this);
-        language.settingLanguage();
+        language.settingLanguage(LearnActivity.this);
     }
 
     public void myIntentFilter(){

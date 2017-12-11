@@ -1,7 +1,5 @@
 package tcn.com.adapters;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,6 @@ import java.util.ArrayList;
 
 import tcn.com.englishbigger.ListActivity;
 import tcn.com.englishbigger.R;
-import tcn.com.handle.Handle;
 import tcn.com.models.LocaleModels;
 
 
@@ -63,7 +60,7 @@ public class LocaleAdapter extends RecyclerView.Adapter<LocaleAdapter.ViewHolder
                 handleSelectLangguage(localeModels);
             }
         });
-        if (context.language.getLanguage().equals(localeModels.getLanguage()) && context.language.getCFLanguageDivice() == false){
+        if (context.language.getLanguage(context).equals(localeModels.getLanguage()) && context.language.getCFLanguageDivice(context) == false){
             holder.imgSelected.setVisibility(View.VISIBLE);
         }else {
             holder.imgSelected.setVisibility(View.GONE);

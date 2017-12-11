@@ -3,7 +3,6 @@ package tcn.com.adapters;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,7 +32,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
-import java.util.Locale;
 
 import tcn.com.englishbigger.ListActivity;
 import tcn.com.englishbigger.R;
@@ -308,12 +306,12 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
         );
         rvItem.setAdapter(localeAdapter);
 
-        if (listActivity.language.getCFLanguageDivice()){
+        if (listActivity.language.getCFLanguageDivice(listActivity)){
             imgSelected.setVisibility(View.VISIBLE);
         }else {
             imgSelected.setVisibility(View.GONE);
         }
-        Log.d("Device",listActivity.language.getCFLanguageDivice()+"");
+        Log.d("Device",listActivity.language.getCFLanguageDivice(listActivity)+"");
 
         Log.d("Language number", dsLocaleModelses.size()+"");
 

@@ -8,6 +8,7 @@ import android.util.Log;
 
 import java.util.Locale;
 
+import tcn.com.englishbigger.ListActivity;
 import tcn.com.englishbigger.R;
 
 /**
@@ -41,12 +42,8 @@ public class Language {
         editor.commit();
     }
 
-    public String getLanguage(){
-        return pf.getString("language","");
-    }
-
     public String getLanguage(Activity activity){
-        SharedPreferences pf = activity.getSharedPreferences(activity.getString(R.string.inforLocale), activity.MODE_PRIVATE);
+        pf = activity.getSharedPreferences(activity.getString(R.string.inforLocale), activity.MODE_PRIVATE);
         return pf.getString("language","");
     }
 
@@ -55,15 +52,10 @@ public class Language {
         editor.commit();
     }
 
-    public boolean getCFLanguageDivice(){
-        return pf.getBoolean("divice",false);
-    }
-
     public boolean getCFLanguageDivice(Activity activity){
-        SharedPreferences pf = activity.getSharedPreferences(activity.getString(R.string.inforLocale), activity.MODE_PRIVATE);
+        pf = activity.getSharedPreferences(activity.getString(R.string.inforLocale), activity.MODE_PRIVATE);
         return pf.getBoolean("divice",false);
     }
-
 
     public void settingLanguage(String lag){
         Locale locale = new Locale(lag);
@@ -79,22 +71,7 @@ public class Language {
         activity.finish();
     }
 
-    public void settingLanguage(){
-        if (pf.getBoolean("divice",false)==false){
-            Locale locale = new Locale(pf.getString("language","en"));
-            Log.d("Language",pf.getString("language","en"));
-            Configuration configuration = new Configuration();
-            configuration.locale = locale;
-            activity.getBaseContext().getResources().updateConfiguration(
-                    configuration,
-                    activity.getResources().getDisplayMetrics()
-            );
-        }
-
-    }
-
     public void settingLanguage(Activity activity){
-        SharedPreferences pf = activity.getSharedPreferences(activity.getString(R.string.inforLocale), activity.MODE_PRIVATE);
         if (pf.getBoolean("divice",false)==false){
             Locale locale = new Locale(pf.getString("language","en"));
             Log.d("Language",pf.getString("language","en"));

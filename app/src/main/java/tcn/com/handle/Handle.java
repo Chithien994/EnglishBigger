@@ -76,6 +76,12 @@ public class Handle {
 
            RequestQueue requestQueue= new RequestQueue(cache, network);
 
+           try {
+
+           }catch (Exception e){
+               e.fillInStackTrace();
+           }
+
            requestQueue.start();
 
            final String query = URLEncoder.encode(sourceText, "UTF-8");
