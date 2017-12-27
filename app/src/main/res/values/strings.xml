@@ -5,6 +5,11 @@
     <string name="fb_login_protocol_scheme">fb109163919789581</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="ad_mob_app_id2">ca-app-pub-7825788831137519~4959694201</string>
+    <string name="ad_id_small">ca-app-pub-7825788831137519/1184100721</string>
+    <string name="ad_id_full">ca-app-pub-7825788831137519/9040154412</string>
+
     <string name="ad_mob_app_id">ca-app-pub-7825788831137519~8179742154</string>
     <string name="ad_id_small_1">ca-app-pub-7825788831137519/6455596947</string>
     <string name="ad_id_small_2">ca-app-pub-7825788831137519/6353323461</string>

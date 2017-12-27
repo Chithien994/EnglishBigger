@@ -214,7 +214,7 @@ public class LearnNowFragment extends Fragment {
                         .setNegativeButton(getActivity().getString(R.string.repeat), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                loadAdFull(getString(R.string.ad_id_full_1));
+                                loadAdFull(getString(R.string.ad_id_full_2));
                                 number = 1;
                                 learned.clear();
                                 handleShow(true);
