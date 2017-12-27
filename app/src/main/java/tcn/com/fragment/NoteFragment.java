@@ -7,13 +7,22 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +36,7 @@ import tcn.com.englishbigger.TopicActivity;
 import tcn.com.handle.Constants;
 import tcn.com.handle.HandleIntent;
 import tcn.com.models.NoteModels;
+import tcn.com.models.TopicModels;
 
 public class NoteFragment extends Fragment {
 
@@ -36,6 +46,7 @@ public class NoteFragment extends Fragment {
     public int pst; //Current topic position
     public int idTopic; //Current topic id
     public View view;
+    private String nameTopic ="";
 
     private ImageView imgBack;
     private ImageView imgAdd;
@@ -73,11 +84,11 @@ public class NoteFragment extends Fragment {
             public void onClick(View view) {
                 Log.i("BACK", "Size: " + topicActivity.size + "\nNoteModels.size(): " + noteModels.size());
                 if (topicActivity.size != noteModels.size() && topicActivity.size != -1){
-                    HandleIntent hi = new HandleIntent();
-                    hi.intentActivity(topicActivity, HandleIntent.INTENT_TOPIC);
+                    HandleIntent.intentActivity(topicActivity, HandleIntent.INTENT_TOPIC);
                     topicActivity.finish();
                 }else {
-                    topicActivity.callFragment(topicActivity.fragmentBack);
+                    if(topicActivity.type==3 || topicActivity.type==4) topicActivity.showFragmentBottom();
+                    else topicActivity.callFragment(topicActivity.fragmentBack);
                 }
                 topicActivity.size = -1;
             }
@@ -86,14 +97,108 @@ public class NoteFragment extends Fragment {
         imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                topicActivity.size = noteModels.size();
-                Log.i("Add", "Size: " + topicActivity.size);
-                Intent intent = new Intent(topicActivity, LearnActivity.class);
-                intent.putExtra("PUT",4);
-                intent.putExtra("ID",pst);
-                startActivity(intent);
+                if (topicActivity.type!=3 && topicActivity.type!=4) openActivityAdd();
+                else   handleBackupTopic(topicActivity.topicModes.get(pst));
             }
         });
+    }
+
+    private void openActivityAdd() {
+        topicActivity.size = noteModels.size();
+        Log.i("Add", "Size: " + topicActivity.size);
+        Intent intent = new Intent(topicActivity, LearnActivity.class);
+        intent.putExtra("PUT",4);
+        intent.putExtra("ID",pst);
+        startActivity(intent);
+    }
+
+    private void handleBackupTopic(final TopicModels topicModels) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(topicActivity);
+        LayoutInflater inflater = topicActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_dialog_set_name, null);
+        dialogBuilder.setView(dialogView);
+
+        ImageView imgCloseDialog = dialogView.findViewById(R.id.imgCloseDialog);
+        final LinearLayout layoutNewNameDialog = dialogView.findViewById(R.id.layoutNewName);
+        final LinearLayout layoutGetNameTopicDialog = dialogView.findViewById(R.id.layoutGetNameTopic);
+        final Spinner spNameTopicDialog = dialogView.findViewById(R.id.spNameTopicDialog);
+        final RadioButton radShowTXTNewName = dialogView.findViewById(R.id.radShowTXTNewName);
+        final RadioButton radShowSPNewName = dialogView.findViewById(R.id.radShowSPNewName);
+        Button btnBackupDialog = dialogView.findViewById(R.id.btnBackupDialog);
+        final EditText txtNewNameTopicDialog = dialogView.findViewById(R.id.txtNewNameTopicDialog);
+        final ArrayList<String> dsNameTopic = new ArrayList<>();
+        final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+        txtNewNameTopicDialog.setText(topicModels.getId() + " " + topicModels.getName());
+        nameTopic = txtNewNameTopicDialog.getText().toString();
+        layoutGetNameTopicDialog.setVisibility(View.GONE);
+        layoutNewNameDialog.setVisibility(View.VISIBLE);
+
+        ArrayAdapter<String> arrayAdapter;
+        dsNameTopic.add(0, getString(R.string.select_));
+        for (int i = 0; i < topicActivity.topicYourModes.size(); i++){
+            dsNameTopic.add(i+1, topicActivity.topicYourModes.get(i).getName());
+        }
+        arrayAdapter =  new ArrayAdapter<String>(topicActivity, R.layout.support_simple_spinner_dropdown_item, dsNameTopic);
+        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spNameTopicDialog.setAdapter(arrayAdapter);
+
+        radShowSPNewName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layoutGetNameTopicDialog.setVisibility(View.VISIBLE);
+                layoutNewNameDialog.setVisibility(View.GONE);
+                spNameTopicDialog.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        nameTopic = dsNameTopic.get(i);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+            }
+        });
+
+        radShowTXTNewName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layoutGetNameTopicDialog.setVisibility(View.GONE);
+                layoutNewNameDialog.setVisibility(View.VISIBLE);
+                nameTopic = txtNewNameTopicDialog.getText().toString();
+            }
+        });
+
+        btnBackupDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!nameTopic.equalsIgnoreCase(getString(R.string.select_))){
+                    JSONObject object = new JSONObject();
+                    try {
+                        object.put("idUser", topicActivity.usersFB.getIdUser());
+                        object.put("nameTopic", nameTopic);
+                        object.put("idTopic", topicModels.getId());
+                        topicActivity.serverAPI.handleBackup(topicActivity, object, Constants.BACKUP_TOPIC, false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    alertDialog.cancel();
+                }else {
+                    Toast.makeText(topicActivity, getString(R.string.msgPleaseSelectAValidTopicName), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+        imgCloseDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.cancel();
+            }
+        });
+
     }
 
     private void addControls(View v) {

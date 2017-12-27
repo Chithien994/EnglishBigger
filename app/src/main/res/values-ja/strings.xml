@@ -43,6 +43,7 @@
     <string name="settings">設定</string>
     <string name="policy">ポリシー</string>
     <string name="support">サポート</string>
+    <string name="feedback">フィードバック</string>
     <string name="accountSuccessfullyLoggedOut">アカウントは正常にログアウトしました。</string>
     <string name="logout">ログアウト</string>
     <string name="close">クローズド</string>
@@ -93,4 +94,17 @@
     <string name="enterItsMeaning">その意味を入力する (追加)</string>
     <string name="exactly">それは正しかった！</string>
     <string name="wrong">間違っている</string>
+    <string name="newTopic">新しい話題。</string>
+    <string name="addToTopicAvailable">利用可能なトピックに追加します。</string>
+    <string name="select_">---選択---</string>
+    <string name="select">選択</string>
+    <string name="msgPleaseSelectAValidTopicName">有効なトピック名を選択してください！</string>
+    <string name="content">コンテンツ</string>
+    <string name="commentedSuccessfully">成功したコメント！</string>
+    <string name="commentedFailed">コメントは成功しません！</string>
+
+    <string name="detectNewVersion">新しいバージョンを検出！</string>
+    <string name="currentVersion">現行版</string>
+    <string name="newVersion">新しいバージョン</string>
+    <string name="update">アップデート</string>
 </resources>

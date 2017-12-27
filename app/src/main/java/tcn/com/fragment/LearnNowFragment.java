@@ -1,27 +1,19 @@
 package tcn.com.fragment;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.media.AudioManager;
-import android.media.MediaFormat;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.speech.tts.TextToSpeech;
-import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.solver.Cache;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -34,14 +26,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,13 +42,10 @@ import java.util.Random;
 
 import tcn.com.englishbigger.TopicActivity;
 import tcn.com.handle.Constants;
-import tcn.com.handle.Database;
 import tcn.com.englishbigger.LearnActivity;
 import tcn.com.englishbigger.R;
 import it.sephiroth.android.library.tooltip.Tooltip;
 import tcn.com.models.NoteModels;
-
-import static android.media.MediaPlayer.SEEK_CLOSEST_SYNC;
 
 
 public class LearnNowFragment extends Fragment {
@@ -83,6 +69,7 @@ public class LearnNowFragment extends Fragment {
     private ArrayList<Integer> learned;
     private int position;
     private int positionLearned = 0;
+    private InterstitialAd mInterstitialAd;
 
     public LearnNowFragment() {
     }
@@ -98,9 +85,26 @@ public class LearnNowFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_learn_now, container, false);
+        loadAdFull(getString(R.string.ad_id_full_1));
+        loadAdView(view);
         addControls(view);
         addEvents();
         return view;
+    }
+
+    private void loadAdFull(String ad_id){
+        mInterstitialAd = new InterstitialAd(learnActivity);
+        mInterstitialAd.setAdUnitId(ad_id);
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+    }
+
+    private void loadAdView(View view) {
+        AdView adView = null;
+        // Sample AdMob app ID: ca-app-pub-7825788831137519~8179742154
+        MobileAds.initialize(learnActivity, getString(R.string.ad_mob_app_id));
+        adView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     private void addEvents() {
@@ -204,13 +208,13 @@ public class LearnNowFragment extends Fragment {
             }
 
             if (number == noteModels.size()){
-
                 new AlertDialog.Builder(learnActivity)
                         .setMessage(getActivity().getString(R.string.finish))
                         .setCancelable(false)
                         .setNegativeButton(getActivity().getString(R.string.repeat), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                loadAdFull(getString(R.string.ad_id_full_1));
                                 number = 1;
                                 learned.clear();
                                 handleShow(true);
@@ -262,13 +266,13 @@ public class LearnNowFragment extends Fragment {
     private void handleContinue() {
 
         if(noteModels.size() == number){
-
             new AlertDialog.Builder(learnActivity)
                     .setMessage(getActivity().getString(R.string.finish))
                     .setCancelable(false)
                     .setNegativeButton(getActivity().getString(R.string.repeat), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            loadAdFull(getString(R.string.ad_id_full_2));
                             number = 1;
                             learned.clear();
                             handleShow(true);

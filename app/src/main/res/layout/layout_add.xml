@@ -89,7 +89,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="wrap_content"
@@ -116,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/selectTopic"
                     android:paddingLeft="3dp"
-                    android:textColor="#343434"
+                    android:textColor="@color/colorTextName"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -127,7 +128,7 @@
                     android:id="@+id/spNameTopic"
                     android:layout_width="128dp"
                     android:layout_height="29dp"
-                    android:textColor="#343434"
+                    android:textColor="@color/colorTextName"
                     android:background="@drawable/spinner"
                     app:layout_constraintTop_toBottomOf="@+id/text22"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -163,7 +164,7 @@
                     android:layout_marginLeft="1dp"
                     android:layout_marginRight="1dp"
                     android:layout_marginTop="1dp"
-                    android:textColor="#343434"
+                    android:textColor="@color/colorTextName"
                     android:background="@color/colorWhite"
                     android:ems="10"
                     android:inputType="textMultiLine"
@@ -219,7 +220,7 @@
                     android:background="@drawable/bgr_add"
                     android:text="@string/add"
                     android:textAllCaps="false"
-                    android:textColor="#343434"
+                    android:textColor="@color/colorButtom"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText,PxUsage,SpUsage" />
 
@@ -265,7 +266,7 @@
                         android:layout_weight="1"
                         android:checked="true"
                         app:buttonTint="#6cc29e"
-                        android:textColor="#343434"
+                        android:textColor="@color/colorTextName"
                         android:text="@string/automaticallyTranslatesItsMeaning"
                         tools:ignore="HardcodedText"/>
 
@@ -275,14 +276,15 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         app:buttonTint="#6cc29e"
-                        android:textColor="#343434"
+                        android:textColor="@color/colorTextName"
                         android:text="@string/enterItsMeaning"
                         tools:ignore="HardcodedText" />
-                </RadioGroup>>
+                </RadioGroup>
 
             </android.support.constraint.ConstraintLayout>
             
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/layoutTranslated"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -301,7 +303,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/colorWhite"
                     android:padding="8dp"
-                    android:textColor="#343434"
+                    android:textColor="@color/colorTextName"
                     android:layout_marginLeft="1dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     android:layout_marginRight="1dp"
@@ -346,6 +348,21 @@
 
             </android.support.constraint.ConstraintLayout>
 
+            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="8dp"
+                ads:layout_constraintVertical_bias="1"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/ad_id_small_4"
+                ads:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+            </com.google.android.gms.ads.AdView>
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

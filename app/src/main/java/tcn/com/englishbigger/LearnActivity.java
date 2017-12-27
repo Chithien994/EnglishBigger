@@ -14,6 +14,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,15 +43,20 @@ public class LearnActivity extends AppCompatActivity {
     public Handle handle;
     public int id;
     public boolean cfFinish;
+    private InterstitialAd mInterstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learn);
-
+        loadAdFull(getString(R.string.ad_id_full_1));
         addControls();
         addEvents();
     }
-
+    private void loadAdFull(String ad_id){
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(ad_id);
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+    }
     private void addEvents() {
 
     }
@@ -161,6 +169,15 @@ public class LearnActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+            loadAdFull(getString(R.string.ad_id_full_2));
+        }
+    }
 
     public void callFragment(Fragment fragment, String type, int id) {
         Bundle bundle = new Bundle();

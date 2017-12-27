@@ -38,6 +38,7 @@ public class ServerAPI {
     Handle handle = new  Handle();
     ProgressDialog dialog;
     boolean cfErr = true;
+    boolean cfSendBRC = true;
 
     public ServerAPI(){}
 
@@ -59,7 +60,7 @@ public class ServerAPI {
                     public void onResponse(JSONObject response) {
 
                         try {
-                            dialog.cancel();
+                            if(type != Constants.LOGIN) dialog.cancel();
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -67,7 +68,15 @@ public class ServerAPI {
 
                             switch (type){
 
+                                case Constants.FEEDBACK:
+                                    specifyNotify(activity,response.getString("message"));
+                                    handle.sendBroadCastToDrawerAdapter(activity, cfErr);
+                                    break;
+
                                 case Constants.BACKUP_TOPIC:
+                                    specifyNotify(activity,response.getString("message"));
+                                    if(cfSendBRC) handle.sendBroadCastToBackupTopicAdapter(activity, cfErr);
+                                    break;
                                 case Constants.BACKUP_VOCABULARY:
                                 case Constants.INSERT_VOCABULARY:
                                     specifyNotify(activity,response.getString("message"));
@@ -88,6 +97,7 @@ public class ServerAPI {
                                     handleResponseDelete(activity, response, type);
                                     break;
 
+                                case Constants.GET_TOPIC_A_FRIEND:
                                 case Constants.GET_TOPIC_FRIENDS:
                                 case Constants.GET_ALL_TOPIC:
                                 case Constants.GET_NAME_TOPIC:
@@ -124,7 +134,6 @@ public class ServerAPI {
                     e.printStackTrace();
                 }
 
-
                 try {
                     switch (type){
 
@@ -132,55 +141,20 @@ public class ServerAPI {
                             handle.sendBroadCastToAddFragment(activity);
                             break;
 
-                        case Constants.EDIT_VOCABULARY:
-                            break;
-
-                        case Constants.GET_VOCABULARY:
-                            break;
-
-                        case Constants.LEARN:
-                            break;
-
-                        case Constants.DELETE_NOTE:
-                            break;
-
-                        case Constants.DELETE_TOPIC:
-                            break;
-
                         case Constants.GET_NAME_TOPIC:
-                            activity.finish();
-                            break;
-
                         case Constants.GET_TOPIC:
                             activity.finish();
                             break;
 
                         case Constants.LOGIN:
-                            handle.sendBroadCastToListActivity(activity, false);
-                            return;
-
                         case Constants.GET_INFO_USER:
                             handle.sendBroadCastToListActivity(activity, false);
                             return;
-
-                        case Constants.GET_TOPIC_FRIENDS:
-                            handle.sendBroadCastToWhatDoPeopleLearnAdapter(activity, true);
-                            return;
-
-                        case Constants.GET_ALL_TOPIC:
-                            break;
-
-                        case Constants.BACKUP_TOPIC:
-                            break;
-
-                        case Constants.BACKUP_VOCABULARY:
-                            break;
 
                         default:{
                             break;
                         }
                     }
-
 
                     if (error.toString()!= null){
 
@@ -193,7 +167,6 @@ public class ServerAPI {
 
                         }
                     }
-
                     Toast.makeText(activity,activity.getString(R.string.failure),Toast.LENGTH_LONG).show();
 
                 }catch (Exception e){
@@ -206,6 +179,36 @@ public class ServerAPI {
                     27000,
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)));
+    }
+
+    public void post(JSONObject object, final int type, String url){
+        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
+
+        Network network = new BasicNetwork(new HurlStack());
+
+        final RequestQueue requestQueue= new RequestQueue(cache, network);
+
+        requestQueue.start();
+
+        Log.d("Request",object.toString());
+        JsonObjectRequest objectRequest = new JsonObjectRequest(
+                Request.Method.POST, url, object,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("Response",response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+
+            }
+        });
+        requestQueue.add(objectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                27000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)));
     }
 
     public void get(final Activity activity, final int type, String url){
@@ -228,15 +231,17 @@ public class ServerAPI {
                             String urlApp;
                             switch (type){
                                 case Constants.SHARE:
-                                    urlApp = response.getString("url_app");
-                                    String name = response.getString("name");
-                                    usersFB.shareLink(urlApp, name);
+                                    usersFB.shareLink(response);
                                     break;
 
                                 case Constants.INVITE:
-                                    urlApp = response.getString("url_app");
-                                    String imageUrl = response.getString("image_url");
-                                    usersFB.inviteFriends(urlApp, imageUrl);
+                                    usersFB.inviteFriends(response);
+                                    break;
+
+                                case Constants.CHECK_UPDATE:
+                                    urlApp = response.getString("files_url");
+                                    String version = response.getString("version");
+                                    handle.sendBroadCastToSplashActivity(activity, version, urlApp);
                                     break;
 
                                 default:{
@@ -244,7 +249,12 @@ public class ServerAPI {
                                 }
                             }
                             Log.d("Response",response.toString());
-                            dialog.cancel();
+                            try {
+                                dialog.cancel();
+                            }catch (Exception e){
+
+                            }
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -254,7 +264,12 @@ public class ServerAPI {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                dialog.cancel();
+                try {
+                    dialog.cancel();
+                }catch (Exception e){
+
+                }
+                if (type==Constants.CHECK_UPDATE) handle.sendBroadCastToSplashActivity(activity, null, null);
                 Toast.makeText(activity,activity.getString(R.string.errorInternetConnectionProblems),Toast.LENGTH_LONG).show();
 
             }
@@ -270,18 +285,18 @@ public class ServerAPI {
             if (response.getString("message").equals("Deleted successfully")){
 
                 cfErr = false;
-
                 Toast.makeText(activity, activity.getString(R.string.deletedSuccessfully), Toast.LENGTH_LONG).show();
-
-                if (type == Constants.DELETE_TOPIC){
-
-                    handle.sendBroadCastToTopicAdapter(activity);
-
-                }else if (type == Constants.DELETE_NOTE) {
-
-                    handle.sendBroadCastToNoteAdapter(activity, type, cfErr);
+                switch (type){
+                    case Constants.DELETE_TOPIC:
+                        handle.sendBroadCastToTopicAdapter(activity);
+                        break;
+                    case Constants.DELETE_NOTE:
+                        handle.sendBroadCastToNoteAdapter(activity, type, cfErr);
+                        break;
+                    default:{
+                        break;
+                    }
                 }
-
 
             }else {
                 Toast.makeText(activity, activity.getString(R.string.failure), Toast.LENGTH_LONG).show();
@@ -316,6 +331,17 @@ public class ServerAPI {
 
             case "Nothing to add":
                 Toast.makeText(activity,activity.getString(R.string.nothingToAdd),Toast.LENGTH_LONG).show();
+                cfErr = false;
+                break;
+
+            case "Commented successfully":
+                Toast.makeText(activity,activity.getString(R.string.commentedSuccessfully),Toast.LENGTH_LONG).show();
+                cfErr = false;
+                break;
+
+            case "Commented failed":
+                Toast.makeText(activity,activity.getString(R.string.commentedFailed),Toast.LENGTH_LONG).show();
+                cfErr = true;
                 break;
 
             default:{
@@ -347,6 +373,7 @@ public class ServerAPI {
             users.setLocation(object.getString("location"));
             users.setGender(object.getString("gender"));
             users.setAccessToken(object.getString("remember_token"));
+            users.setTokenFirebase(object.getString("token_firebase"));
 
         }catch (JSONException e){
             e.printStackTrace();
@@ -360,6 +387,7 @@ public class ServerAPI {
     }
 
     public void postEditVocabulary(Activity activity, JSONObject object){
+        cfErr = true;
         showDialog(activity);
 
         post(activity, object, Constants.EDIT_VOCABULARY, Constants.VOCABULARY_URL);
@@ -367,7 +395,8 @@ public class ServerAPI {
 
     //Require the server to test the registered account? If not then register.
     public void postUsers(Activity activity, JSONObject object, int type){
-        showDialog(activity);
+        if(!(new UsersFB(activity).confirmLogin()))
+            showDialog(activity);
         post(activity, object, type, Constants.USER_URL);
     }
 
@@ -403,9 +432,8 @@ public class ServerAPI {
                 //empty
                 Toast.makeText(activity, activity.getString(R.string.empty), Toast.LENGTH_LONG).show();
 
-                if (type == Constants.LEARN){
-                    activity.finish();
-                }
+                if (type == Constants.LEARN) activity.finish();
+
             }else {
                 for (int i = 0; i < json.length(); i++){
                     JSONObject object = json.getJSONObject(i);
@@ -483,11 +511,10 @@ public class ServerAPI {
                 showDialog(activity);
                 post(activity, object, type, Constants.ALL_TOPIC_URL);
                 break;
-
+            case Constants.GET_TOPIC_A_FRIEND:
             case Constants.GET_TOPIC_FRIENDS:
                 post(activity, object, type, Constants.TOPIC_OF_FRIENDS_URL);
                 break;
-
             default:{
                 //GET_TOPIC or GET_NAME_TOPIC
                 showDialog(activity);
@@ -532,9 +559,18 @@ public class ServerAPI {
                     handle.sendBroadCastNameTopicToLearnActivity(activity, topicModes);
                     break;
 
+                case Constants.GET_TOPIC_FRIENDS:
+                    handle.sendBroadCastToTabBackupFriends(activity, topicModes);
+                    break;
+                case Constants.GET_TOPIC_A_FRIEND:
+                    handle.sendBroadCastToWDKFragment(activity, topicModes);
+                    break;
+
+                case Constants.GET_ALL_TOPIC:
+                    handle.sendBroadCastToTabBackupOthers(activity, topicModes);
+                    break;
+
                 default:{
-                    //GET_TOPIC_FRIENDS or GET_ALL_TOPIC
-                    handle.sendBroadCastToWhatDoPeopleLearnAdapter(activity, topicModes);
                     break;
                 }
             }
@@ -544,8 +580,9 @@ public class ServerAPI {
         }
     }
 
-    public void handleBackup(Activity activity, JSONObject object, int type){
-
+    public void handleBackup(Activity activity, JSONObject object, int type, boolean cfSendBRC){
+        cfErr = true;
+        this.cfSendBRC = cfSendBRC;
         showDialog(activity);
 
         switch (type){
@@ -563,6 +600,20 @@ public class ServerAPI {
 
         }
 
+    }
+
+    public void checkUpdateVersion(Activity activity){
+        get(activity, Constants.CHECK_UPDATE, Constants.CHECK_UPDATE_URL);
+    }
+
+    public void postFeedBack(Activity activity, JSONObject object){
+        showDialog(activity);
+        cfErr = true;
+        post(activity, object, Constants.FEEDBACK, Constants.FEEDBACK_URL);
+    }
+
+    public void postSaveTokenFirebase(JSONObject object){
+        post(object, Constants.POST_TOKEN_FIREBASE, Constants.POST_TOKEN_FIREBASE_URL);
     }
 
     private void showDialog(Activity activity){

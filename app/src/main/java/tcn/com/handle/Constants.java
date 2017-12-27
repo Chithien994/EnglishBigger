@@ -21,6 +21,10 @@ public class Constants {
     public static final int GET_INFO_USER = 14;
     public static final int SHARE = 15;
     public static final int INVITE = 16;
+    public static final int GET_TOPIC_A_FRIEND = 17;
+    public static final int CHECK_UPDATE = 18;
+    public static final int FEEDBACK = 19;
+    public static final int POST_TOKEN_FIREBASE = 20;
 
 
     /// api for http://hidev.top
@@ -28,6 +32,18 @@ public class Constants {
     //APP URL
 
     public static final String GET_LINK_APP_URL = "http://hidev.top/englishbigger/api/appurl/";
+
+    //CHECK UPDATE URL
+
+    public static final String CHECK_UPDATE_URL = "http://hidev.top/englishbigger/api/check/version/";
+
+    //FEEDBACK URL
+
+    public static final String FEEDBACK_URL = "http://hidev.top/englishbigger/api/feedback/";
+
+    //CHECK UPDATE URL
+
+    public static final String POST_TOKEN_FIREBASE_URL = "http://hidev.top/englishbigger/api/users/firebase/";
 
     //Insert topic
     public static final String INSERT_URL = "http://hidev.top/englishbigger/api/topic/insert.php";

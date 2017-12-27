@@ -43,6 +43,7 @@
     <string name="settings">设置</string>
     <string name="policy">政策</string>
     <string name="support">支持</string>
+    <string name="feedback">反馈</string>
     <string name="accountSuccessfullyLoggedOut">註銷成功</string>
     <string name="logout">注销帐号</string>
     <string name="close">关闭的</string>
@@ -93,4 +94,17 @@
     <string name="enterItsMeaning">输入它的意思（添加）</string>
     <string name="exactly">对了！</string>
     <string name="wrong">做错了！</string>
+    <string name="newTopic">新话题。</string>
+    <string name="addToTopicAvailable">添加到可用的主题。</string>
+    <string name="select_">---选择---</string>
+    <string name="select">选择</string>
+    <string name="msgPleaseSelectAValidTopicName">请选择一个有效的主题名称！</string>
+    <string name="content">内容</string>
+    <string name="commentedSuccessfully">评论成功！</string>
+    <string name="commentedFailed">评论不成功！</string>
+
+    <string name="detectNewVersion">有一个新的版本！</string>
+    <string name="currentVersion">当前版本</string>
+    <string name="newVersion">新版本</string>
+    <string name="update">更新新的</string>
 </resources>

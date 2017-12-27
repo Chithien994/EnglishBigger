@@ -20,7 +20,7 @@
             android:text="Food"
             android:textStyle="bold"
             android:textSize="18sp"
-            android:textColor="#2b2b2b"
+            android:textColor="@color/colorTextName"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toLeftOf="parent"

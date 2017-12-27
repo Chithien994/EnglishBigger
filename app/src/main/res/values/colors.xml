@@ -3,13 +3,17 @@
     <color name="colorPrimary">#034b02</color>
     <color name="colorPrimaryDark">#303f9f</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorButtom">#6cc29e</color>
     <color name="colorGactangle">#2a2b2d</color>
+    <color name="colorTextTab">#3e3e3e</color>
+    <color name="colorTextName">#3f3f3f</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorOrange">#f4a654</color>
     <color name="colorButtonOK">#4d90fe</color>
     <color name="colorLink">#3a56e4</color>
     <color name="colorApp">#ebebeb</color>
     <color name="colorAppBar">#00c39e</color>
+    <color name="colorTab">#6cc39e</color>
+    <color name="colorButtom">#2cab86</color>
     <color name="colorNew">#fbfce2</color>
     <color name="colorText">#838383</color>
 </resources>

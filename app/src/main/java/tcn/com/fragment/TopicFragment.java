@@ -56,12 +56,13 @@ public class TopicFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d("TOPIC_FRAGMENT","Action: onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("TOPIC_FRAGMENT","Action: onCreateView");
         View view = inflater.inflate(R.layout.fragment_topic, container, false);
         addControls(view);
         addEvents();
@@ -225,6 +226,7 @@ public class TopicFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
+        Log.d("TOPIC_FRAGMENT","Action: onAttach");
         super.onAttach(context);
         if (context instanceof TopicActivity) {
             topicActivity = (TopicActivity) context;
@@ -235,17 +237,54 @@ public class TopicFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
+    public void onStart() {
+        super.onStart();
+        Log.d("TOPIC_FRAGMENT","Action: onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("TOPIC_FRAGMENT","Action: onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("TOPIC_FRAGMENT","Action: onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("TOPIC_FRAGMENT","Action: onStop");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("TOPIC_FRAGMENT","Action: onDestroyView");
+        onDestroy();
+        onDetach();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Log.d("TOPIC_FRAGMENT","Action: onLowMemory");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("TOPIC_FRAGMENT","Action: onDestroy");
+    }
+
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.d("TOPIC_FRAGMENT","Action: onDetach");
     }
 }

@@ -2,7 +2,11 @@ package tcn.com.adapters;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -53,6 +59,8 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
     ImageView imgShow;
     ImageView imgShowed;
     Handle handle = new Handle();
+    AlertDialog alertDialog;
+    public static String MY_BRC_DRAWER_ADAPTER = "MY_BRC_DRAWER_ADAPTER";
     public DrawerAdapter(Activity context, int resource, List<DrawerModels> objects) {
         super(context, resource, objects);
         this.context = context;
@@ -92,10 +100,12 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
                     handleShowPolicy(row);
                 }else if (drawerModels.getName().equals(context.getString(R.string.support))){
                     support(row);
+                }else if (drawerModels.getName().equals(context.getString(R.string.feedback))){
+                    handleFeedBack();
                 }
             }
         });
-        if (drawerModels.getName().equals(context.getString(R.string.logout))){
+        if (drawerModels.getName().equals(context.getString(R.string.logout)) || drawerModels.getName().equals(context.getString(R.string.feedback))){
             imgShow = row.findViewById(R.id.imgShow);
             imgShow.setVisibility(View.GONE);
             LinearLayout layoutMore = row.findViewById(R.id.layoutMore);
@@ -108,6 +118,48 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
             layoutMore.setVisibility(View.VISIBLE);
         }
         return row;
+    }
+
+    private void handleFeedBack(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = context.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_dialog_feedback, null);
+        dialogBuilder.setView(dialogView);
+
+        ImageView imgCloseDialog = dialogView.findViewById(R.id.imgCloseDialog);
+        final EditText txtContentDialog = dialogView.findViewById(R.id.txtContentDialog);
+        Button btnPostDialog = dialogView.findViewById(R.id.btnPostDialog);
+
+        alertDialog = dialogBuilder.create();
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+
+        btnPostDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!txtContentDialog.getText().toString().equals("")){
+                    JSONObject object = new JSONObject();
+                    try {
+                        myIntentFilter();
+                        object.put("idUser", listActivity.users.getIdUser());
+                        object.put("content",txtContentDialog.getText().toString());
+                        listActivity.serverAPI.postFeedBack(listActivity, object);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    Toast.makeText(listActivity,listActivity.getString(R.string.msgYouHaveNotEnteredAnythingYet), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+        imgCloseDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.cancel();
+            }
+        });
     }
 
     private void handleGetListFriendsUseApp(final View row) {
@@ -336,4 +388,26 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
             imgShowed.setVisibility(View.VISIBLE);
         }
     }
+
+    public void myIntentFilter(){
+        IntentFilter mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(MY_BRC_DRAWER_ADAPTER);
+        context.registerReceiver(mReceiver,mIntentFilter);
+        Log.i("DK","mReceiver");
+    }
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(MY_BRC_DRAWER_ADAPTER)) {
+                context.unregisterReceiver(mReceiver);
+                Log.d("unregisterReceiver","Unregister Receiver");
+                if(!intent.getBooleanExtra("ERR",true))
+                    try {
+                        alertDialog.cancel();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+            }
+        }
+    };
 }

@@ -54,7 +54,7 @@ public class Language {
 
     public boolean getCFLanguageDivice(Activity activity){
         pf = activity.getSharedPreferences(activity.getString(R.string.inforLocale), activity.MODE_PRIVATE);
-        return pf.getBoolean("divice",false);
+        return pf.getBoolean("divice",true);
     }
 
     public void settingLanguage(String lag){

@@ -1,7 +1,9 @@
 package tcn.com.handle;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import tcn.com.englishbigger.R;
 
@@ -13,10 +15,27 @@ public class Users {
     Activity activity;
     SharedPreferences pf;
     SharedPreferences.Editor editor;
+    Context context;
     public Users(Activity activity){
         this.activity = activity;
         pf = activity.getSharedPreferences(activity.getString(R.string.saveInforUser), activity.MODE_PRIVATE);
         editor = pf.edit();
+    }
+
+    public Users(Context context){
+        this.context = context;
+        pf = context.getSharedPreferences(context.getString(R.string.saveInforUser), context.MODE_PRIVATE);
+        editor = pf.edit();
+    }
+
+    public String getTokenFirebase(){
+        return pf.getString("token_firebase","");
+    }
+
+    public void setTokenFirebase(String tokenFirebase){
+        Log.d("tokenFirebase","Saved: "+tokenFirebase);
+        editor.putString("token_firebase",tokenFirebase);
+        editor.commit();
     }
 
     public String getIdUser(){

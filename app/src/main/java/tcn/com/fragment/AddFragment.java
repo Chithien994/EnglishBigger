@@ -35,6 +35,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,10 +104,19 @@ public class AddFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add, container, false);
         //The two main components handle the control and event handlers
+        loadAdView(view);
         addControls(view);
         addEvents();
-
         return view;
+    }
+
+    private void loadAdView(View view) {
+        AdView adView = null;
+        // Sample AdMob app ID: ca-app-pub-7825788831137519~8179742154
+        MobileAds.initialize(learnActivity, getString(R.string.ad_mob_app_id));
+        adView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     private void addEvents() {
@@ -522,7 +534,7 @@ public class AddFragment extends Fragment {
         bool = false;
 
         vi = txtTranslated.getText().toString();
-        if (handleFilterBeforeAdd(vi).equalsIgnoreCase(handleFilterBeforeAdd(enl)) == false){  //Before adding: check the new word and its meaning if the same. Then issue a "add" or "add not" confirmation request.
+        if (!handleFilterBeforeAdd(vi).equalsIgnoreCase(handleFilterBeforeAdd(enl))){  //Before adding: check the new word and its meaning if the same. Then issue a "add" or "add not" confirmation request.
 
             add(enl,vi);
 
@@ -651,14 +663,19 @@ public class AddFragment extends Fragment {
 
     //Use to pronounce words or phrases (online).
     private void speakOutOnline(String soundText, String languageSpeak) {
-        if (languageSpeak.equals("en")){
-            languageSpeak = "en-GB";
-        }else if (languageSpeak.equals("vi")){
-            languageSpeak = "en-GB";
-        }else if (languageSpeak.equals("ja")){
-            languageSpeak = "ja";
-        }else if (languageSpeak.equals("zh")){
-            languageSpeak = "zh-CN";
+        switch (languageSpeak){
+            case "vi":
+                languageSpeak = "en-GB";
+                break;
+            case "ja":
+                break;
+            case "zh":
+                languageSpeak = "zh-CN";
+                break;
+            default:{
+                languageSpeak = "en-GB";
+                break;
+            }
         }
         //https://responsivevoice.org/
         String url = "https://code.responsivevoice.org/getvoice.php?t="+soundText+"&tl="+languageSpeak+"&sv=&vn=&pitch=0.5&rate=0.5&vol=1";

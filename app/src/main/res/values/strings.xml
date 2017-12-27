@@ -5,6 +5,13 @@
     <string name="fb_login_protocol_scheme">fb109163919789581</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="ad_mob_app_id">ca-app-pub-7825788831137519~8179742154</string>
+    <string name="ad_id_small_1">ca-app-pub-7825788831137519/6455596947</string>
+    <string name="ad_id_small_2">ca-app-pub-7825788831137519/6353323461</string>
+    <string name="ad_id_small_3">ca-app-pub-7825788831137519/8838395317</string>
+    <string name="ad_id_small_4">ca-app-pub-7825788831137519/3801691051</string>
+    <string name="ad_id_full_1">ca-app-pub-7825788831137519/8326425270</string>
+    <string name="ad_id_full_2">ca-app-pub-7825788831137519/3162562659</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -47,6 +54,7 @@
     <string name="settings">Settings</string>
     <string name="policy">Policy</string>
     <string name="support">Support</string>
+    <string name="feedback">Feedback</string>
     <string name="accountSuccessfullyLoggedOut">Account successfully logged out!</string>
     <string name="logout">Logout</string>
     <string name="close">Close</string>
@@ -98,5 +106,18 @@
     <string name="enterItsMeaning">Enter its meaning (Add)</string>
     <string name="exactly">Exactly !</string>
     <string name="wrong">Wrong !</string>
+    <string name="newTopic">New Topic</string>
+    <string name="addToTopicAvailable">Add to Topic available</string>
+    <string name="select_">---Select---</string>
+    <string name="select">Select</string>
+    <string name="msgPleaseSelectAValidTopicName">Please select a valid topic name!</string>
+    <string name="content">Content</string>
+    <string name="commentedSuccessfully">Commented successfully!</string>
+    <string name="commentedFailed">Commented failed!</string>
+
+    <string name="detectNewVersion">Detect new version!</string>
+    <string name="currentVersion">Current version</string>
+    <string name="newVersion">New version</string>
+    <string name="update">Update</string>
 
 </resources>

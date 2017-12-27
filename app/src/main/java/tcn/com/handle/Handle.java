@@ -1,6 +1,7 @@
 package tcn.com.handle;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -10,7 +11,6 @@ import android.graphics.Rect;
 import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -39,14 +39,19 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import tcn.com.adapters.BackupTopicAdapter;
+import tcn.com.adapters.DrawerAdapter;
 import tcn.com.adapters.NoteAdapter;
 import tcn.com.adapters.TopicAdapter;
-import tcn.com.adapters.WhatDoPeopleLearnAdapter;
 import tcn.com.englishbigger.LearnActivity;
 import tcn.com.englishbigger.R;
+import tcn.com.englishbigger.SplashActivity;
 import tcn.com.englishbigger.TopicActivity;
 import tcn.com.fragment.AddFragment;
 import tcn.com.fragment.NoteFragment;
+import tcn.com.fragment.TabBackupFriendsFragment;
+import tcn.com.fragment.TabBackupOthersFragment;
+import tcn.com.fragment.WhatDoPeopleLearnFragment;
 import tcn.com.models.NoteModels;
 import tcn.com.models.TopicModels;
 
@@ -212,6 +217,20 @@ public class Handle {
         activity.sendBroadcast(broadCastIntent);
     }
 
+    public void sendBroadCastToBackupTopicAdapter(Activity activity, boolean err) {
+        Intent broadCastIntent = new Intent();
+        broadCastIntent.setAction(BackupTopicAdapter.MY_BRC_TOPIC_ADAPTER);
+        broadCastIntent.putExtra("ERR", err);
+        activity.sendBroadcast(broadCastIntent);
+    }
+
+    public void sendBroadCastToDrawerAdapter(Activity activity, boolean err) {
+        Intent broadCastIntent = new Intent();
+        broadCastIntent.setAction(DrawerAdapter.MY_BRC_DRAWER_ADAPTER);
+        broadCastIntent.putExtra("ERR", err);
+        activity.sendBroadcast(broadCastIntent);
+    }
+
     public void sendBroadCastToTopicAdapter(Activity activity) {
         Intent broadCastIntent = new Intent();
         broadCastIntent.setAction(TopicAdapter.MY_BRC_TOPIC_ADAPTER);
@@ -225,17 +244,25 @@ public class Handle {
         activity.sendBroadcast(broadCastIntent);
     }
 
-    public void sendBroadCastToWhatDoPeopleLearnAdapter(Activity activity, ArrayList<TopicModels> topicModes){
+
+    public void sendBroadCastToTabBackupFriends(Activity activity, ArrayList<TopicModels> topicModes){
         Intent broadCastIntent = new Intent();
-        broadCastIntent.setAction(WhatDoPeopleLearnAdapter.broadcastAction);
+        broadCastIntent.setAction(TabBackupFriendsFragment.BROADCAST_ACTION);
         broadCastIntent.putExtra("TOPIC", topicModes);
         activity.sendBroadcast(broadCastIntent);
     }
 
-    public void sendBroadCastToWhatDoPeopleLearnAdapter(Activity activity, boolean bool){
+    public void sendBroadCastToWDKFragment(Activity activity, ArrayList<TopicModels> topicModes){
         Intent broadCastIntent = new Intent();
-        broadCastIntent.setAction(WhatDoPeopleLearnAdapter.broadcastAction);
-        broadCastIntent.putExtra("ERR", bool);
+        broadCastIntent.setAction(WhatDoPeopleLearnFragment.BROADCAST_ACTION_WDPL);
+        broadCastIntent.putExtra("TOPIC", topicModes);
+        activity.sendBroadcast(broadCastIntent);
+    }
+
+    public void sendBroadCastToTabBackupOthers(Activity activity, ArrayList<TopicModels> topicModes){
+        Intent broadCastIntent = new Intent();
+        broadCastIntent.setAction(TabBackupOthersFragment.BROADCAST_ACTION_OTHERS);
+        broadCastIntent.putExtra("TOPIC", topicModes);
         activity.sendBroadcast(broadCastIntent);
     }
 
@@ -246,6 +273,13 @@ public class Handle {
         activity.sendBroadcast(broadCastIntent);
     }
 
+    public void sendBroadCastToSplashActivity(Activity activity, String version, String url){
+        Intent broadCastIntent = new Intent();
+        broadCastIntent.setAction(SplashActivity.BROADCAST_ACTION_SPLASH);
+        broadCastIntent.putExtra("VERSION", version);
+        broadCastIntent.putExtra("URL", url);
+        activity.sendBroadcast(broadCastIntent);
+    }
 
     public void saveInfoView(Activity activity, String view) {
         try {
@@ -273,7 +307,7 @@ public class Handle {
         Log.i("NEW"," newWidth: "+newWidth+" newHeight: "+newHeight);
 
         Bitmap outBitmap = Bitmap.createBitmap(inBitmap, cropWidth , cropHeight, newWidth, newHeight);
-
+        inBitmap.recycle();
         return outBitmap;
     }
 
@@ -343,7 +377,6 @@ public class Handle {
                 Bitmap.Config.ARGB_8888);
         bmp.eraseColor(Color.BLACK);// just adding black background
         final Canvas canvas = new Canvas(bmp);
-
         int xPos = (canvas.getWidth() / 2);
         int yPos = (int) ((canvas.getHeight() / 2) - ((textPaint.descent() + textPaint.ascent()) / 2)) ;
 
@@ -413,7 +446,7 @@ public class Handle {
     }
 
 
-    public static void deleteCache(Activity context) {
+    public static void deleteCache(Context context) {
         try {
             File dir = context.getCacheDir();
             deleteDir(dir);

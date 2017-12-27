@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "104685642939",
+    "firebase_url": "https://englishbigger.firebaseio.com",
+    "project_id": "englishbigger",
+    "storage_bucket": "englishbigger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104685642939:android:aca16e40c6219c41",
+        "android_client_info": {
+          "package_name": "tcn.com.englishbigger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "104685642939-usj4mjaelsfg4gvv7g3l47rs3v34sg42.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeQ-7F4Y7db-lENynZWuHBSaJ4IsmZ7BQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

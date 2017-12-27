@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Việt Nam"
-            android:textColor="#000000"
+            android:textColor="@color/colorTextName"
             android:id="@+id/txtLanguage"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp"

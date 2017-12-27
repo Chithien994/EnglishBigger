@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="false"
+    android:layout_height="match_parent">
+    <Button
+        android:id="@+id/btnOthers"
+        android:layout_width="match_parent"
+        android:text="@string/other"
+        android:fitsSystemWindows="false"
+        android:textColor="@color/tab_color_selector"
+        android:textAllCaps="false"
+        android:background="@drawable/tab_other_bgr_selector"
+        android:gravity="center"
+        android:layout_height="90px" />
+</LinearLayout>

@@ -37,6 +37,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.ServerResponse;
@@ -82,13 +85,10 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
 
     private int PICK_IMAGE_REQUEST = 1; //Image request code
     private int RESQUEST_TAKE_PHOTO = 2;
-    private static final int STORAGE_PERMISSION_CODE = 123; //storage permission code
-    private static final int CAMERA_PERMISSION_CODE = 321; //camera permission code
     private Bitmap bitmap; //Bitmap to get image from gallery
     private Uri filePath; //Uri to store the image uri
     private Users users; //user information
     private static final String TAG = "AndroidUploadService";
-    private int progress;
     private UploadNotificationConfig notify;
     private String type;
     private String notificationType;
@@ -98,8 +98,6 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
     private String path = "";
     private String mySelect;
     private String name;
-    private String sDefault; //Define the default image if true
-    private Context mContext;
 
 
     public AddAndEditTopicFragment() {
@@ -117,9 +115,19 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_and_edit_topic, container, false);
         //The two main components handle the control and event handlers
+        loadAdView(view);
         addControls(view);
         addEvents();
         return view;
+    }
+
+    private void loadAdView(View view) {
+        AdView adView = null;
+        // Sample AdMob app ID: ca-app-pub-7825788831137519~8179742154
+        MobileAds.initialize(topicActivity, getString(R.string.ad_mob_app_id));
+        adView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     private void addEvents() {
@@ -383,7 +391,6 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
     }
 
     private void handleSaveTopic() {
-        sDefault = "false";
         //to close the keyboard
         txtNameTopic.setEnabled(false);
         txtNameTopic.setEnabled(true);
@@ -414,6 +421,7 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
     // Used to select images from the library
     //method to show file chooser
     private void handleChoosePhoto() {
+        topicActivity.requestStoragePermission();
         try {
 
             Intent intent = new Intent();
@@ -429,6 +437,7 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
 
     //Used to opening camera
     private void handleOpenCamera() {
+        topicActivity.requestCameraPermission();
         try {
             Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(i, RESQUEST_TAKE_PHOTO);
@@ -502,7 +511,6 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
                         .addFileToUpload(path, "image") //Adding file
                         .addParameter("id", id) //Adding id user to the request
                         .addParameter("name", name) //Adding text parameter to the request
-                        .addParameter("default",sDefault)
                         .setUtf8Charset()
                         .setNotificationConfig(notify)
                         .setMaxRetries(2).setDelegate(new UploadStatusDelegate() {

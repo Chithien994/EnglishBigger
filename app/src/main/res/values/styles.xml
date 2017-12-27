@@ -16,6 +16,12 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="StyleTabLayout">
+        <item name="android:textSize">10dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="ToolTip">
         <item name="ttlm_padding">@dimen/ttlm_default_padding</item>
         <item name="ttlm_strokeColor">@color/colorGactangle</item>

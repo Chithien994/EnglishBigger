@@ -1,6 +1,7 @@
 package tcn.com.handle;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -10,8 +11,14 @@ import com.facebook.FacebookSdk;
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.ShareOpenGraphAction;
+import com.facebook.share.model.ShareOpenGraphContent;
+import com.facebook.share.model.ShareOpenGraphObject;
 import com.facebook.share.widget.AppInviteDialog;
 import com.facebook.share.widget.ShareDialog;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import tcn.com.englishbigger.R;
 
@@ -23,9 +30,16 @@ public class UsersFB {
     Activity activity;
     SharedPreferences pf;
     SharedPreferences.Editor editor;
+    Context context;
     public UsersFB(Activity activity){
         this.activity = activity;
         pf = activity.getSharedPreferences(activity.getString(R.string.saveInforLoginFB), activity.MODE_PRIVATE);
+        editor = pf.edit();
+    }
+
+    public UsersFB(Context context){
+        this.context = context;
+        pf = context.getSharedPreferences(context.getString(R.string.saveInforLoginFB), context.MODE_PRIVATE);
         editor = pf.edit();
     }
 
@@ -139,22 +153,29 @@ public class UsersFB {
         }
     }
 
-    public void shareLink(String appLinkUrl, String name){
+    public void shareLink(JSONObject response) throws JSONException {
+        String appName = response.getString("name");
+        String name = response.getString("developers");
+        String title = response.getString("description");
+        String appUrl = response.getString("files_url");
+        String logo = response.getString("logo");
         ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse(appLinkUrl))
-                .setShareHashtag(new ShareHashtag.Builder()
-                        .setHashtag(name)
-                        .build())
+                .setContentUrl(Uri.parse(appUrl))
+                .setImageUrl(Uri.parse(logo))
+                .setShareHashtag(new ShareHashtag.Builder().setHashtag(appName).build())
+                .setQuote(title+"\n"+name)
                 .build();
         ShareDialog.show(activity, content);
     }
 
-    public void inviteFriends(String appLinkUrl, String previewImageUrl){
+    public void inviteFriends(JSONObject response) throws JSONException {
+        String logo = response.getString("logo");
+        String appUrl = response.getString("files_url");
         FacebookSdk.sdkInitialize(activity);
         if (AppInviteDialog.canShow()) {
             AppInviteContent content = new AppInviteContent.Builder()
-                    .setApplinkUrl(appLinkUrl)
-                    .setPreviewImageUrl(previewImageUrl)
+                    .setApplinkUrl(appUrl)
+                    .setPreviewImageUrl(logo)
                     .build();
             AppInviteDialog.show(activity, content);
         }

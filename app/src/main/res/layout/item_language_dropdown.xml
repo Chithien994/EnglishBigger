@@ -17,7 +17,7 @@
         android:id="@+id/txtLanguage"
         android:layout_width="83dp"
         android:layout_height="29dp"
-        android:textColor="#000000"
+        android:textColor="@color/colorTextName"
         android:textSize="32px"
         android:gravity="center"
         android:spinnerMode="dropdown"

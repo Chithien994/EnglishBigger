@@ -61,7 +61,7 @@
                 android:id="@+id/txtName"
                android:layout_gravity="center_vertical"
                 android:paddingLeft="10dp"
-                android:textColor="#000000"
+                android:textColor="@color/colorTextTab"
                 android:textStyle="bold"
                 android:text="Settings"/>
 

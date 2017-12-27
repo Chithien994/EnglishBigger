@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.SystemClock;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
@@ -45,6 +46,10 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,14 +60,17 @@ import tcn.com.handle.Constants;
 import tcn.com.handle.Handle;
 import tcn.com.handle.HandleIntent;
 import tcn.com.handle.Language;
+import tcn.com.handle.MyAction;
 import tcn.com.handle.ServerAPI;
 import tcn.com.handle.Users;
 import tcn.com.handle.UsersFB;
 import tcn.com.models.DrawerModels;
 import tcn.com.models.LocaleModels;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Locale;
 
 
@@ -83,7 +91,6 @@ public class ListActivity extends AppCompatActivity {
     public UsersFB usersFB;
     public Users users;
     public ServerAPI serverAPI = new ServerAPI();
-    public HandleIntent hi;
 
     private ListView lvLeftDrawer;
     private ArrayList<DrawerModels> dsDrawerModelses;
@@ -106,8 +113,7 @@ public class ListActivity extends AppCompatActivity {
         language = new Language();
         checkSelectLanguage();
         setContentView(R.layout.activity_list);
-
-
+        showAdView();
         addControns();
         addEvents();
     }
@@ -142,7 +148,8 @@ public class ListActivity extends AppCompatActivity {
         layoutLogInFB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (usersFB.confirmLogin()==false){
+                if (!usersFB.confirmLogin() || cfAutoLogin){
+                    cfAutoLogin = false;
                     try {
                         LoginManager.getInstance().logOut(); //logout facebook
                     }catch (Exception e){
@@ -203,7 +210,7 @@ public class ListActivity extends AppCompatActivity {
 
     private void handleWhatDoPeopleLearn() {
         if (usersFB.confirmLogin()){
-            hi.intentActivity(ListActivity.this, HandleIntent.INTENT_WHAT_DO_PEOPLE_LEARN);
+            HandleIntent.intentActivity(ListActivity.this, HandleIntent.INTENT_WHAT_DO_PEOPLE_LEARN);
         }else {
             loginRequired();
         }
@@ -212,7 +219,7 @@ public class ListActivity extends AppCompatActivity {
 
     private void handleAdd() {
         if (usersFB.confirmLogin()){
-            hi.intentActivity(ListActivity.this, HandleIntent.INTENT_ADD);
+            HandleIntent.intentActivity(ListActivity.this, HandleIntent.INTENT_ADD);
         }else {
             loginRequired();
         }
@@ -220,7 +227,7 @@ public class ListActivity extends AppCompatActivity {
 
     private void handleLearnNow() {
         if (usersFB.confirmLogin()){
-            hi.intentActivity(ListActivity.this, HandleIntent.INTENT_LEARN);
+            HandleIntent.intentActivity(ListActivity.this, HandleIntent.INTENT_LEARN);
         }else {
             loginRequired();
         }
@@ -228,7 +235,7 @@ public class ListActivity extends AppCompatActivity {
 
     private void handleLearnByTopic() {
         if (usersFB.confirmLogin()){
-            hi.intentActivity(ListActivity.this, HandleIntent.INTENT_TOPIC);
+            HandleIntent.intentActivity(ListActivity.this, HandleIntent.INTENT_TOPIC);
         }else {
             loginRequired();
         }
@@ -245,7 +252,6 @@ public class ListActivity extends AppCompatActivity {
         language = new Language(ListActivity.this);
         usersFB = new UsersFB(ListActivity.this);
         users = new Users(ListActivity.this);
-        hi = new HandleIntent();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -293,11 +299,13 @@ public class ListActivity extends AppCompatActivity {
         handleShowButtomLogin();
     }
 
-    private void checkAutoLoginFB() {
-        cfAutoLogin = false;
-        if (users.getIdUser().isEmpty() == false){
-            layoutLogInFB.performClick();
-        }
+    private void showAdView() {
+        AdView adView = null;
+        // Sample AdMob app ID: ca-app-pub-7825788831137519~8179742154
+        MobileAds.initialize(this, getString(R.string.ad_mob_app_id));
+        adView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
 
@@ -309,7 +317,8 @@ public class ListActivity extends AppCompatActivity {
         dsDrawerModelses.add(new DrawerModels(3, R.drawable.ic_accout_settings ,getString(R.string.settings)));
         dsDrawerModelses.add(new DrawerModels(4, R.drawable.ic_policy ,getString(R.string.policy)));
         dsDrawerModelses.add(new DrawerModels(5, R.drawable.ic_support ,getString(R.string.support)));
-        dsDrawerModelses.add(new DrawerModels(6, R.drawable.ic_logout ,getString(R.string.logout)));
+        dsDrawerModelses.add(new DrawerModels(6, R.drawable.ic_feedback ,getString(R.string.feedback)));
+        dsDrawerModelses.add(new DrawerModels(7, R.drawable.ic_logout ,getString(R.string.logout)));
         drawerAdapter = new DrawerAdapter(
                 ListActivity.this,
                 R.layout.item_left_drawer,
@@ -532,6 +541,7 @@ public class ListActivity extends AppCompatActivity {
             jsonObject.put("type_register","Social");
             jsonObject.put("urlAvatar",linkAvatar);
             jsonObject.put("accessToken",accessToken);
+            jsonObject.put("token_firebase",users.getTokenFirebase());
             jsonObject.put("type","_INSERT");
 
         } catch (JSONException e) {
@@ -655,15 +665,26 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        MyAction.setAction(this,false);
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (cfAutoLogin){
-            checkAutoLoginFB();
-        }
+        MyAction.setAction(this,true);
+        //Function checkRefreshDateLogin:
+        //Check if the login session has expired?
+        //The login session expires:
+        //Renewed login session add return true
+        if (MyAction.checkRefreshDateLogin(this))
+            //Check if you have ever logged in before? Will login automatically!
+            if (!users.getIdUser().isEmpty()) layoutLogInFB.performClick();
+
     }
 
     public void handleShowButtomLogin(){
@@ -677,6 +698,7 @@ public class ListActivity extends AppCompatActivity {
     public void myIntentFilter(){
         IntentFilter mIntentFilter = new IntentFilter();
         mIntentFilter.addAction(cfBroadcastAction);
+        //mIntentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mReceiver,mIntentFilter);
         Log.i("DK","mReceiver");
     }

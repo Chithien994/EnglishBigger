@@ -179,7 +179,7 @@
                     android:id="@+id/btnOptionView"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_list"/>
+                    android:src="@drawable/ic_list_b"/>
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"

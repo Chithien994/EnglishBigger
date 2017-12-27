@@ -77,7 +77,10 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
         TextView txtNote = view.findViewById(R.id.txtNote);
         LinearLayout layoutItem = view.findViewById(R.id.layoutItem);
         ConstraintLayout layoutDelete = view.findViewById(R.id.layoutDelete);
-
+        ImageView imgDelete = view.findViewById(R.id.imgDelete);
+        if (topicActivity.type ==3 || topicActivity.type ==4){
+            imgDelete.setImageResource(R.drawable.ic_add);
+        }
         final NoteModels noteModels = this.objects.get(position);
 
         try {
@@ -99,17 +102,18 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
             e.printStackTrace();
         }
 
+
         layoutDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handleDeleteNote(noteModels, position);
+                if (topicActivity.type!=3 && topicActivity.type!=4) handleDeleteNote(noteModels, position);
             }
         });
 
         layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handleEdit(noteModels, position);
+                if (topicActivity.type!=3 && topicActivity.type!=4) handleEdit(noteModels, position);
             }
         });
 
@@ -202,6 +206,7 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
         alertDialog = dialogBuilder.create();
         alertDialog.setCancelable(false);
         alertDialog.show();
+
 
         imgCloseDialog.setOnClickListener(new View.OnClickListener() {
             @Override

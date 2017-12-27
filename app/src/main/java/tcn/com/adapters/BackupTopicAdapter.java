@@ -6,15 +6,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -44,6 +52,8 @@ public class BackupTopicAdapter extends RecyclerView.Adapter<BackupTopicAdapter.
     Activity context;
     int resource;
     ArrayList<TopicModels> objects;
+    String nameTopic = null;
+    AlertDialog alertDialog;
     public static String MY_BRC_TOPIC_ADAPTER = "MY_BRC_TOPIC_ADAPTER";
 
     public BackupTopicAdapter(Activity context, int resource, ArrayList<TopicModels> objects){
@@ -107,17 +117,96 @@ public class BackupTopicAdapter extends RecyclerView.Adapter<BackupTopicAdapter.
         });
     }
 
-    private void handleBackupTopic(TopicModels topicModels) {
-        JSONObject object = new JSONObject();
-        try {
-            object.put("idUser", topicActivity.usersFB.getIdUser());
-            object.put("idUserFriend", topicModels.getIdUser());
-            object.put("idTopic", topicModels.getId());
-            topicActivity.serverAPI.handleBackup(topicActivity, object, Constants.BACKUP_TOPIC);
-        } catch (JSONException e) {
-            e.printStackTrace();
+    private void handleBackupTopic(final TopicModels topicModels) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = context.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_dialog_set_name, null);
+        dialogBuilder.setView(dialogView);
+
+        ImageView imgCloseDialog = dialogView.findViewById(R.id.imgCloseDialog);
+        final LinearLayout layoutNewNameDialog = dialogView.findViewById(R.id.layoutNewName);
+        final LinearLayout layoutGetNameTopicDialog = dialogView.findViewById(R.id.layoutGetNameTopic);
+        final Spinner spNameTopicDialog = dialogView.findViewById(R.id.spNameTopicDialog);
+        final RadioButton radShowTXTNewName = dialogView.findViewById(R.id.radShowTXTNewName);
+        final RadioButton radShowSPNewName = dialogView.findViewById(R.id.radShowSPNewName);
+        Button btnBackupDialog = dialogView.findViewById(R.id.btnBackupDialog);
+        final EditText txtNewNameTopicDialog = dialogView.findViewById(R.id.txtNewNameTopicDialog);
+        final ArrayList<String> dsNameTopic = new ArrayList<>();
+        alertDialog = dialogBuilder.create();
+        alertDialog.show();
+        txtNewNameTopicDialog.setText(topicModels.getId() + " " + topicModels.getName());
+        nameTopic = txtNewNameTopicDialog.getText().toString();
+        layoutGetNameTopicDialog.setVisibility(View.GONE);
+        layoutNewNameDialog.setVisibility(View.VISIBLE);
+
+        ArrayAdapter<String> arrayAdapter;
+        dsNameTopic.add(0, context.getString(R.string.select_));
+        for (int i = 0; i < topicActivity.topicYourModes.size(); i++){
+            dsNameTopic.add(i+1, topicActivity.topicYourModes.get(i).getName());
         }
+        arrayAdapter =  new ArrayAdapter<String>(topicActivity, R.layout.support_simple_spinner_dropdown_item, dsNameTopic);
+        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spNameTopicDialog.setAdapter(arrayAdapter);
+
+        radShowSPNewName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layoutGetNameTopicDialog.setVisibility(View.VISIBLE);
+                layoutNewNameDialog.setVisibility(View.GONE);
+                spNameTopicDialog.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        nameTopic = dsNameTopic.get(i);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+            }
+        });
+
+        radShowTXTNewName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layoutGetNameTopicDialog.setVisibility(View.GONE);
+                layoutNewNameDialog.setVisibility(View.VISIBLE);
+                nameTopic = txtNewNameTopicDialog.getText().toString();
+            }
+        });
+
+        btnBackupDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(!nameTopic.equalsIgnoreCase(context.getString(R.string.select_))){
+                    JSONObject object = new JSONObject();
+                    try {
+                        object.put("idUser", topicActivity.usersFB.getIdUser());
+                        object.put("nameTopic", nameTopic);
+                        object.put("idTopic", topicModels.getId());
+                        topicActivity.serverAPI.handleBackup(topicActivity, object, Constants.BACKUP_TOPIC, true);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    Toast.makeText(topicActivity, context.getString(R.string.msgPleaseSelectAValidTopicName), Toast.LENGTH_LONG).show();
+                }
+
+
+            }
+        });
+
+        imgCloseDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.cancel();
+            }
+        });
+
     }
+
 
     private void handleManageVocabulary(int position) {
         topicActivity.saveFragmen(new WhatDoPeopleLearnFragment());
@@ -137,9 +226,14 @@ public class BackupTopicAdapter extends RecyclerView.Adapter<BackupTopicAdapter.
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(MY_BRC_TOPIC_ADAPTER)) {
+                topicActivity.unregisterReceiver(mReceiver);
                 Log.d("unregisterReceiver","Unregister Receiver");
-
-                context.unregisterReceiver(mReceiver);
+                if(!intent.getBooleanExtra("ERR",true))
+                    try {
+                        alertDialog.cancel();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
             }
         }
     };

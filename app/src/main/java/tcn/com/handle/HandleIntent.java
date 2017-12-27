@@ -17,35 +17,31 @@ import tcn.com.englishbigger.TopicActivity;
  */
 
 public class HandleIntent {
-    public static int INTENT_TOPIC = 0;
-    public static int INTENT_LEARN = 1;
-    public static int INTENT_WHAT_DO_PEOPLE_LEARN = 3;
-    public static int INTENT_ADD = 4;
+    public static final int INTENT_TOPIC = 0;
+    public static final int INTENT_LEARN = 1;
+    public static final int INTENT_WHAT_DO_PEOPLE_LEARN = 3;
+    public static final int INTENT_ADD = 4;
 
     private Activity activity;
 
-    public HandleIntent(){
-
-    }
-
-    public void intentActivity(Activity activity, int i){
+    public static void intentActivity(Activity activity, int i){
 
         switch (i){
 
-            case 0:
-                handleLearnByTopic(activity, i);
+            case INTENT_TOPIC:
+                handleLearnByTopic(activity);
                 break;
 
-            case 1:
-                handleLearnNow(activity, i);
+            case INTENT_LEARN:
+                handleLearnNow(activity);
                 break;
 
-            case 3:
-                handleWhatDoPeopleLearn(activity, i);
+            case INTENT_WHAT_DO_PEOPLE_LEARN:
+                handleWhatDoPeopleLearn(activity);
                 break;
 
-            case 4:
-                handleAdd(activity, i);
+            case INTENT_ADD:
+                handleAdd(activity);
                 break;
 
             default:{
@@ -54,30 +50,30 @@ public class HandleIntent {
         }
     }
 
-    private void handleWhatDoPeopleLearn(Activity activity, int i) {
+    private static void handleWhatDoPeopleLearn(Activity activity) {
         Intent intent = new Intent(activity, TopicActivity.class);
-        intent.putExtra("type", i);
+        intent.putExtra("type", INTENT_WHAT_DO_PEOPLE_LEARN);
         intent.putExtra("id", -1);
         activity.startActivity(intent);
     }
 
-    private void handleAdd(Activity activity, int i) {
+    private static void handleAdd(Activity activity) {
         Intent intent = new Intent(activity, LearnActivity.class);
-        intent.putExtra("PUT",i);
+        intent.putExtra("PUT",INTENT_ADD);
         activity.startActivity(intent);
     }
 
-    private void handleLearnNow(Activity activity, int i) {
+    private static void handleLearnNow(Activity activity) {
         Intent intent = new Intent(activity, LearnActivity.class);
-        intent.putExtra("PUT",i);
+        intent.putExtra("PUT",INTENT_LEARN);
         intent.putExtra("FINISH",false);
         activity.startActivity(intent);
     }
 
-    private void handleLearnByTopic(Activity activity, int i) {
+    private static void handleLearnByTopic(Activity activity) {
         Intent intent = new Intent(activity, TopicActivity.class);
-        intent.putExtra("type", i);
-        intent.putExtra("id", i);
+        intent.putExtra("type", INTENT_TOPIC);
+        intent.putExtra("id", INTENT_TOPIC);
         activity.startActivity(intent);
     }
 }

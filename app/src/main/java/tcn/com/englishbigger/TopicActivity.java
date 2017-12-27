@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -37,12 +38,21 @@ import tcn.com.models.UsersModels;
 public class TopicActivity extends AppCompatActivity {
     private Toolbar toolbarTopic;
     public ArrayList<TopicModels> topicModes;
-    private LinearLayout layoutFragmentTopic;
+    public ArrayList<TopicModels> topicYourModes;
+    public LinearLayout layoutFragmentTopic;
+    public LinearLayout layoutFragmentWhatDoPeopleLearn;
     public Fragment fragmentBack;
-    public boolean cfFinish;
+    public boolean cfFinish; //cfFinish = true: Closes the current activity when the back button is pressed
+
     public static final String broadcastAction = "BroadcastAction";
-    private static final int STORAGE_PERMISSION_CODE = 123; //storage permission code
-    private static final int CAMERA_PERMISSION_CODE = 321; //camera permission code
+    public static final int STORAGE_PERMISSION_CODE = 123; //storage permission code
+    public static final int CAMERA_PERMISSION_CODE = 321; //camera permission code
+    public static final int OP_TOPIC_USER = 0; //Open a topic section
+    public static final int ADD_TOPIC = 1; //Open a add section
+    public static final int EDIT_TOPIC = 2; //Open a edit section
+    public static final int OP_WHAT_DO_PEOPLE_LEARN = 3; //Open a WhatDoPeopleLearn
+    public static final int OP_A_FRIEND_TOPIC = 4; //Open a friend's topic
+
     public ServerAPI serverAPI;
     public UsersFB usersFB;
     public Handle handle;
@@ -56,6 +66,7 @@ public class TopicActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("TOPIC_ACTIVITY","Action: onCreate");
         setContentView(R.layout.activity_topic);
         //Requesting storage permission
         requestStoragePermission();
@@ -72,7 +83,7 @@ public class TopicActivity extends AppCompatActivity {
         fragmentBack = fragment;
     }
     //Requesting permission
-    private void requestStoragePermission() {
+    public void requestStoragePermission() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
             return;
 
@@ -86,7 +97,7 @@ public class TopicActivity extends AppCompatActivity {
     }
 
     //Requesting permission
-    private void requestCameraPermission() {
+    public void requestCameraPermission() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
             return;
 
@@ -134,6 +145,8 @@ public class TopicActivity extends AppCompatActivity {
         size = -1;
         toolbarTopic = (Toolbar) findViewById(R.id.toolbarTopic);
         setSupportActionBar(toolbarTopic);
+        layoutFragmentWhatDoPeopleLearn = findViewById(R.id.layoutFragmentWhatDoPeopleLearn);
+        layoutFragmentTopic = findViewById(R.id.layoutFragmentTopic);
         topicModes = new ArrayList<>();
         serverAPI = new ServerAPI();
         usersFB = new UsersFB(TopicActivity.this);
@@ -144,11 +157,11 @@ public class TopicActivity extends AppCompatActivity {
         //type = 1 Open a add section
         //type = 2 Open a edit section
         //type = 3 Open a WhatDoPeopleLearn
-        //type = 4 Open a topic of friend
-        type = intent.getIntExtra("type",0);
+        //type = 4 Open a friend's topic
+        type = intent.getIntExtra("type",OP_TOPIC_USER);
 
         //id topic need edit
-        id = intent.getIntExtra("id",0);
+        id = intent.getIntExtra("id",OP_TOPIC_USER);
 
         try {
             usersModels = (UsersModels) intent.getSerializableExtra("FRIENDS");
@@ -159,12 +172,7 @@ public class TopicActivity extends AppCompatActivity {
 
         position = intent.getIntExtra("position",-1); //Get position to update photos
 
-        if (type == 3){
-            //What do people learn?
-            callFragment(new WhatDoPeopleLearnFragment());
-        }else {
-            loadingTopic();
-        }
+        loadingTopic();
 
     }
 
@@ -173,9 +181,6 @@ public class TopicActivity extends AppCompatActivity {
         Users users = new Users(TopicActivity.this);
         JSONObject object = new JSONObject();
         String idUser = users.getIdUser();
-        if (type == 4){
-            idUser = usersModels.getIdUser();
-        }
         try {
             object.put("idUser", idUser);
             serverAPI.getTopic(this, object, Constants.GET_TOPIC);
@@ -185,13 +190,33 @@ public class TopicActivity extends AppCompatActivity {
         }
     }
 
+    public void showFragmentTop(){
+        layoutFragmentTopic.setVisibility(View.VISIBLE);
+        layoutFragmentWhatDoPeopleLearn.setVisibility(View.GONE);
+    }
+
+    public void showFragmentBottom(){
+        cfFinish = true;
+        layoutFragmentTopic.setVisibility(View.GONE);
+        layoutFragmentWhatDoPeopleLearn.setVisibility(View.VISIBLE);
+    }
+
     public void callFragment(Fragment fragment) {
+        showFragmentTop();
         android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.layoutFragmentTopic, fragment);
-        transaction.commit();
+        transaction.commitNow();
+    }
+    public void callFragment(Fragment fragment, int rs) {
+        showFragmentBottom();
+        android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(rs, fragment);
+        transaction.commitNow();
     }
     public void callFragment(Fragment fragment, String type, int id) {
+        showFragmentTop();
         Bundle bundle = new Bundle();
         bundle.putString("SELECT", type);
         bundle.putInt("ID", id);
@@ -214,28 +239,33 @@ public class TopicActivity extends AppCompatActivity {
             if (intent.getAction().equals(broadcastAction)) {
                 try {
                     topicModes = (ArrayList<TopicModels>) intent.getSerializableExtra("TOPIC");
-
+                    unregisterReceiver(mReceiver);
+                    Log.d("unregisterReceiver","Unregister Receiver");
                     //type = 0 Open a topic section
                     //type = 1 Open a add section
                     //type = 2 Open a edit section
-                    if (type == 0){
-                        callFragment(new TopicFragment());
-
-                    }else if (type == 1){
-                        callFragment(new AddAndEditTopicFragment(), "add", 0);
-
-                    }else if (type == 2){
-                        callFragment(new AddAndEditTopicFragment(), "edit", id);
-
-                    }else if (type == 3){
-                        callFragment(new WhatDoPeopleLearnFragment());
-
-                    }else if (type == 4){
-                        callFragment(new WhatDoPeopleLearnFragment());
+                    //type = 3 Open a WhatDoPeopleLearn
+                    //type = 4 Open a topic of friend
+                    switch (type){
+                        case OP_TOPIC_USER:
+                            callFragment(new TopicFragment());
+                            break;
+                        case ADD_TOPIC:
+                            callFragment(new AddAndEditTopicFragment(), "add", 0);
+                            break;
+                        case EDIT_TOPIC:
+                            callFragment(new AddAndEditTopicFragment(), "edit", id);
+                            break;
+                        case OP_WHAT_DO_PEOPLE_LEARN:
+                        case OP_A_FRIEND_TOPIC:
+                            topicYourModes = new ArrayList<>();
+                            topicYourModes = topicModes;
+                            callFragment(new WhatDoPeopleLearnFragment(), R.id.layoutFragmentWhatDoPeopleLearn);
+                            break;
+                        default:{
+                            break;
+                        }
                     }
-
-                    unregisterReceiver(mReceiver);
-                    Log.d("unregisterReceiver","Unregister Receiver");
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -245,14 +275,49 @@ public class TopicActivity extends AppCompatActivity {
     };
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("TOPIC_ACTIVITY","Action: onRestart");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("TOPIC_ACTIVITY","Action: onStart");
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        Log.d("TOPIC_ACTIVITY","Action: onResume");
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        Log.d("TOPIC_ACTIVITY","Action: onPostResume");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d("TOPIC_ACTIVITY","Action: onPause");
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("TOPIC_ACTIVITY","Action: onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("TOPIC_ACTIVITY","Action: onDestroy");
+        if (topicModes!=null) topicModes.clear();
+        if (topicYourModes!=null) topicYourModes.clear();
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -263,11 +328,11 @@ public class TopicActivity extends AppCompatActivity {
                 finish();
             }else {
                 if (size != sizeNow && size != -1){
-                    HandleIntent hi = new HandleIntent();
-                    hi.intentActivity(this, HandleIntent.INTENT_TOPIC);
+                    HandleIntent.intentActivity(this, HandleIntent.INTENT_TOPIC);
                     finish();
                 }else {
-                    callFragment(fragmentBack);
+                    if(type==OP_WHAT_DO_PEOPLE_LEARN || type==OP_A_FRIEND_TOPIC) showFragmentBottom();
+                    else callFragment(fragmentBack);
                 }
                 size = -1;
                 sizeNow = 0;
