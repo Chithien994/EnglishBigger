@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_gravity="center_horizontal"
     android:layout_height="match_parent"
-    tools:context="tcn.com.englishbigger.LearnActivity"
+    tools:context="com.tcn.englishbigger.LearnActivity"
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
@@ -31,7 +31,16 @@
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
-        android:id="@+id/fragment"
+        android:id="@+id/fragmentLearn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fragmentAddNewWord"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"

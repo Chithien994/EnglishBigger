@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#034b02</color>
-    <color name="colorPrimaryDark">#303f9f</color>
+    <color name="colorPrimary">#009f81</color>
+    <color name="colorPrimaryDark">#009f81</color>
     <color name="colorAccent">#FF4081</color>
+
     <color name="colorGactangle">#2a2b2d</color>
     <color name="colorTextTab">#3e3e3e</color>
     <color name="colorTextName">#3f3f3f</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorWhiteM">#e2e2e2</color>
     <color name="colorOrange">#f4a654</color>
+    <color name="colorYellow">#fcfde4</color>
     <color name="colorButtonOK">#4d90fe</color>
     <color name="colorLink">#3a56e4</color>
     <color name="colorApp">#ebebeb</color>

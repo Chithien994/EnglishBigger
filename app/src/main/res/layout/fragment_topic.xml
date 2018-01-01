@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bgr_list_ac"
-    tools:context="tcn.com.englishbigger.TopicActivity">
+    tools:context="com.tcn.englishbigger.TopicActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

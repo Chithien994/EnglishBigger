@@ -4,5 +4,5 @@
         android:color="@color/colorTab"/> <!-- pressed -->
     <item android:state_selected="true"
         android:color="@color/colorWhite"/> <!-- focused -->
-    <item android:color="@color/colorTextTab"/> <!-- default -->
+    <item android:color="@color/colorWhiteM"/> <!-- default -->
 </selector>

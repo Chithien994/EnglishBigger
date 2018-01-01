@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
-    tools:context="tcn.com.englishbigger.ListActivity">
+    tools:context="com.tcn.englishbigger.ListActivity">
 
     <include
         layout="@layout/app_bar_list"
@@ -17,67 +17,71 @@
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view_left"
         android:background="@color/colorApp"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         app:itemTextColor="@color/colorWhite"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true">
 
         <android.support.constraint.ConstraintLayout
-            android:orientation="horizontal"
             android:id="@+id/layoutCoverImage"
-            android:background="#fcfde4"
             android:layout_width="match_parent"
-            android:layout_height="110dp">
+            android:layout_height="120dp"
+            app:layout_constraintVertical_bias="0"
+            android:background="#fcfde4"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/text"
                 android:layout_width="wrap_content"
-                android:textColor="@color/colorTextTab"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:gravity="center"
                 android:text="@string/hi"
+                android:textColor="@color/colorTextTab"
                 android:textSize="18dp"
-                tools:ignore="HardcodedText,SpUsage"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toRightOf="@+id/layoutA"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/layoutA"
-                android:layout_marginLeft="16dp"
-                app:layout_constraintHorizontal_bias="0.0"
-                android:layout_marginStart="16dp" />
+                tools:ignore="HardcodedText,SpUsage" />
 
             <TextView
                 android:id="@+id/txtNameMax"
                 android:layout_width="wrap_content"
-                android:textColor="@color/colorTextTab"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
                 android:gravity="center"
                 android:text="@string/app_name"
+                android:textColor="@color/colorTextTab"
                 android:textSize="18dp"
                 android:textStyle="bold"
-                tools:ignore="HardcodedText,SpUsage"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toRightOf="@+id/text"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/text"
-                android:layout_marginLeft="4dp"
-                app:layout_constraintHorizontal_bias="0.0"
-                android:layout_marginStart="4dp" />
-
+                tools:ignore="HardcodedText,SpUsage" />
 
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/layoutA"
                 android:layout_width="63dp"
                 android:layout_height="63dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginStart="16dp">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imgAvatarMax"
@@ -86,20 +90,20 @@
                     android:background="@drawable/ic_avatar"
                     app:civ_border_color="@color/colorWhite"
                     app:civ_border_width="2dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    tools:ignore="ContentDescription"/>
+                    tools:ignore="ContentDescription" />
 
                 <ProgressBar
-                    android:visibility="gone"
                     android:id="@+id/pbLoadingMax"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="20dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
 
@@ -107,37 +111,38 @@
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/layoutLoginFB"
                 android:layout_width="128dp"
-                android:layout_marginLeft="8dp"
-                app:layout_constraintLeft_toLeftOf="@+id/text"
-                app:layout_constraintTop_toBottomOf="@+id/text"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:background="@drawable/loginfb"
                 android:layout_height="20dp"
-                android:layout_marginStart="8dp">
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/loginfb"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@+id/text"
+                app:layout_constraintTop_toBottomOf="@+id/text">
+
                 <TextView
-                    android:layout_width="wrap_content"
                     android:id="@+id/text22"
-                    android:text="f"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginLeft="11dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:textColor="@color/colorWhite"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="11dp" />
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginStart="11dp"
+                    android:text="f"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
                     android:layout_width="wrap_content"
-                    android:text="@string/loginWithFacebook"
-                    android:textStyle="bold"
-                    android:textSize="16px"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintLeft_toRightOf="@+id/text22"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:textColor="@color/colorWhite"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="11dp" />
+                    android:text="@string/loginWithFacebook"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16px"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/text22"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
             </android.support.constraint.ConstraintLayout>
@@ -146,17 +151,15 @@
                 android:visibility="gone"
                 android:id="@+id/login_button"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                tools:layout_editor_absoluteY="125dp"
-                tools:layout_editor_absoluteX="0dp" />
+                android:layout_height="wrap_content" />
 
         </android.support.constraint.ConstraintLayout>
 
         <android.support.constraint.ConstraintLayout
-            android:layout_marginTop="120dp"
             android:layout_marginBottom="5dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="130dp">
 
             <ListView
                 android:id="@+id/lvLeftDrawer"
@@ -224,8 +227,6 @@
                 android:text="@string/share"
                 android:layout_marginEnd="4dp" />
         </android.support.constraint.ConstraintLayout>
-
-
 
     </android.support.design.widget.NavigationView>
 

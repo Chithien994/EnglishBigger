@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:104685642939:android:aca16e40c6219c41",
+        "mobilesdk_app_id": "1:104685642939:android:870eeda71bc124fa",
         "android_client_info": {
-          "package_name": "tcn.com.englishbigger"
+          "package_name": "com.tcn.englishbigger"
         }
       },
       "oauth_client": [

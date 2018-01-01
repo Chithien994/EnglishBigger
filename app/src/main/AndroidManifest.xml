@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="tcn.com.englishbigger">
+    package="com.tcn.englishbigger">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -104,14 +104,14 @@
         <!-- for FCM -->
 
         <service
-            android:name="tcn.com.myservice.MyFirebaseMessagingService">
+            android:name="com.tcn.myservice.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 
         <service
-            android:name="tcn.com.myservice.MyFirebaseInstanceIDService">
+            android:name="com.tcn.myservice.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>

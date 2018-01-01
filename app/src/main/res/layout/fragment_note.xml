@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/colorApp"
-    tools:context="tcn.com.fragment.NoteFragment">
+    tools:context="com.tcn.fragment.NoteFragment">
 
     <android.support.design.widget.AppBarLayout
         app:popupTheme="@style/AppTheme.AppBarOverlay"
@@ -24,6 +24,7 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|enterAlways"
             android:layout_weight="1">
 
             <android.support.v7.widget.Toolbar
@@ -45,6 +46,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:src="@drawable/back_w"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -58,6 +60,7 @@
                 android:paddingRight="8dp"
                 android:layout_weight="1"
                 android:src="@drawable/ic_add_w"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -72,6 +75,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:layout_constraintRight_toRightOf="parent">
 
                 <TextView
@@ -103,9 +107,10 @@
         android:paddingRight="20dp"
         android:layout_width="match_parent"
         android:id="@+id/lvNote"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_height="match_parent">
 
     </ListView>
 
 
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

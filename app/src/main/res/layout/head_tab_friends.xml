@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:fitsSystemWindows="false"
-    android:layout_height="wrap_content">
-    <Button
-        android:id="@+id/btnFriends"
+    android:maxWidth="1dp"
+    android:paddingRight="30dp"
+    android:paddingLeft="30dp"
+    android:layout_gravity="center_horizontal"
+    android:background="@color/colorAppBar"
+    android:orientation="horizontal"
+    android:id="@+id/layoutFriends"
+    android:layout_height="82px">
+
+    <ImageView
+        android:layout_width="48px"
+        android:layout_height="48px"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/tab_friend_bgr_selector" />
+    <TextView
         android:layout_width="match_parent"
-        android:text="@string/friend"
-        android:fitsSystemWindows="false"
-        android:textAllCaps="false"
-        android:background="@drawable/tab_friend_bgr_selector"
-        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dp"
+        android:textStyle="bold"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
         android:textColor="@color/tab_color_selector"
-        android:layout_height="90px" />
+        android:text="@string/friend"/>
 </LinearLayout>

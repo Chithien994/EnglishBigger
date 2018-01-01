@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
     android:background="@drawable/bgr_learn_now"
-    tools:context="tcn.com.fragment.LearnNowFragment"
+    tools:context="com.tcn.fragment.LearnNowFragment"
     tools:ignore="RtlHardcoded,RtlSymmetry">
 
     <ImageView
@@ -30,392 +30,381 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgBack">
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/layoutLearn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="vertical"
-                android:paddingTop="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0"
-                tools:ignore="RtlSymmetry">
-
+            android:layout_height="match_parent"
+            android:id="@+id/totalLayout">
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <LinearLayout
+                    android:id="@+id/layoutLearn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/bgr_learn"
                     android:orientation="vertical"
-                    tools:ignore="UselessParent">
+                    android:paddingTop="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0"
+                    tools:ignore="RtlSymmetry">
 
-                    <android.support.constraint.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="98dp"
-                        android:background="@drawable/bgr_learn"
-                        android:padding="8dp">
-
-                        <ScrollView
-                            android:id="@+id/scrollView2"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="85dp"
-                            android:layout_marginRight="85dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.5"
-                            tools:ignore="NestedScrolling">
-
-                            <TextView
-                                android:id="@+id/txtVocabulary"
-                                android:layout_width="147dp"
-                                android:layout_height="wrap_content"
-                                android:hint="Vocabulary"
-                                android:paddingLeft="16dp"
-                                android:textColor="@color/colorTextName"
-                                android:textSize="24dp"
-                                android:textStyle="bold"
-                                tools:ignore="HardcodedText,SpUsage" />
-
-
-                        </ScrollView>
-
-
-                        <Button
-                            android:id="@+id/btnShow"
-                            android:layout_width="32dp"
-                            android:layout_height="16dp"
-                            android:layout_gravity="center"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="50dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginRight="50dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:background="@drawable/ic_show"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintHorizontal_bias="0.884"
-                            app:layout_constraintLeft_toRightOf="@+id/scrollView2"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <Button
-                            android:id="@+id/btnSound"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_gravity="center"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:background="@drawable/ic_sound"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintLeft_toRightOf="@+id/btnShow"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </android.support.constraint.ConstraintLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@color/colorWhite"
-                        android:orientation="vertical"></LinearLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/layoutCheck1"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:orientation="horizontal"
-                        android:visibility="gone">
+                        android:background="@drawable/bgr_learn"
+                        android:orientation="vertical"
+                        tools:ignore="UselessParent">
 
-                        <LinearLayout
-                            android:id="@+id/linearLayout4"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="128dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginRight="128dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:orientation="vertical"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="@+id/imgVocabulary"
-                            app:layout_constraintTop_toTopOf="parent">
+                        <android.support.constraint.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="98dp"
+                            android:background="@drawable/bgr_learn"
+                            android:padding="8dp">
 
-                            <EditText
-                                android:id="@+id/txtInput"
-                                android:layout_width="match_parent"
-                                android:layout_height="29dp"
-                                android:layout_gravity="center"
-                                android:layout_marginTop="10dp"
-                                android:background="@drawable/bgr_add"
-                                android:gravity="center"
-                                android:textColor="@color/colorTextName"
-                                android:textStyle="bold"
-                                tools:ignore="TextFields" />
+                            <ScrollView
+                                android:id="@+id/scrollView2"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="85dp"
+                                android:layout_marginRight="85dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.5"
+                                tools:ignore="NestedScrolling">
+
+                                <TextView
+                                    android:id="@+id/txtVocabulary"
+                                    android:layout_width="147dp"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Vocabulary"
+                                    android:paddingLeft="16dp"
+                                    android:textColor="@color/colorTextName"
+                                    android:textSize="24dp"
+                                    android:textStyle="bold"
+                                    tools:ignore="HardcodedText,SpUsage" />
+
+
+                            </ScrollView>
+
 
                             <Button
-                                android:id="@+id/btnOK"
+                                android:id="@+id/btnShow"
+                                android:layout_width="32dp"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="50dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginRight="50dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/ic_show"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintHorizontal_bias="0.884"
+                                app:layout_constraintLeft_toRightOf="@+id/scrollView2"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <Button
+                                android:id="@+id/btnSound"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="10dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginRight="10dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/ic_sound"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toRightOf="@+id/btnShow"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </android.support.constraint.ConstraintLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:background="@color/colorWhite"
+                            android:orientation="vertical"></LinearLayout>
+
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/layoutCheck1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:id="@+id/linearLayout4"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="128dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginRight="128dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:orientation="vertical"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="@+id/imgVocabulary"
+                                app:layout_constraintTop_toTopOf="parent">
+
+                                <EditText
+                                    android:id="@+id/txtInput"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="29dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@drawable/bgr_add"
+                                    android:gravity="center"
+                                    android:textColor="@color/colorTextName"
+                                    android:textStyle="bold"
+                                    tools:ignore="TextFields" />
+
+                                <Button
+                                    android:id="@+id/btnOK"
+                                    android:layout_width="58dp"
+                                    android:layout_height="29dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="5dp"
+                                    android:background="@color/colorButtom"
+                                    android:text="@string/ok_"
+                                    android:textAllCaps="false"
+                                    android:textColor="#ffffff"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+
+                            <ImageView
+                                android:id="@+id/imgVocabulary"
+                                android:layout_width="120dp"
+                                android:layout_height="120dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="3dp"
+                                android:layout_marginRight="3dp"
+                                android:layout_marginTop="8dp"
+                                android:adjustViewBounds="true"
+                                android:scaleType="centerCrop"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintHorizontal_bias="1.0"
+                                app:layout_constraintLeft_toLeftOf="@+id/imgTrueFalse"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.0"
+                                app:srcCompat="@android:drawable/ic_menu_gallery"
+                                tools:ignore="ContentDescription" />
+
+                            <ImageView
+                                android:id="@+id/imgTrueFalse"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginRight="8dp"
+                                android:src="@drawable/ic_true"
+                                app:layout_constraintBottom_toBottomOf="@+id/linearLayout4"
+                                app:layout_constraintHorizontal_bias="0.98"
+                                app:layout_constraintLeft_toLeftOf="@+id/linearLayout4"
+                                app:layout_constraintRight_toLeftOf="@+id/imgVocabulary"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.53"
+                                tools:ignore="ContentDescription" />
+
+                        </android.support.constraint.ConstraintLayout>
+
+                        <android.support.constraint.ConstraintLayout
+                            android:id="@+id/layoutCheck2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <RadioGroup
+                                android:id="@+id/radioGroup"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+
+                                <android.support.v7.widget.AppCompatRadioButton
+                                    android:id="@+id/radA"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Câu A"
+                                    android:textColor="@color/colorTextName"
+                                    app:buttonTint="#6cc29e"
+                                    tools:ignore="HardcodedText" />
+
+                                <android.support.v7.widget.AppCompatRadioButton
+                                    android:id="@+id/radB"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Câu B"
+                                    android:textColor="@color/colorTextName"
+                                    app:buttonTint="#6cc29e"
+                                    tools:ignore="HardcodedText" />
+
+                                <android.support.v7.widget.AppCompatRadioButton
+                                    android:id="@+id/radC"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Câu C"
+                                    android:textColor="@color/colorTextName"
+                                    app:buttonTint="#6cc29e"
+                                    tools:ignore="HardcodedText" />
+
+                                <android.support.v7.widget.AppCompatRadioButton
+                                    android:id="@+id/radD"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Câu D"
+                                    android:textColor="@color/colorTextName"
+                                    app:buttonTint="#6cc29e"
+                                    tools:ignore="HardcodedText" />
+
+                            </RadioGroup>
+
+                            <LinearLayout
+                                android:id="@+id/layoutTrueFalse2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:background="@color/colorWhite"
+                                android:orientation="horizontal"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+
+                                <ImageView
+
+                                    android:id="@+id/imgTrueFalse2"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_gravity="center_vertical"
+                                    android:src="@drawable/ic_true"
+                                    tools:ignore="ContentDescription" />
+
+                                <TextView
+                                    android:id="@+id/txtTrueFalse"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="16dp"
+                                    android:gravity="center"
+                                    android:text="@string/exactly"
+                                    android:textColor="@color/colorButtom"
+                                    android:textSize="24dp"
+                                    android:textStyle="bold"
+                                    tools:ignore="RtlHardcoded,SpUsage" />
+
+                            </LinearLayout>
+
+                            <Button
+                                android:id="@+id/btnOK_2"
                                 android:layout_width="58dp"
                                 android:layout_height="29dp"
-                                android:layout_gravity="center"
-                                android:layout_marginTop="5dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginRight="8dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
                                 android:background="@color/colorButtom"
                                 android:text="@string/ok_"
                                 android:textAllCaps="false"
                                 android:textColor="#ffffff"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
-
-
-                        <ImageView
-                            android:id="@+id/imgVocabulary"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="3dp"
-                            android:layout_marginRight="3dp"
-                            android:layout_marginTop="8dp"
-                            android:adjustViewBounds="true"
-                            android:scaleType="centerCrop"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintHorizontal_bias="1.0"
-                            app:layout_constraintLeft_toLeftOf="@+id/imgTrueFalse"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0"
-                            app:srcCompat="@android:drawable/ic_menu_gallery"
-                            tools:ignore="ContentDescription" />
-
-                        <ImageView
-                            android:id="@+id/imgTrueFalse"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginRight="8dp"
-                            android:src="@drawable/ic_true"
-                            app:layout_constraintBottom_toBottomOf="@+id/linearLayout4"
-                            app:layout_constraintHorizontal_bias="0.98"
-                            app:layout_constraintLeft_toLeftOf="@+id/linearLayout4"
-                            app:layout_constraintRight_toLeftOf="@+id/imgVocabulary"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.53"
-                            tools:ignore="ContentDescription" />
-
-                    </android.support.constraint.ConstraintLayout>
-
-                    <android.support.constraint.ConstraintLayout
-                        android:id="@+id/layoutCheck2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <RadioGroup
-                            android:id="@+id/radioGroup"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                            <android.support.v7.widget.AppCompatRadioButton
-                                android:id="@+id/radA"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Câu A"
-                                android:textColor="@color/colorTextName"
-                                app:buttonTint="#6cc29e"
-                                tools:ignore="HardcodedText" />
-
-                            <android.support.v7.widget.AppCompatRadioButton
-                                android:id="@+id/radB"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Câu B"
-                                android:textColor="@color/colorTextName"
-                                app:buttonTint="#6cc29e"
-                                tools:ignore="HardcodedText" />
-
-                            <android.support.v7.widget.AppCompatRadioButton
-                                android:id="@+id/radC"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Câu C"
-                                android:textColor="@color/colorTextName"
-                                app:buttonTint="#6cc29e"
-                                tools:ignore="HardcodedText" />
-
-                            <android.support.v7.widget.AppCompatRadioButton
-                                android:id="@+id/radD"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Câu D"
-                                android:textColor="@color/colorTextName"
-                                app:buttonTint="#6cc29e"
-                                tools:ignore="HardcodedText" />
-
-                        </RadioGroup>
-
-                        <LinearLayout
-                            android:id="@+id/layoutTrueFalse2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:background="@color/colorWhite"
-                            android:orientation="horizontal"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/radioGroup">
-
-                            <ImageView
-
-                                android:id="@+id/imgTrueFalse2"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_gravity="center_vertical"
-                                android:src="@drawable/ic_true"
-                                tools:ignore="ContentDescription" />
-
-                            <TextView
-                                android:id="@+id/txtTrueFalse"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="16dp"
-                                android:gravity="center"
-                                android:text="@string/exactly"
-                                android:textColor="@color/colorButtom"
-                                android:textSize="24dp"
                                 android:textStyle="bold"
-                                tools:ignore="RtlHardcoded,SpUsage" />
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/layoutTrueFalse2" />
 
-                        </LinearLayout>
+                        </android.support.constraint.ConstraintLayout>
 
-                        <Button
-                            android:id="@+id/btnOK_2"
-                            android:layout_width="58dp"
-                            android:layout_height="29dp"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginRight="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:background="@color/colorButtom"
-                            android:text="@string/ok_"
-                            android:textAllCaps="false"
-                            android:textColor="#ffffff"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/layoutTrueFalse2" />
+                        <android.support.constraint.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginTop="32dp"
+                            android:background="#ffffff"
+                            android:orientation="horizontal">
 
-                    </android.support.constraint.ConstraintLayout>
+                            <Button
+                                android:id="@+id/btnBack"
+                                android:layout_width="32dp"
+                                android:layout_height="24dp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginRight="8dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/ic_back"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
-                    <android.support.constraint.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginTop="32dp"
-                        android:background="#ffffff"
-                        android:orientation="horizontal">
+                            <Button
+                                android:id="@+id/btnContinue"
+                                android:layout_width="32dp"
+                                android:layout_height="24dp"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/ic_continue"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintHorizontal_bias="1.0"
+                                app:layout_constraintLeft_toLeftOf="@+id/btnBack"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
-                        <Button
-                            android:id="@+id/btnBack"
-                            android:layout_width="32dp"
-                            android:layout_height="24dp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginRight="8dp"
-                            android:layout_marginTop="8dp"
-                            android:background="@drawable/ic_back"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                        </android.support.constraint.ConstraintLayout>
+                    </LinearLayout>
 
-                        <Button
-                            android:id="@+id/btnContinue"
-                            android:layout_width="32dp"
-                            android:layout_height="24dp"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:background="@drawable/ic_continue"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintHorizontal_bias="1.0"
-                            app:layout_constraintLeft_toLeftOf="@+id/btnBack"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                    </android.support.constraint.ConstraintLayout>
                 </LinearLayout>
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/txtNumber"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="32dp"
+                    android:background="@drawable/ic_number"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textColor="#ffffff"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:ignore="HardcodedText,SpUsage" />
 
-            <TextView
-                android:id="@+id/txtNumber"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="32dp"
-                android:background="@drawable/ic_number"
-                android:gravity="center"
-                android:text="1"
-                android:textColor="#ffffff"
-                android:textSize="24dp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                tools:ignore="HardcodedText,SpUsage" />
-
-            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/adView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="8dp"
-                ads:adSize="BANNER"
-                ads:adUnitId="@string/ad_id_small_3"
-                ads:layout_constraintBottom_toBottomOf="parent"
-                ads:layout_constraintVertical_bias="1"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layoutLearn"></com.google.android.gms.ads.AdView>
-
-        </android.support.constraint.ConstraintLayout>
+            </android.support.constraint.ConstraintLayout>
+        </LinearLayout>
 
     </ScrollView>
 
