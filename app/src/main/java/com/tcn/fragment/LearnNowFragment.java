@@ -47,6 +47,8 @@ import com.tcn.handle.Constants;
 import com.tcn.englishbigger.LearnActivity;
 import com.tcn.englishbigger.R;
 import it.sephiroth.android.library.tooltip.Tooltip;
+
+import com.tcn.handle.Handle;
 import com.tcn.handle.IntentActivity;
 import com.tcn.handle.MyAction;
 import com.tcn.models.NoteModels;
@@ -55,6 +57,7 @@ import com.tcn.models.NoteModels;
 public class LearnNowFragment extends Fragment {
     private LearnActivity learnActivity;
     public static String MY_BRC_NOTE = "MY_BRC_NOTE";
+    private View thisView;
 
     private ImageView imgVocabulary, imgTrueFalse, imgTrueFalse_2, imgBack;
     private TextView txtVocabulary, txtNumber, txtTrueFalse;
@@ -88,12 +91,12 @@ public class LearnNowFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_learn_now, container, false);
-        AdFast.loadAdView(learnActivity, (LinearLayout) view.findViewById(R.id.totalLayout), getString(R.string.ad_id_small_2));
+        thisView = inflater.inflate(R.layout.fragment_learn_now, container, false);
+        AdFast.loadAdView(learnActivity, (RelativeLayout) thisView.findViewById(R.id.totalLayout), getString(R.string.ad_id_small_2));
         loadAdFull(getString(R.string.ad_id_full_1));
-        addControls(view);
+        addControls(thisView);
         addEvents();
-        return view;
+        return thisView;
     }
 
     private void loadAdFull(String ad_id){
@@ -219,7 +222,8 @@ public class LearnNowFragment extends Fragment {
     }
 
     private void handleCheck() {
-        btnOK.setBackgroundResource(R.color.colorButtonOK);
+        Handle.hideKeyboard(learnActivity, thisView);
+        btnOK.setBackgroundResource(R.drawable.layout_border_full_green);
         imgTrueFalse.setVisibility(View.VISIBLE);
         String inputText = txtInput.getText().toString();
         if (en.equalsIgnoreCase(inputText) == true){
@@ -594,6 +598,7 @@ public class LearnNowFragment extends Fragment {
                     noteModels = new ArrayList<>();
                     learned = new ArrayList<Integer>();
                     noteModels = (ArrayList<NoteModels>) intent.getSerializableExtra("NOTE");
+                    number = 1;
                     handleShow(true);
                 }else {
                     learnActivity.openedLearn = false;

@@ -107,7 +107,7 @@ public class AddFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add, container, false);
         //The two main components handle the control and event handlers
-        AdFast.loadAdView(learnActivity, (LinearLayout) view.findViewById(R.id.totalLayout), getString(R.string.ad_id_small_4));
+        AdFast.loadAdView(learnActivity, (RelativeLayout) view.findViewById(R.id.totalLayout), getString(R.string.ad_id_small_4));
         addControls(view);
         addEvents();
         return view;

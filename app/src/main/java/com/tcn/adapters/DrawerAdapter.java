@@ -106,7 +106,7 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
                 }else if (drawerModels.getName().equals(context.getString(R.string.support))){
                     support(row);
                 }else if (drawerModels.getName().equals(context.getString(R.string.feedback))){
-                    handleFeedBack();
+                    handleFeedBack(row);
                 }
             }
         });
@@ -125,7 +125,7 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
         return row;
     }
 
-    private void handleFeedBack(){
+    private void handleFeedBack(final View row){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
         LayoutInflater inflater = context.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.layout_dialog_feedback, null);
@@ -136,12 +136,13 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
         Button btnPostDialog = dialogView.findViewById(R.id.btnPostDialog);
 
         alertDialog = dialogBuilder.create();
-        alertDialog.setCancelable(false);
+        alertDialog.setCancelable(true);
         alertDialog.show();
 
         btnPostDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Handle.hideKeyboard(listActivity, row);
                 if (!txtContentDialog.getText().toString().equals("")){
                     JSONObject object = new JSONObject();
                     try {
@@ -162,6 +163,7 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
         imgCloseDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Handle.hideKeyboard(listActivity, row);
                 alertDialog.cancel();
             }
         });
@@ -317,12 +319,13 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
             txtGenderChildItem = row.findViewById(R.id.txtGenderChildItem);
             txtLocationChildItem = row.findViewById(R.id.txtLocationChildItem);
             txtEmailChildItem = row.findViewById(R.id.txtEmailChildItem);
-            SharedPreferences pf = context.getSharedPreferences(context.getString(R.string.saveInforUser), ((com.tcn.englishbigger.ListActivity) context).MODE_PRIVATE);
-            txtNameChildItem.setText(pf.getString("name","English Bigger"));
-            txtBirthdayChildItem.setText(pf.getString("birthday","English Bigger"));
-            txtGenderChildItem.setText(pf.getString("gender","English Bigger"));
-            txtLocationChildItem.setText(pf.getString("location","English Bigger"));
-            txtEmailChildItem.setText(pf.getString("email","English Bigger"));
+
+            txtNameChildItem.setText(listActivity.users.getName());
+            txtBirthdayChildItem.setText(listActivity.users.getBirthday());
+            txtGenderChildItem.setText(listActivity.users.getGender());
+            txtLocationChildItem.setText(listActivity.users.getLocation());
+            txtEmailChildItem.setText(listActivity.users.getEmail());
+
             if (layoutChildItem.getVisibility()==View.VISIBLE){
                 hideOptionView(layoutChildItem);
                 imgShow.setVisibility(View.VISIBLE);
@@ -394,7 +397,7 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
         }
     }
 
-    public void hideOptionView(final LinearLayout layout){
+    private void hideOptionView(final LinearLayout layout){
         layout.animate().setInterpolator(new AccelerateDecelerateInterpolator()).scaleY(0)
                 .setDuration(500)
                 .setListener(new AnimatorListenerAdapter() {
@@ -406,7 +409,7 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
                 });
     }
 
-    public void showOptionView(final LinearLayout layout){
+    private void showOptionView(final LinearLayout layout){
         layout.animate().setInterpolator(new AccelerateDecelerateInterpolator()).scaleY(1)
                 .setDuration(500)
                 .setListener(new AnimatorListenerAdapter() {

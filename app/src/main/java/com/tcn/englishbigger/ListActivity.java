@@ -118,7 +118,7 @@ public class ListActivity extends AppCompatActivity {
         language = new Language();
         checkSelectLanguage();
         setContentView(R.layout.activity_list);
-        AdFast.loadAdView(this, (LinearLayout) findViewById(R.id.totalLayout), getString(R.string.ad_id_small_1));
+        AdFast.loadAdView(this, (RelativeLayout) findViewById(R.id.totalLayout), getString(R.string.ad_id_small_1));
         addControns();
         addEvents();
     }

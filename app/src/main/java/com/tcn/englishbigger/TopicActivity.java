@@ -45,6 +45,7 @@ public class TopicActivity extends AppCompatActivity {
     public LinearLayout layoutFragmentWhatDoPeopleLearn;
     public Fragment fragmentBack;
     public boolean cfFinish; //cfFinish = true: Closes the current activity when the back button is pressed
+    public View view;
 
     public static final String broadcastAction = "BroadcastAction";
     public static final int STORAGE_PERMISSION_CODE = 123; //storage permission code

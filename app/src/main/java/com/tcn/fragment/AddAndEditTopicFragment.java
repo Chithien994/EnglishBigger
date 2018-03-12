@@ -120,7 +120,7 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_and_edit_topic, container, false);
         //The two main components handle the control and event handlers
-        AdFast.loadAdView(topicActivity, (LinearLayout) view.findViewById(R.id.totalLayout), getString(R.string.ad_id_small_3));
+        AdFast.loadAdView(topicActivity, (RelativeLayout) view.findViewById(R.id.totalLayout), getString(R.string.ad_id_small_3));
         addControls(view);
         addEvents();
         return view;
@@ -477,7 +477,7 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
             //Initialize notification dialog
             dialog = new ProgressDialog(topicActivity);
             dialog.setMessage(getActivity().getString(R.string.pleaseWait));
-            dialog.setCancelable(false);
+            dialog.setCancelable(true);
             dialog.show();
 
             notify = new UploadNotificationConfig()

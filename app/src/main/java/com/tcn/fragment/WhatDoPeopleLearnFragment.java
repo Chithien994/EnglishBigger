@@ -82,6 +82,7 @@ public class WhatDoPeopleLearnFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d("WDPL_FRAGMENT","Action: onCreateView");
         this.view = inflater.inflate(R.layout.fragment_what_do_people_learn, container, false);
+        topicActivity.view = this.view;
         addControls(this.view);
         addEvents();
         return this.view;

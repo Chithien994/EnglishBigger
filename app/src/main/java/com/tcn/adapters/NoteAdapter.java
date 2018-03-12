@@ -25,12 +25,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +47,7 @@ import com.tcn.englishbigger.R;
 import com.tcn.englishbigger.TopicActivity;
 import com.tcn.fragment.NoteFragment;
 import com.tcn.handle.Constants;
+import com.tcn.handle.Handle;
 import com.tcn.handle.MyAction;
 import com.tcn.models.NoteModels;
 
@@ -61,7 +66,7 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
     private String noteSource;
     public static String MY_BRC_NOTE_ADAPTER = "MY_BRC_NOTE_ADAPTER";
     private AlertDialog alertDialog;
-    private View view;
+    String nameTopic;
 
     public NoteAdapter(@NonNull Activity context, NoteFragment noteFragment, @LayoutRes int resource, @NonNull List<NoteModels> objects) {
         super(context, resource, objects);
@@ -111,6 +116,7 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
             @Override
             public void onClick(View view) {
                 if (topicActivity.type!= MyAction.WDPL_FRAGMENT && topicActivity.type!=MyAction.TOPIC_FRIEND_FRAGMENT) handleDeleteNote(noteModels, position);
+                else handleBackupWord(noteModels);
             }
         });
 
@@ -122,6 +128,104 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
         });
 
         return view;
+    }
+
+    private void handleBackupWord(final NoteModels noteModels) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(topicActivity);
+        LayoutInflater inflater = topicActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_dialog_set_name, null);
+        dialogBuilder.setView(dialogView);
+
+        ImageView imgCloseDialog = dialogView.findViewById(R.id.imgCloseDialog);
+        final LinearLayout layoutNewNameDialog = dialogView.findViewById(R.id.layoutNewName);
+        final LinearLayout layoutGetNameTopicDialog = dialogView.findViewById(R.id.layoutGetNameTopic);
+        final Spinner spNameTopicDialog = dialogView.findViewById(R.id.spNameTopicDialog);
+        final RadioButton radShowTXTNewName = dialogView.findViewById(R.id.radShowTXTNewName);
+        final RadioButton radShowSPNewName = dialogView.findViewById(R.id.radShowSPNewName);
+        Button btnBackupDialog = dialogView.findViewById(R.id.btnBackupDialog);
+        final EditText txtNewNameTopicDialog = dialogView.findViewById(R.id.txtNewNameTopicDialog);
+        final ArrayList<String> dsNameTopic = new ArrayList<>();
+        final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.setCancelable(true);
+        alertDialog.show();
+
+        txtNewNameTopicDialog.setText(noteFragment.topicModes.get(noteFragment.pst).getId() + " " + noteFragment.topicModes.get(noteFragment.pst).getName());
+        nameTopic = txtNewNameTopicDialog.getText().toString();
+        layoutGetNameTopicDialog.setVisibility(View.GONE);
+        layoutNewNameDialog.setVisibility(View.VISIBLE);
+
+        ArrayAdapter<String> arrayAdapter;
+        dsNameTopic.add(0, context.getString(R.string.select_));
+        for (int i = 0; i < topicActivity.topicYourModes.size(); i++){
+            dsNameTopic.add(i+1, topicActivity.topicYourModes.get(i).getName());
+        }
+        arrayAdapter =  new ArrayAdapter<String>(topicActivity, R.layout.support_simple_spinner_dropdown_item, dsNameTopic);
+        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spNameTopicDialog.setAdapter(arrayAdapter);
+
+        radShowSPNewName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layoutGetNameTopicDialog.setVisibility(View.VISIBLE);
+                layoutNewNameDialog.setVisibility(View.GONE);
+                spNameTopicDialog.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        nameTopic = dsNameTopic.get(i);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+            }
+        });
+
+        radShowTXTNewName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layoutGetNameTopicDialog.setVisibility(View.GONE);
+                layoutNewNameDialog.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btnBackupDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Handle.hideKeyboard(topicActivity, noteFragment.thisView);
+
+                if (radShowTXTNewName.isChecked())
+                    nameTopic = txtNewNameTopicDialog.getText().toString();
+                if(!nameTopic.equalsIgnoreCase(context.getString(R.string.select_))){
+                    JSONObject object = new JSONObject();
+                    try {
+                        object.put("idUser", topicActivity.usersFB.getIdUser());
+                        object.put("nameTopic", nameTopic);
+                        object.put("idTopic", noteFragment.topicModes.get(noteFragment.pst).getId());
+                        object.put("id", noteModels.getId());
+                        topicActivity.serverAPI.handleBackup(topicActivity, object, Constants.BACKUP_VOCABULARY, false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    MyAction.setRefreshTopic(topicActivity,true);
+                    topicActivity.loadedTopic = false;
+                    alertDialog.cancel();
+                }else {
+                    Toast.makeText(topicActivity, context.getString(R.string.msgPleaseSelectAValidTopicName), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
+
+        imgCloseDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Handle.hideKeyboard(topicActivity, noteFragment.thisView);
+                alertDialog.cancel();
+            }
+        });
     }
 
     private void handleDeleteNote(final NoteModels noteModels, final int position) {
@@ -166,6 +270,7 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
         }
     };
 
+    //Called after deleting or editing successfully
     private void handleShowListNote(int type, boolean cfErr) {
         try {
 
@@ -208,13 +313,14 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
         txtNoteMeaningDialog.setText(noteModels.getNoteMeaning());
 
         alertDialog = dialogBuilder.create();
-        alertDialog.setCancelable(false);
+        alertDialog.setCancelable(true);
         alertDialog.show();
 
 
         imgCloseDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Handle.hideKeyboard(topicActivity, noteFragment.thisView);
                 alertDialog.cancel();
             }
         });
@@ -227,7 +333,7 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
                 noteMeaning =   txtNoteMeaningDialog.getText().toString();
                 //check keyboard hide or show
                 //If it's showing then hide it
-                topicActivity.handle.hideKeyboard(topicActivity, noteFragment.view);
+                Handle.hideKeyboard(topicActivity, noteFragment.thisView);
                 add(noteModels);
             }
         });

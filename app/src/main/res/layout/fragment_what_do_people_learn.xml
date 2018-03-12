@@ -21,125 +21,122 @@
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.constraint.ConstraintLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbarView"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:gravity="center_horizontal"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="754dp">
-
-            </android.support.v7.widget.Toolbar>
-
-            <ImageView
-                android:id="@+id/imgBack"
-                android:layout_width="32dp"
-                android:layout_height="24dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:src="@drawable/back_w"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0" />
-
-            <ImageView
-                android:id="@+id/imgSearch"
-                android:layout_width="32dp"
-                android:layout_height="24dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:paddingRight="8dp"
-                android:src="@drawable/ic_search_w"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0" />
-
+            android:layout_height="180px"
+            android:gravity="center_horizontal"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/layoutView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1">
 
-                <TextView
-                    android:id="@+id/txtNameToolbar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:id="@+id/imgBack"
+                    android:layout_width="32dp"
+                    android:layout_height="24dp"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="@string/whatDoPeopleLearn2"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="24dp"
-                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:src="@drawable/back_w"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0" />
 
-                <LinearLayout
-                    android:id="@+id/layoutTab"
-                    android:layout_width="match_parent"
-                    android:layout_height="98px"
-                    android:background="@color/colorAppBar"
-                    android:orientation="vertical"
-                    android:paddingTop="17dp"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                <ImageView
+                    android:id="@+id/imgSearch"
+                    android:layout_width="32dp"
+                    android:layout_height="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:paddingRight="8dp"
+                    android:src="@drawable/ic_search_w"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtNameToolbar"
-                    app:layout_constraintVertical_bias="1">
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0" />
 
-                    <android.support.design.widget.TabLayout
-                        android:id="@+id/tabWhatDoPeopleLearn"
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/layoutView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0">
+
+                    <TextView
+                        android:id="@+id/txtNameToolbar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/whatDoPeopleLearn2"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="24dp"
+                        android:textStyle="bold"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0" />
+
+                    <LinearLayout
+                        android:id="@+id/layoutTab"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        app:tabGravity="center"
-                        app:tabIndicatorColor="@color/colorWhite"
-                        app:tabIndicatorHeight="2px"
-                        app:tabMode="fixed"
-                        app:tabSelectedTextColor="#ffffff"
-                        app:tabTextAppearance="@style/StyleTabLayout"
-                        app:tabTextColor="#e2e2e2"
-                        tools:ignore="PxUsage">
+                        android:layout_height="98px"
+                        android:background="@color/colorAppBar"
+                        android:orientation="vertical"
+                        android:paddingTop="17dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtNameToolbar"
+                        app:layout_constraintVertical_bias="1">
 
-                        <android.support.design.widget.TabItem
+                        <android.support.design.widget.TabLayout
+                            android:id="@+id/tabWhatDoPeopleLearn"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Bạn bè"
-                            tools:ignore="HardcodedText" />
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            app:tabGravity="center"
+                            app:tabIndicatorColor="@color/colorWhite"
+                            app:tabIndicatorHeight="2px"
+                            app:tabMode="fixed"
+                            app:tabSelectedTextColor="#ffffff"
+                            app:tabTextAppearance="@style/StyleTabLayout"
+                            app:tabTextColor="#e2e2e2"
+                            tools:ignore="PxUsage">
 
-                        <android.support.design.widget.TabItem
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Khác"
-                            tools:ignore="HardcodedText" />
-                    </android.support.design.widget.TabLayout>
+                            <android.support.design.widget.TabItem
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Bạn bè"
+                                tools:ignore="HardcodedText" />
 
-                </LinearLayout>
+                            <android.support.design.widget.TabItem
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Khác"
+                                tools:ignore="HardcodedText" />
+                        </android.support.design.widget.TabLayout>
+
+                    </LinearLayout>
+
+                </android.support.constraint.ConstraintLayout>
 
             </android.support.constraint.ConstraintLayout>
 
-        </android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 

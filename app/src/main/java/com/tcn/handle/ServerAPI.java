@@ -163,7 +163,7 @@ public class ServerAPI {
                             return;
                         case Constants.CHECK_UPDATE:
                             handle.sendBroadCastToSplashActivity(activity, null, null);
-                            break;
+                            return;
                         default:{
                             break;
                         }
@@ -599,7 +599,7 @@ public class ServerAPI {
     private void showDialog(Activity activity){
         dialog = new ProgressDialog(activity);
         dialog.setMessage(activity.getString(R.string.pleaseWait));
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
         dialog.show();
     }
 }

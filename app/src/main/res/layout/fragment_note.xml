@@ -7,7 +7,26 @@
     android:orientation="vertical"
     android:background="@color/colorApp"
     tools:context="com.tcn.fragment.NoteFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_height="wrap_content">
 
+        <ListView
+            android:id="@+id/lvNote"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorApp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        </ListView>
+    </LinearLayout>
     <android.support.design.widget.AppBarLayout
         app:popupTheme="@style/AppTheme.AppBarOverlay"
         android:layout_width="match_parent"
@@ -100,17 +119,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ListView
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:layout_width="match_parent"
-        android:id="@+id/lvNote"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_height="match_parent">
 
-    </ListView>
 
 
 </android.support.design.widget.CoordinatorLayout>

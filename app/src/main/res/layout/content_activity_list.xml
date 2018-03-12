@@ -11,12 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:id="@+id/totalLayout"
             android:layout_height="match_parent">
+
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
+                android:layout_centerHorizontal="true"
                 android:layout_height="wrap_content">
 
                 <Button
@@ -96,6 +98,6 @@
                     android:layout_marginEnd="64dp" />
 
             </android.support.constraint.ConstraintLayout>
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
 </LinearLayout>

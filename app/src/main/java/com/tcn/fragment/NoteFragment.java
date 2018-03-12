@@ -39,6 +39,7 @@ import com.tcn.adapters.NoteAdapter;
 import com.tcn.englishbigger.R;
 import com.tcn.englishbigger.TopicActivity;
 import com.tcn.handle.Constants;
+import com.tcn.handle.Handle;
 import com.tcn.handle.HideShowScrollListener;
 import com.tcn.handle.IntentActivity;
 import com.tcn.handle.MyAction;
@@ -52,9 +53,9 @@ public class NoteFragment extends Fragment {
     private ArrayList<NoteModels> noteModels;
     public int pst; //Current topic position
     public int idTopic; //Current topic id
-    public View view;
+    public View thisView;
     private String nameTopic ="";
-    private ArrayList<TopicModels> topicModes;
+    public ArrayList<TopicModels> topicModes;
 
     private ImageView imgBack;
     private ImageView imgAdd;
@@ -79,12 +80,12 @@ public class NoteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_note, container, false);
+        thisView = inflater.inflate(R.layout.fragment_note, container, false);
 
-        addControls(view);
+        addControls(thisView);
         addEvents();
 
-        return view;
+        return thisView;
     }
 
     private void addEvents() {
@@ -143,6 +144,7 @@ public class NoteFragment extends Fragment {
         final EditText txtNewNameTopicDialog = dialogView.findViewById(R.id.txtNewNameTopicDialog);
         final ArrayList<String> dsNameTopic = new ArrayList<>();
         final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.setCancelable(true);
         alertDialog.show();
         txtNewNameTopicDialog.setText(topicModels.getId() + " " + topicModels.getName());
         nameTopic = txtNewNameTopicDialog.getText().toString();
@@ -182,13 +184,16 @@ public class NoteFragment extends Fragment {
             public void onClick(View view) {
                 layoutGetNameTopicDialog.setVisibility(View.GONE);
                 layoutNewNameDialog.setVisibility(View.VISIBLE);
-                nameTopic = txtNewNameTopicDialog.getText().toString();
             }
         });
 
         btnBackupDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Handle.hideKeyboard(topicActivity, thisView);
+
+                if (radShowTXTNewName.isChecked())
+                    nameTopic = txtNewNameTopicDialog.getText().toString();
                 if(!nameTopic.equalsIgnoreCase(getString(R.string.select_))){
                     JSONObject object = new JSONObject();
                     try {
@@ -212,6 +217,7 @@ public class NoteFragment extends Fragment {
         imgCloseDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Handle.hideKeyboard(getActivity(),thisView);
                 alertDialog.cancel();
             }
         });

@@ -134,6 +134,7 @@ public class BackupTopicAdapter extends RecyclerView.Adapter<BackupTopicAdapter.
         final EditText txtNewNameTopicDialog = dialogView.findViewById(R.id.txtNewNameTopicDialog);
         final ArrayList<String> dsNameTopic = new ArrayList<>();
         alertDialog = dialogBuilder.create();
+        alertDialog.setCancelable(true);
         alertDialog.show();
         txtNewNameTopicDialog.setText(topicModels.getId() + " " + topicModels.getName());
         nameTopic = txtNewNameTopicDialog.getText().toString();
@@ -173,14 +174,16 @@ public class BackupTopicAdapter extends RecyclerView.Adapter<BackupTopicAdapter.
             public void onClick(View view) {
                 layoutGetNameTopicDialog.setVisibility(View.GONE);
                 layoutNewNameDialog.setVisibility(View.VISIBLE);
-                nameTopic = txtNewNameTopicDialog.getText().toString();
             }
         });
 
         btnBackupDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Handle.hideKeyboard(topicActivity, topicActivity.view);
 
+                if (radShowTXTNewName.isChecked())
+                    nameTopic = txtNewNameTopicDialog.getText().toString();
                 if(!nameTopic.equalsIgnoreCase(context.getString(R.string.select_))){
                     JSONObject object = new JSONObject();
                     try {
@@ -203,6 +206,7 @@ public class BackupTopicAdapter extends RecyclerView.Adapter<BackupTopicAdapter.
         imgCloseDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Handle.hideKeyboard(topicActivity, topicActivity.view);
                 alertDialog.cancel();
             }
         });

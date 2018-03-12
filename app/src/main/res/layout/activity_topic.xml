@@ -10,7 +10,6 @@
         android:visibility="gone"
         app:popupTheme="@style/AppTheme.AppBarOverlay"
         android:layout_width="match_parent"
-        android:background="@drawable/bgr"
         android:layout_height="?attr/actionBarSize">
 
         <android.support.v7.widget.Toolbar

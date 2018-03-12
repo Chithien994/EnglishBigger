@@ -35,7 +35,7 @@ import com.tcn.models.TopicModels;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static long SPLASH_DISPLAY_LENGTH = 27000;
+    private static long SPLASH_DISPLAY_LENGTH = 10000;
     public static final String BROADCAST_ACTION_SPLASH = "BROADCAST_ACTION_SPLASH";
     private Language language;
     private Toolbar toolbar;
@@ -111,7 +111,6 @@ public class SplashActivity extends AppCompatActivity {
                     if (intent.getStringExtra("VERSION")!=null){
                         String newVersion = intent.getStringExtra("VERSION");
                         final String url = intent.getStringExtra("URL");
-                        unregisterReceiver(mReceiver);
                         Log.d("unregisterReceiver","Unregister Receiver");
 
                         if (!versionName.equalsIgnoreCase(newVersion)){
@@ -154,6 +153,12 @@ public class SplashActivity extends AppCompatActivity {
 
     private void openListActivity(){
         mTimer.cancel();
+        try {
+            unregisterReceiver(mReceiver);
+            Log.d("unregisterReceiver","Unregister Receiver");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         IntentActivity.handleOpenListActivity(this);
         finish();
     }

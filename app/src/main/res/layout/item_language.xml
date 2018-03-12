@@ -13,6 +13,6 @@
         android:gravity="center"
         android:spinnerMode="dropdown"
         android:text="English"
-        android:background="@drawable/bgr_item_language"/>
+        android:background="@drawable/layout_border_txt_gray"/>
 
 </LinearLayout>
