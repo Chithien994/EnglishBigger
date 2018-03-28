@@ -529,7 +529,7 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
                     public void onCompleted(UploadInfo uploadInfo, ServerResponse serverResponse) {
 
                         Log.i("Completed","serverResponse " +serverResponse.getBodyAsString());
-                        specifyNotify(handleMessage(serverResponse.getBodyAsString()));
+                        specifyNotify(handleMessage(serverResponse.getBodyAsString().toLowerCase()));
 
                         //Close the dialog and restart TopicActivity, when added successfully
                         //Assign updated position
@@ -588,33 +588,29 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
     }
 
     private String handleMessage(String message){
-        return message.contains("Topic already exists")?"Topic already exists":
-        message.contains("Successfully added")?"Successfully added":
-        message.contains("Changed successfully")?"Changed successfully":
-        message.contains("Error input parameters")?"Error input parameters":
-        message.contains("Failure")?"Failure":message;
+        return message.contains("topic already exists")?"Topic already exists":
+        message.contains("successfully added")?"Successfully added":
+        message.contains("changed successfully")?"Changed successfully":
+        message.contains("error input parameters")?"Error input parameters":
+        message.contains("failure")?"Failure":message;
     }
     private void specifyNotify(String message) {
 
-        switch (message){
-            case "Topic already exists":
+        switch (message.toLowerCase()){
+            case "topic already exists":
                 Toast.makeText(getActivity(),getActivity().getString(R.string.topicAlreadyExists),Toast.LENGTH_LONG).show();
                 break;
 
-            case "Successfully added":
+            case "successfully added":
                 Toast.makeText(getActivity(),getActivity().getString(R.string.successfullyAdded),Toast.LENGTH_LONG).show();
                 break;
 
-            case "Changed successfully":
+            case "changed successfully":
                 Toast.makeText(getActivity(),getActivity().getString(R.string.changedSuccessfully),Toast.LENGTH_LONG).show();
                 break;
 
-            case "Error input parameters":
+            case "error input parameters":
                 Toast.makeText(getActivity(),getActivity().getString(R.string.errorInputParameters),Toast.LENGTH_LONG).show();
-                break;
-
-            case "Failure":
-                Toast.makeText(getActivity(),getActivity().getString(R.string.failure),Toast.LENGTH_LONG).show();
                 break;
 
             default:{

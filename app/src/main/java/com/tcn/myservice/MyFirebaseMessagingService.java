@@ -106,16 +106,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     private void sendNotification(String messageBody) {
 
-        boolean b = (messageBody.contains("Cập nhật") || messageBody.contains("cập nhật")
-                || messageBody.contains("Upgate") || messageBody.contains("upgate")
-                || messageBody.contains("Phiên bản mới") || messageBody.contains("Phiên bản mới")
-                || messageBody.contains("New version") || messageBody.contains("new version"))?true:false;
+        boolean update = (messageBody.toLowerCase().contains("(cập nhật)")
+                || messageBody.toLowerCase().contains("(update)"))?true:false;
 
         Intent intent = new Intent(this, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
-        if (MyAction.getAction(this) && !b){
+        if (MyAction.getAction(this) && !update){
             Log.d(TAG, "pendingIntent: cancel");
             pendingIntent.cancel();
         }

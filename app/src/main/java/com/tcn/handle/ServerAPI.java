@@ -293,37 +293,37 @@ public class ServerAPI {
     private void specifyNotify(Activity activity, String message) {
         handle.sendBroadCastToAddFragment(activity);
 
-        switch (message){
+        switch (message.toLowerCase()){
 
-            case "This word or phrase already exists":
+            case "this word or phrase already exists":
                 Toast.makeText(activity,activity.getString(R.string.msgVocabularyAlreadyExists),Toast.LENGTH_LONG).show();
                 break;
 
-            case "Successfully added":
+            case "successfully added":
                 Toast.makeText(activity,activity.getString(R.string.successfullyAdded),Toast.LENGTH_LONG).show();
                 cfErr = false;
                 break;
 
-            case "Changed successfully":
+            case "changed successfully":
                 Toast.makeText(activity,activity.getString(R.string.changedSuccessfully),Toast.LENGTH_LONG).show();
                 cfErr = false;
                 break;
 
-            case "Error input parameters":
+            case "error input parameters":
                 Toast.makeText(activity,activity.getString(R.string.errorInputParameters),Toast.LENGTH_LONG).show();
                 break;
 
-            case "Nothing to add":
+            case "nothing to add":
                 Toast.makeText(activity,activity.getString(R.string.nothingToAdd),Toast.LENGTH_LONG).show();
                 cfErr = false;
                 break;
 
-            case "Commented successfully":
+            case "commented successfully":
                 Toast.makeText(activity,activity.getString(R.string.commentedSuccessfully),Toast.LENGTH_LONG).show();
                 cfErr = false;
                 break;
 
-            case "Commented failed":
+            case "commented failed":
                 Toast.makeText(activity,activity.getString(R.string.commentedFailed),Toast.LENGTH_LONG).show();
                 cfErr = true;
                 break;
