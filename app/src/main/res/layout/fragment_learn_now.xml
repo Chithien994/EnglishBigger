@@ -107,7 +107,7 @@
                                             android:hint="Vocabulary"
                                             android:paddingLeft="16dp"
                                             android:textColor="@color/colorTextName"
-                                            android:textSize="24dp"
+                                            android:textSize="@dimen/text_content_big"
                                             android:textStyle="bold"
                                             tools:ignore="HardcodedText,SpUsage" />
 
@@ -158,7 +158,7 @@
                                     android:orientation="vertical"></LinearLayout>
 
                                 <android.support.constraint.ConstraintLayout
-                                    android:visibility="gone"
+
                                     android:id="@+id/layoutCheck1"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -186,23 +186,25 @@
                                         <EditText
                                             android:id="@+id/txtInput"
                                             android:layout_width="match_parent"
-                                            android:layout_height="29dp"
+                                            android:layout_height="32dp"
                                             android:layout_gravity="center"
                                             android:layout_marginTop="10dp"
                                             android:background="@drawable/layout_border_btn_add"
                                             android:gravity="center"
+                                            android:textSize="@dimen/text_content_max"
                                             android:textColor="@color/colorTextName"
                                             android:textStyle="bold"
                                             tools:ignore="TextFields" />
 
                                         <Button
                                             android:id="@+id/btnOK"
-                                            android:layout_width="58dp"
-                                            android:layout_height="29dp"
+                                            android:layout_width="64dp"
+                                            android:layout_height="32dp"
                                             android:layout_gravity="center"
                                             android:layout_marginTop="24dp"
                                             android:background="@drawable/layout_border_full_green"
                                             android:text="@string/ok_"
+                                            android:textSize="@dimen/text_buttom_max"
                                             android:textAllCaps="false"
                                             android:textColor="#ffffff"
                                             android:textStyle="bold" />
@@ -242,7 +244,7 @@
                                         app:layout_constraintLeft_toLeftOf="@+id/linearLayout4"
                                         app:layout_constraintRight_toLeftOf="@+id/imgVocabulary"
                                         app:layout_constraintTop_toTopOf="parent"
-                                        app:layout_constraintVertical_bias="0.4"
+                                        app:layout_constraintVertical_bias="0.36"
                                         tools:ignore="ContentDescription" />
 
                                 </android.support.constraint.ConstraintLayout>
@@ -270,6 +272,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Câu A"
+                                            android:textSize="@dimen/text_content_max"
                                             android:textColor="@color/colorTextName"
                                             app:buttonTint="#6cc29e"
                                             tools:ignore="HardcodedText" />
@@ -279,6 +282,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Câu B"
+                                            android:textSize="@dimen/text_content_max"
                                             android:textColor="@color/colorTextName"
                                             app:buttonTint="#6cc29e"
                                             tools:ignore="HardcodedText" />
@@ -288,6 +292,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Câu C"
+                                            android:textSize="@dimen/text_content_max"
                                             android:textColor="@color/colorTextName"
                                             app:buttonTint="#6cc29e"
                                             tools:ignore="HardcodedText" />
@@ -297,6 +302,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:text="Câu D"
+                                            android:textSize="@dimen/text_content_max"
                                             android:textColor="@color/colorTextName"
                                             app:buttonTint="#6cc29e"
                                             tools:ignore="HardcodedText" />
@@ -331,7 +337,7 @@
                                             android:gravity="center"
                                             android:text="@string/exactly"
                                             android:textColor="@color/colorButtom"
-                                            android:textSize="24dp"
+                                            android:textSize="@dimen/text_content_big"
                                             android:textStyle="bold"
                                             tools:ignore="RtlHardcoded,SpUsage" />
 
@@ -339,17 +345,14 @@
 
                                     <Button
                                         android:id="@+id/btnOK_2"
-                                        android:layout_width="58dp"
-                                        android:layout_height="29dp"
+                                        android:layout_width="64dp"
+                                        android:layout_height="32dp"
                                         android:layout_gravity="center_horizontal"
                                         android:layout_marginBottom="8dp"
-                                        android:layout_marginEnd="8dp"
-                                        android:layout_marginLeft="8dp"
-                                        android:layout_marginRight="8dp"
-                                        android:layout_marginStart="8dp"
                                         android:layout_marginTop="8dp"
                                         android:background="@drawable/layout_border_full_green"
                                         android:text="@string/ok_"
+                                        android:textSize="@dimen/text_content_max"
                                         android:textAllCaps="false"
                                         android:textColor="#ffffff"
                                         android:textStyle="bold"
@@ -412,7 +415,7 @@
                             android:gravity="center"
                             android:text="1"
                             android:textColor="#ffffff"
-                            android:textSize="24dp"
+                            android:textSize="@dimen/text_content_big"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"

@@ -11,12 +11,12 @@
         app:popupTheme="@style/AppTheme.AppBarOverlay"
         android:layout_width="match_parent"
         android:background="@color/colorAppBar"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="?android:attr/actionBarSize">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="?android:attr/actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <android.support.constraint.ConstraintLayout
@@ -119,6 +119,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="3dp"
+                        android:textSize="@dimen/text_content"
                         android:text="@string/selectTopic"
                         android:textColor="@color/colorTextName"
                         app:layout_constraintHorizontal_bias="0"
@@ -130,6 +131,7 @@
                         android:id="@+id/spNameTopic"
                         android:layout_width="128dp"
                         android:layout_height="29dp"
+                        android:textSize="@dimen/text_content"
                         android:background="@drawable/spinner"
                         android:textColor="@color/colorTextName"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -167,7 +169,8 @@
                         android:layout_marginRight="1dp"
                         android:layout_marginTop="1dp"
                         android:background="#00ffffff"
-                        android:ems="10"
+                        android:textSize="@dimen/text_content"
+                        android:ems="12"
                         android:inputType="textMultiLine"
                         android:padding="8dp"
                         android:text="\n"
@@ -218,6 +221,7 @@
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/layout_border_btn_add"
                         android:text="@string/add"
+                        android:textSize="@dimen/text_buttom"
                         android:textAllCaps="false"
                         android:textColor="@color/colorButtom"
                         android:textStyle="bold"
@@ -230,6 +234,7 @@
                         android:layout_gravity="center_horizontal"
                         android:background="@drawable/layout_border_full_green"
                         android:text="@string/Translate"
+                        android:textSize="@dimen/text_buttom"
                         android:textAllCaps="false"
                         android:textColor="@color/colorWhite"
                         android:textStyle="bold"
@@ -262,6 +267,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:textSize="@dimen/text_content"
                             android:checked="true"
                             android:text="@string/automaticallyTranslatesItsMeaning"
                             android:textColor="@color/colorTextName"
@@ -274,6 +280,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/enterItsMeaning"
+                            android:textSize="@dimen/text_content"
                             android:textColor="@color/colorTextName"
                             app:buttonTint="#6cc29e"
                             tools:ignore="HardcodedText" />
@@ -306,6 +313,7 @@
                         android:layout_marginTop="1dp"
                         android:background="#00ffffff"
                         android:padding="8dp"
+                        android:textSize="@dimen/text_content"
                         android:textColor="@color/colorTextName"
                         app:layout_constraintBottom_toTopOf="@+id/layout"
                         app:layout_constraintLeft_toLeftOf="parent"

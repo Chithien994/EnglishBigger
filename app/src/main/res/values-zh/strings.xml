@@ -32,6 +32,7 @@
     <string name="errorInternetConnectionProblems">由於與Internet連接問題的錯誤！</string>
     <string name="errorInputParameters">错误输入参数！</string>
     <string name="pleaseWait">請稍候...</string>
+    <string name="loading">载入中...</string>
     <string name="msgYouAreNotLoggedIn">你沒有登錄！</string>
     <string name="msgPleaseLoginToUseThisFeature">請登錄使用此功能！</string>
     <string name="name">名稱: </string>
@@ -65,7 +66,8 @@
     <string name="other">其他</string>
     <string name="addAndTranslate">添加和翻譯</string>
     <string name="add">添加</string>
-    <string name="edit">Edit</string>
+    <string name="edit">编辑</string>
+    <string name="delete">抹去</string>
     <string name="Translate">翻譯</string>
     <string name="msgYouHaveNotEnteredAnythingYet">你還沒有輸入任何內容！</string>
     <string name="msgVocabularyAlreadyExists">詞彙已經存在了！</string>
@@ -80,6 +82,7 @@
     <string name="changedSuccessfully">更改成功！</string>
     <string name="deletedSuccessfully">刪除成功！</string>
     <string name="ok_">得到</string>
+    <string name="send">发送</string>
     <string name="save">保存</string>
     <string name="functionIsBeingUpdated">功能正在更新！</string>
     <string name="finish">完！</string>

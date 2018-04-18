@@ -66,7 +66,9 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
     private String noteSource;
     public static String MY_BRC_NOTE_ADAPTER = "MY_BRC_NOTE_ADAPTER";
     private AlertDialog alertDialog;
-    String nameTopic;
+    private String nameTopic;
+    private int scroll = 0;
+    private boolean leanrnShow = true;
 
     public NoteAdapter(@NonNull Activity context, NoteFragment noteFragment, @LayoutRes int resource, @NonNull List<NoteModels> objects) {
         super(context, resource, objects);
@@ -82,6 +84,8 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = this.context.getLayoutInflater();
         View view = inflater.inflate(this.resource, null);
+
+        if (objects.size() > 0 && position == 1) noteFragment.showLearnNow();//Show learning node when the list has one or more objects
 
         TextView txtNote = view.findViewById(R.id.txtNote);
         final LinearLayout layoutItem = view.findViewById(R.id.layoutItem);
@@ -127,7 +131,23 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
             }
         });
 
+        if (noteFragment.touch)
+            hideOrShowLearnNow(position);
+
         return view;
+    }
+
+    //
+    private void hideOrShowLearnNow(int position) {
+        if (scroll - position >= 0 && !leanrnShow){
+            leanrnShow = true;
+            noteFragment.showLearnNow();//Show learning button when scrolling up
+        }else if (scroll - position < 0 && leanrnShow){
+            leanrnShow = false;
+            noteFragment.hideLearnNow();//Hide learning button when scrolling down
+        }
+        scroll = position;
+
     }
 
     private void handleBackupWord(final NoteModels noteModels) {

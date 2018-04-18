@@ -72,7 +72,6 @@ public class LearnNowFragment extends Fragment {
     private int number = 1;
     private String languageSpeak;
     private boolean cf = false;
-    private ArrayList<NoteModels> noteModels;
     private ArrayList<Integer> learned;
     private int position;
     private int positionLearned = 0;
@@ -207,8 +206,8 @@ public class LearnNowFragment extends Fragment {
         layoutTrueFalse_2.setVisibility(View.VISIBLE);
         if (en.equalsIgnoreCase(inputText)){
 
-            if (noteModels.get(position).getLearned() == (byte) 0){
-                learnActivity.serverAPI.setLearned(learnActivity, noteModels.get(position).getId(), (byte) 1);
+            if (learnActivity.noteModels.get(position).getLearned() == (byte) 0){
+                learnActivity.serverAPI.setLearned(learnActivity, learnActivity.noteModels.get(position).getId(), (byte) 1);
                 learnActivity.cfUpdate = true;
             }
 
@@ -234,12 +233,12 @@ public class LearnNowFragment extends Fragment {
             txtInput.setEnabled(false);
             txtInput.setEnabled(true);
 
-            if (noteModels.get(position).getLearned() == (byte) 0){
-                learnActivity.serverAPI.setLearned(learnActivity, noteModels.get(position).getId(), (byte) 1);
+            if (learnActivity.noteModels.get(position).getLearned() == (byte) 0){
+                learnActivity.serverAPI.setLearned(learnActivity, learnActivity.noteModels.get(position).getId(), (byte) 1);
                 learnActivity.cfUpdate = true;
             }
 
-            if (number == noteModels.size()){
+            if (number == learnActivity.noteModels.size()){
                 confirmTopicTransfer();
             }
 
@@ -259,7 +258,7 @@ public class LearnNowFragment extends Fragment {
     private void handleBack() {
 
         if (number == 1){
-            number = noteModels.size();
+            number = learnActivity.noteModels.size();
             Log.i("MOVE","Move To Last");
 
         }else {
@@ -271,7 +270,7 @@ public class LearnNowFragment extends Fragment {
     }
 
     private void handleContinue() {
-        if(noteModels.size() == number){
+        if(learnActivity.noteModels.size() == number){
             confirmTopicTransfer();
         }else {
 
@@ -309,7 +308,7 @@ public class LearnNowFragment extends Fragment {
         Random rd = new Random();
         if (rand){
 
-            position = rd.nextInt(noteModels.size());
+            position = rd.nextInt(learnActivity.noteModels.size());
             Log.i("position",position+" ");
 
             if (learned != null){
@@ -336,14 +335,14 @@ public class LearnNowFragment extends Fragment {
 
         txtNumber.setText(number+"");
         try {
-            en = noteModels.get(position).getNoteSource();
-            vi = noteModels.get(position).getNoteMeaning();
+            en = learnActivity.noteModels.get(position).getNoteSource();
+            vi = learnActivity.noteModels.get(position).getNoteMeaning();
             txtVocabulary.setText(vi);
-            languageSpeak = noteModels.get(position).getLangguageSource();;
+            languageSpeak = learnActivity.noteModels.get(position).getLangguageSource();;
 
             // rd.nextBoolean() == true || noteModels.size() < 4: word fill
             // rd.nextBoolean() == false && noteModels.size() >= 4: Multiple-choice
-            if (rd.nextBoolean() || noteModels.size() < 4){
+            if (rd.nextBoolean() || learnActivity.noteModels.size() < 4){
                 //Hide: Multiple-choice
                 layoutCheck_2.setVisibility(View.GONE);
                 //Show: word fill
@@ -381,7 +380,7 @@ public class LearnNowFragment extends Fragment {
 //                for(int i = 1; i < strings.length; i++){
 //                    sourceText += "+"+strings[i];
 //                }
-                sound = noteModels.get(position).getLangguageSource();
+                sound = learnActivity.noteModels.get(position).getLangguageSource();
                 speakOutOnline(inputText, languageSpeak);
             }
         });
@@ -393,21 +392,21 @@ public class LearnNowFragment extends Fragment {
         int i1, i2, i3;
 
         while (true){
-            i1 = rd.nextInt(noteModels.size()-1);
+            i1 = rd.nextInt(learnActivity.noteModels.size()-1);
             if (i1 != position){
                 break;
             }
         }
 
         while (true){
-            i2 = rd.nextInt(noteModels.size()-1);
+            i2 = rd.nextInt(learnActivity.noteModels.size()-1);
             if (i1 != i2 && i2 != position){
                 break;
             }
         }
 
         while (true){
-            i3 = rd.nextInt(noteModels.size()-1);
+            i3 = rd.nextInt(learnActivity.noteModels.size()-1);
             if (i3 != i1 && i3 != i2 && i3 != position){
                 break;
             }
@@ -416,28 +415,28 @@ public class LearnNowFragment extends Fragment {
         int kq = rd.nextInt(4) + 1;
 
         if (kq == 1){
-            radA.setText(noteModels.get(position).getNoteSource());
-            radB.setText(noteModels.get(i1).getNoteSource());
-            radC.setText(noteModels.get(i2).getNoteSource());
-            radD.setText(noteModels.get(i3).getNoteSource());
+            radA.setText(learnActivity.noteModels.get(position).getNoteSource());
+            radB.setText(learnActivity.noteModels.get(i1).getNoteSource());
+            radC.setText(learnActivity.noteModels.get(i2).getNoteSource());
+            radD.setText(learnActivity.noteModels.get(i3).getNoteSource());
 
         }else if (kq == 2){
-            radA.setText(noteModels.get(i1).getNoteSource());
-            radB.setText(noteModels.get(position).getNoteSource());
-            radC.setText(noteModels.get(i2).getNoteSource());
-            radD.setText(noteModels.get(i3).getNoteSource());
+            radA.setText(learnActivity.noteModels.get(i1).getNoteSource());
+            radB.setText(learnActivity.noteModels.get(position).getNoteSource());
+            radC.setText(learnActivity.noteModels.get(i2).getNoteSource());
+            radD.setText(learnActivity.noteModels.get(i3).getNoteSource());
 
         }else if (kq == 3){
-            radA.setText(noteModels.get(i1).getNoteSource());
-            radB.setText(noteModels.get(i2).getNoteSource());
-            radC.setText(noteModels.get(position).getNoteSource());
-            radD.setText(noteModels.get(i3).getNoteSource());
+            radA.setText(learnActivity.noteModels.get(i1).getNoteSource());
+            radB.setText(learnActivity.noteModels.get(i2).getNoteSource());
+            radC.setText(learnActivity.noteModels.get(position).getNoteSource());
+            radD.setText(learnActivity.noteModels.get(i3).getNoteSource());
 
         }else if (kq == 4){
-            radA.setText(noteModels.get(i1).getNoteSource());
-            radB.setText(noteModels.get(i2).getNoteSource());
-            radC.setText(noteModels.get(i3).getNoteSource());
-            radD.setText(noteModels.get(position).getNoteSource());
+            radA.setText(learnActivity.noteModels.get(i1).getNoteSource());
+            radB.setText(learnActivity.noteModels.get(i2).getNoteSource());
+            radC.setText(learnActivity.noteModels.get(i3).getNoteSource());
+            radD.setText(learnActivity.noteModels.get(position).getNoteSource());
 
         }
 
@@ -552,18 +551,23 @@ public class LearnNowFragment extends Fragment {
         imgTrueFalse.setVisibility(View.GONE);
         layoutTrueFalse_2.setVisibility(View.INVISIBLE);
 
-        handleGET();
     }
 
     private void handleGET() {
+        learned = new ArrayList<Integer>();
         if (!learnActivity.openedLearn ||
                 learnActivity.id == -1 ||
-                learnActivity.id != MyAction.getIdTopic(learnActivity)){
+                learnActivity.id != MyAction.getIdTopic(learnActivity) ||
+                (learnActivity.noteModels != null && learnActivity.noteModels.size() == 0)){
             learnActivity.id = MyAction.getIdTopic(learnActivity);
+            learnActivity.noteModels = new ArrayList<>();
             myIntentFilter();
             learnActivity.id = (learnActivity.id==-1) ? learnActivity.topicModes.get(learnActivity.id).getId() :
                     learnActivity.id;
             learnActivity.serverAPI.getVocabulary(learnActivity, learnActivity.id, Constants.LEARN);
+        }else {
+            if (learnActivity.noteModels != null &&learnActivity.noteModels.size() > 0)
+                handleShow(true);
         }
     }
 
@@ -580,18 +584,16 @@ public class LearnNowFragment extends Fragment {
             if (intent.getAction().equals(MY_BRC_NOTE)) {
                 Handle.unregisterReceiver(context,mReceiver);
                 if (intent.getSerializableExtra("NOTE") != null){
-                    noteModels = new ArrayList<>();
-                    learned = new ArrayList<Integer>();
-                    noteModels = (ArrayList<NoteModels>) intent.getSerializableExtra("NOTE");
+                    learnActivity.noteModels = (ArrayList<NoteModels>) intent.getSerializableExtra("NOTE");
                     number = 1;
-                    if (noteModels.size()>0)
+                    if (learnActivity.noteModels.size()>0)
                         handleShow(true);
                     else {
                         learnActivity.openedLearn = false;
+                        learnActivity.openedAdd = true;
                         MyAction.setActivityBulb(learnActivity, MyAction.LIST_ACTIVITY);
                         MyAction.setFragmentNew(learnActivity, MyAction.TOPIC_FRAGMENT);
                         IntentActivity.handleOpenTopicActivy(learnActivity);
-                        learnActivity.finish();
                     }
                 }else {
                     learnActivity.openedLearn = false;

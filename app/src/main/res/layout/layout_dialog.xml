@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:paddingLeft="20dp"
         android:text="@string/selectLangguage"
+        android:textSize="@dimen/text_option"
         android:textColor="@color/colorTextTab"
         android:textStyle="bold"
         android:layout_height="match_parent"
@@ -31,6 +32,7 @@
             android:layout_marginBottom="8dp"
             android:textColor="@color/colorTextName"
             android:gravity="center"
+            android:textSize="@dimen/text_content"
             android:text="@string/deviceLanguage"/>
     </LinearLayout>
 

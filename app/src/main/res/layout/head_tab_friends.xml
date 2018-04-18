@@ -9,11 +9,11 @@
     android:background="@color/colorAppBar"
     android:orientation="horizontal"
     android:id="@+id/layoutFriends"
-    android:layout_height="82px">
+    android:layout_height="42dp">
 
     <ImageView
-        android:layout_width="48px"
-        android:layout_height="48px"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_gravity="center_vertical"
         android:background="@drawable/tab_friend_bgr_selector" />
     <TextView
@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="6dp"
         android:textStyle="bold"
+        android:textSize="@dimen/text_option"
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
         android:textColor="@color/tab_color_selector"

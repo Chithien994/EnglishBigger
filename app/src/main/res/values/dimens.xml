@@ -7,4 +7,14 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="text_actionbar">9pt</dimen>
+    <dimen name="text_option">7pt</dimen>
+    <dimen name="text_content_big">10pt</dimen>
+    <dimen name="text_content_max">7pt</dimen>
+    <dimen name="text_content">6.5pt</dimen>
+    <dimen name="text_content_min">5pt</dimen>
+    <dimen name="text_buttom">6.5pt</dimen>
+    <dimen name="text_buttom_max">7pt</dimen>
+    <dimen name="text_name">8pt</dimen>
+    <dimen name="text_splash_big">16pt</dimen>
 </resources>

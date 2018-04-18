@@ -226,7 +226,11 @@ public class TopicActivity extends AppCompatActivity {
         Log.d("TOPIC_ACTIVITY","Action: onResume");
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cfRefresh = true;
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

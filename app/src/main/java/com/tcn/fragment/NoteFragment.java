@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
@@ -56,12 +57,14 @@ public class NoteFragment extends Fragment {
     public View thisView;
     private String nameTopic ="";
     public ArrayList<TopicModels> topicModes;
-
+    public Button btnLearnNow;
     private ImageView imgBack;
     private ImageView imgAdd;
     private TextView txtNameTopic;
     private ListView lvNote;
     private AppBarLayout appBarLayout;
+    private boolean loadNote = true; //True: Download the vocabulary list of the topic
+    public boolean touch = false; //True: When start scrolling listview. To start the function: check roll up or down
 
     private NoteAdapter noteAdapter;
 
@@ -116,9 +119,22 @@ public class NoteFragment extends Fragment {
                 else   handleBackupTopic(topicModes.get(pst));
             }
         });
+
+        btnLearnNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                touch = false;
+                MyAction.setIdTopic(topicActivity, idTopic);
+                MyAction.setActivityBulb(topicActivity, MyAction.TOPIC_ACTIVITY);
+                MyAction.setFragmentBulb(topicActivity, MyAction.NOTE_FRAGMENT);
+                MyAction.setFragmentNew(topicActivity, MyAction.LEARN_FRAGMENT);
+                IntentActivity.handleOpenLearnActivity(topicActivity);
+            }
+        });
     }
 
     private void openActivityAdd() {
+        loadNote = true;
         topicActivity.cfRefresh = true;
         topicActivity.size = noteModels.size();
         Log.i("Add", "Size: " + topicActivity.size);
@@ -226,13 +242,74 @@ public class NoteFragment extends Fragment {
 
     private void addControls(View v) {
         appBarLayout = v.findViewById(R.id.appBarLayout);
+        btnLearnNow = v.findViewById(R.id.btnLearnNow);
         imgBack = v.findViewById(R.id.imgBack);
         imgAdd = v.findViewById(R.id.imgAdd);
         txtNameTopic = v.findViewById(R.id.txtNameTopic);
         lvNote = v.findViewById(R.id.lvNote);
         noteModels = new ArrayList<>();
         topicModes = new ArrayList<>();
+        hideNow(); //hide the learning node
         getInfoOfTopic();
+
+        //Getting the user's listview scrolling event
+        lvNote.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            private float scrolledDistance = 0;
+            private int countH = 0;
+            private int countS = 0;
+            private float hide = 0;
+            private boolean controlsVisible = true;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                touch = true;
+                return false;
+            }
+        });
+    }
+
+    public void hideLearnNow(){
+        btnLearnNow.animate()
+                .translationY(btnLearnNow.getHeight())
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(1000)
+                .setListener(new AnimatorListenerAdapter() {
+                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        btnLearnNow.setVisibility(View.GONE);
+                    }
+                });
+    }
+
+    public void hideNow(){
+        btnLearnNow.animate()
+                .translationY(btnLearnNow.getHeight())
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(0)
+                .setListener(new AnimatorListenerAdapter() {
+                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        btnLearnNow.setVisibility(View.GONE);
+                    }
+                });
+    }
+
+    public void showLearnNow(){
+        btnLearnNow.animate()
+                .translationY(0)
+                .setInterpolator(new LinearInterpolator())
+                .setDuration(1000)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {;
+                        btnLearnNow.setVisibility(View.VISIBLE);
+                    }
+                });
+        //layoutOptionView.animate().setInterpolator(new AccelerateDecelerateInterpolator()).scaleX(1).scaleY(1);
     }
 
 
@@ -321,7 +398,8 @@ public class NoteFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (MyAction.getFragmentNew(topicActivity) == MyAction.NOTE_FRAGMENT){
+        if (MyAction.getFragmentNew(topicActivity) == MyAction.NOTE_FRAGMENT && loadNote){
+            loadNote = false;
             getVocabulary(idTopic);
         }
     }

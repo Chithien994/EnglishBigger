@@ -12,12 +12,12 @@
         app:popupTheme="@style/AppTheme.AppBarOverlay"
         android:layout_width="match_parent"
         android:background="@color/colorAppBar"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="?android:attr/actionBarSize">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="?android:attr/actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
         </android.support.v7.widget.Toolbar>
@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textSize="32dp"
+        android:textSize="@dimen/text_splash_big"
         android:textAllCaps="false"
         android:textStyle="bold"
         android:textColor="@color/colorButtom"
@@ -36,11 +36,11 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toTopOf="@+id/progressBar2"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
-        app:layout_constraintVertical_bias="0.8" />
+        app:layout_constraintVertical_bias="1" />
 
     <ProgressBar
         android:id="@+id/progressBar2"
@@ -55,6 +55,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6" />
+        app:layout_constraintVertical_bias="0.55" />
 
 </android.support.constraint.ConstraintLayout>

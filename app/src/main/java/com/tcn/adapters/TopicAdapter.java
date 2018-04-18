@@ -175,8 +175,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
                             holder.txtLearned,
                             learned,
                             "en",
-                            languageAfter,
-                            holder.progressBar);
+                            languageAfter);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -369,7 +368,6 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
         TextView txtNameTopic, txtLearned;
         ConstraintLayout layoutEdit, layoutLearn;
         LinearLayout layoutEditIn, layoutDeleteIn, layoutItem;
-        ProgressBar progressBar;
         ProgressBar pbLoading;
         public ViewHolder(View view) {
             super(view);
@@ -382,7 +380,6 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
             pbLoading = view.findViewById(R.id.pbLoading);
             if (type==false){
                 txtLearned = view.findViewById(R.id.txtLearned);
-                progressBar = view.findViewById(R.id.progressBar);
                 layoutLearn = view.findViewById(R.id.layoutLearn);
             }
         }

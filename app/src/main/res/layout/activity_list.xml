@@ -44,7 +44,7 @@
                 android:gravity="center"
                 android:text="@string/hi"
                 android:textColor="@color/colorTextTab"
-                android:textSize="18dp"
+                android:textSize="@dimen/text_name"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/layoutA"
@@ -61,7 +61,7 @@
                 android:gravity="center"
                 android:text="@string/app_name"
                 android:textColor="@color/colorTextTab"
-                android:textSize="18dp"
+                android:textSize="@dimen/text_name"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -126,6 +126,7 @@
                     android:layout_marginLeft="11dp"
                     android:layout_marginStart="11dp"
                     android:text="f"
+                    android:textSize="5pt"
                     android:textColor="@color/colorWhite"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -137,7 +138,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/loginWithFacebook"
                     android:textColor="@color/colorWhite"
-                    android:textSize="16px"
+                    android:textSize="4pt"
+                    android:layout_marginLeft="2dp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/text22"
@@ -195,7 +197,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLink"
-                android:textSize="28px"
+                android:textSize="@dimen/text_option"
                 android:text="@string/inviteFriends"
                 android:layout_marginEnd="4dp" />
 
@@ -209,7 +211,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLink"
-                android:textSize="28px"
+                android:textSize="7pt"
                 android:text="|"
                 android:layout_marginEnd="4dp" />
 
@@ -223,7 +225,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorLink"
-                android:textSize="28px"
+                android:textSize="@dimen/text_option"
                 android:text="@string/share"
                 android:layout_marginEnd="4dp" />
         </android.support.constraint.ConstraintLayout>

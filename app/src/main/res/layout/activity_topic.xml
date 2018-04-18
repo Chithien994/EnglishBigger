@@ -10,12 +10,12 @@
         android:visibility="gone"
         app:popupTheme="@style/AppTheme.AppBarOverlay"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="?android:attr/actionBarSize">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbarTopic"
             android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_height="?android:actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             tools:layout_editor_absoluteY="405dp"
             tools:layout_editor_absoluteX="8dp">

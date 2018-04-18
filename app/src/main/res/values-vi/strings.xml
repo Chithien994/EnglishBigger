@@ -32,6 +32,7 @@
     <string name="errorInternetConnectionProblems">Lỗi do vấn đề kết nối internet!</string>
     <string name="errorInputParameters">Lỗi tham số đầu vào!</string>
     <string name="pleaseWait">Vui lòng chờ...</string>
+    <string name="loading">Đang tải...</string>
     <string name="msgYouAreNotLoggedIn">Bạn chưa đăng nhập!</string>
     <string name="msgPleaseLoginToUseThisFeature">Vui lòng đăng nhập để sử dụng tính năng này!</string>
     <string name="name">Tên: </string>
@@ -66,6 +67,7 @@
     <string name="addAndTranslate">Thêm &amp; Dịch</string>
     <string name="add">Thêm</string>
     <string name="edit">Chỉnh sửa</string>
+    <string name="delete">Xóa</string>
     <string name="Translate">Dịch</string>
     <string name="msgYouHaveNotEnteredAnythingYet">Bạn chưa nhập bất cứ điều gì!</string>
     <string name="msgVocabularyAlreadyExists">Từ vựng đã tồn tại!</string>
@@ -80,6 +82,7 @@
     <string name="changedSuccessfully">Đã thay đổi thành công!</string>
     <string name="deletedSuccessfully">Xóa thành công!</string>
     <string name="ok_">Xong</string>
+    <string name="send">Gửi</string>
     <string name="save">Lưu</string>
     <string name="functionIsBeingUpdated">Chức năng đang được cập nhật!</string>
     <string name="finish">Hoàn thành!</string>

@@ -48,6 +48,7 @@
     <string name="errorInternetConnectionProblems">Error due to internet connection problem!</string>
     <string name="errorInputParameters">Error input parameters</string>
     <string name="pleaseWait">Please wait...</string>
+    <string name="loading">Loading...</string>
     <string name="msgYouAreNotLoggedIn">You are not logged in!</string>
     <string name="msgPleaseLoginToUseThisFeature">Please log in to use this feature!</string>
     <string name="name">Name: </string>
@@ -83,6 +84,7 @@
     <string name="addAndTranslate">Add &amp; Translate</string>
     <string name="add">Add</string>
     <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
     <string name="Translate">Translate</string>
     <string name="msgYouHaveNotEnteredAnythingYet">You have not entered anything yet!</string>
     <string name="msgVocabularyAlreadyExists">Vocabulary already exists!</string>
@@ -97,6 +99,7 @@
     <string name="changedSuccessfully">Changed successfully!</string>
     <string name="deletedSuccessfully">Deleted successfully!</string>
     <string name="ok_">OK</string>
+    <string name="send">Send</string>
     <string name="save">Save</string>
     <string name="functionIsBeingUpdated">Function is being updated!</string>
     <string name="finish">Finish!</string>

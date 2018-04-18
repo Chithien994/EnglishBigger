@@ -18,7 +18,7 @@
         android:layout_width="83dp"
         android:layout_height="29dp"
         android:textColor="@color/colorTextName"
-        android:textSize="32px"
+        android:textSize="@dimen/text_content"
         android:gravity="center"
         android:spinnerMode="dropdown"
         android:text="English"

@@ -35,7 +35,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textStyle="bold"
-        android:textSize="24dp"
+        android:textSize="@dimen/text_actionbar"
         android:textColor="@color/colorTextName"
         android:text="@string/add"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,8 +70,7 @@
             <LinearLayout
                 android:id="@+id/layoutNewName"
                 android:layout_width="match_parent"
-                android:layout_height="74px"
-                android:padding="1px"
+                android:layout_height="36dp"
                 android:background="@drawable/layout_border_txt_gray"
                 android:orientation="horizontal"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -79,18 +78,18 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="72px"
-                    android:layout_height="74px"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:src="@drawable/ic_name_big"
                     tools:ignore="ContentDescription,PxUsage" />
 
                 <EditText
                     android:id="@+id/txtNewNameTopicDialog"
                     android:layout_width="match_parent"
-                    android:layout_height="74px"
+                    android:layout_height="36dp"
                     android:background="#00ffffff"
                     android:gravity="center_vertical"
-                    android:textSize="28px"
+                    android:textSize="@dimen/text_content"
                     android:inputType="textImeMultiLine"
                     android:paddingLeft="10dp"
                     android:textColor="@color/colorTextName"
@@ -100,29 +99,27 @@
             <LinearLayout
                 android:id="@+id/layoutGetNameTopic"
                 android:layout_width="match_parent"
-                android:layout_height="74px"
+                android:layout_height="36dp"
                 android:background="@drawable/layout_border_txt_gray"
-                android:padding="1px"
                 android:orientation="horizontal"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:layout_width="72px"
-                    android:layout_height="74px"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:src="@drawable/ic_name_big"
                     tools:ignore="ContentDescription,PxUsage" />
 
                 <Spinner
                     android:id="@+id/spNameTopicDialog"
                     android:layout_width="match_parent"
-                    android:layout_height="74px"
+                    android:layout_height="36dp"
                     android:background="@drawable/spinner"
                     android:gravity="center_vertical"
                     android:inputType="textImeMultiLine"
-                    android:textSize="28px"
-                    android:paddingLeft="10dp"
+                    android:textSize="@dimen/text_content"
                     android:textColor="@color/colorTextName"
                     tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
             </LinearLayout>
@@ -145,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:checked="true"
-                android:textSize="28px"
+                android:textSize="@dimen/text_content"
                 android:text="@string/newTopic"
                 android:textColor="@color/colorTextName"
                 app:buttonTint="#6cc29e"
@@ -156,7 +153,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="28px"
+                android:textSize="@dimen/text_content"
                 android:text="@string/addToTopicAvailable"
                 android:textColor="@color/colorTextName"
                 app:buttonTint="#6cc29e"
@@ -168,11 +165,11 @@
     <Button
         android:id="@+id/btnBackupDialog"
         android:layout_width="0dp"
-        android:layout_height="72px"
+        android:layout_height="36dp"
         android:background="@drawable/layout_border_full_green"
         android:text="@string/ok_"
+        android:textSize="@dimen/text_buttom"
         android:textAllCaps="false"
-        android:textSize="28px"
         android:textColor="@color/colorWhite"
         android:layout_marginTop="64dp"
         android:layout_marginRight="16dp"

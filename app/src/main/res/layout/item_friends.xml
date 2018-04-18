@@ -61,9 +61,10 @@
                 android:id="@+id/txtName"
                android:layout_gravity="center_vertical"
                 android:paddingLeft="10dp"
+                android:textSize="@dimen/text_content"
                 android:textColor="@color/colorTextTab"
                 android:textStyle="bold"
-                android:text="Settings"/>
+                android:text="@string/friend"/>
 
 
         </LinearLayout>

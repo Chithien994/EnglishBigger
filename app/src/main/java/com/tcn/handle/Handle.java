@@ -71,11 +71,8 @@ public class Handle {
     //languageBefore: Current language
     //languageAfter: Language needs to be translated
     //progressBar: Show the rotating bar when translating;
-    public void handleTranslateText(Activity activity, final TextView textView, final String sourceText, String languageBefore, String languageAfter, final ProgressBar progressBar) throws UnsupportedEncodingException {
+    public void handleTranslateText(Activity activity, final TextView textView, final String sourceText, String languageBefore, String languageAfter) throws UnsupportedEncodingException {
        try {
-           if (textView.getText().toString().equals("")) {
-               progressBar.setVisibility(View.VISIBLE);
-           }
            Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024);
            cache.clear();
            Network network = new BasicNetwork(new HurlStack());
@@ -100,7 +97,6 @@ public class Handle {
                        @Override
                        public void onResponse(JSONObject response) {
                            Log.d("TAG", response.toString());
-                           progressBar.setVisibility(View.GONE);
                            try {
                                textView.setText(response.getString("translation"));
 
@@ -113,7 +109,6 @@ public class Handle {
                @Override
                public void onErrorResponse(VolleyError error) {
                    VolleyLog.d("TAG", "Error: " + error.getMessage());
-                   progressBar.setVisibility(View.GONE);
                    textView.setText(sourceText);
                }
            });

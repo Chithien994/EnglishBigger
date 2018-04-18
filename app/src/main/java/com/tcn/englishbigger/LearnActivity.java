@@ -34,6 +34,7 @@ import com.tcn.handle.Language;
 import com.tcn.handle.MyAction;
 import com.tcn.handle.ServerAPI;
 import com.tcn.handle.Users;
+import com.tcn.models.NoteModels;
 import com.tcn.models.TopicModels;
 
 public class LearnActivity extends AppCompatActivity {
@@ -43,6 +44,7 @@ public class LearnActivity extends AppCompatActivity {
     public SQLiteDatabase database;
     Toolbar toolbar;
     public ArrayList<TopicModels> topicModes;
+    public ArrayList<NoteModels> noteModels;
     public ServerAPI serverAPI;
     public Handle handle;
     public int pst;
@@ -95,15 +97,13 @@ public class LearnActivity extends AppCompatActivity {
             Log.d("pst",pst+"");
             open = MyAction.getFragmentNew(this);
             //Get the topic name from the server
-            if (openedLearn && open==MyAction.LEARN_FRAGMENT){
-                findViewById(R.id.fragmentAddNewWord).setVisibility(View.GONE);
-                findViewById(R.id.fragmentLearn).setVisibility(View.VISIBLE);
-            }else if (openedAdd && open==MyAction.ADD_NEW_WORD_FRAGMENT){
-                findViewById(R.id.fragmentAddNewWord).setVisibility(View.VISIBLE);
-                findViewById(R.id.fragmentLearn).setVisibility(View.GONE);
-            }else if(!openedLearn && !openedAdd){
+            if(!openedLearn && !openedAdd){
                 handleGetNameTopic();
-            }else{
+            }else if (open==MyAction.ADD_NEW_WORD_FRAGMENT){
+                handleOpenFragment();
+            }else if (open==MyAction.LEARN_FRAGMENT){
+                handleOpenFragment();
+            }else {
                 handleOpenFragment();
             }
         }
@@ -128,25 +128,19 @@ public class LearnActivity extends AppCompatActivity {
     private void handleOpenFragment(){
         if (open == MyAction.LEARN_FRAGMENT){
             openedLearn = true;
-            callFragment(new  LearnNowFragment(), R.id.fragmentLearn);
+            callFragment(new  LearnNowFragment());
         }else if (open == MyAction.ADD_NEW_WORD_FRAGMENT){
             openedAdd = true;
-            callFragment(new  AddFragment(), R.id.fragmentAddNewWord);
+            callFragment(new  AddFragment());
         }
     }
 
-    public void callFragment(Fragment fragment, int fmID) {
-        if (fmID==R.id.fragmentAddNewWord){
-            findViewById(R.id.fragmentAddNewWord).setVisibility(View.VISIBLE);
-            findViewById(R.id.fragmentLearn).setVisibility(View.GONE);
-        }else if (fmID == R.id.fragmentLearn){
-            findViewById(R.id.fragmentLearn).setVisibility(View.VISIBLE);
-            findViewById(R.id.fragmentAddNewWord).setVisibility(View.GONE);
-        }
-        android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(fmID, fragment);
-        transaction.commit();
+    public void callFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.fragment, fragment);
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
     }
 
     public void myIntentFilter(){
@@ -172,17 +166,18 @@ public class LearnActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         //close learn now
-                                        openedLearn = false;
-                                        onBackPressed();
+                                        if ((open == MyAction.LEARN_FRAGMENT))
+                                            finish();
+                                        else callFragment(new AddFragment());
                                     }
                                 })
                                 .setPositiveButton(getString(R.string.add), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         //add topic && close learn now
-                                        openedLearn = false;
                                         MyAction.setFragmentNew(LearnActivity.this, MyAction.ADD_TOPIC_FRAGMENT);
                                         IntentActivity.handleOpenTopicActivy(LearnActivity.this);
+                                        finish();
 
                                     }
                                 }).show();

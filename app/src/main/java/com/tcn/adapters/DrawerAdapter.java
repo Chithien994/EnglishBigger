@@ -399,7 +399,7 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
 
     private void hideOptionView(final LinearLayout layout){
         layout.animate().setInterpolator(new AccelerateDecelerateInterpolator()).scaleY(0)
-                .setDuration(500)
+                .setDuration(300)
                 .setListener(new AnimatorListenerAdapter() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
@@ -411,7 +411,7 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
 
     private void showOptionView(final LinearLayout layout){
         layout.animate().setInterpolator(new AccelerateDecelerateInterpolator()).scaleY(1)
-                .setDuration(500)
+                .setDuration(300)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {

@@ -210,14 +210,13 @@ public class ServerAPI {
                     public void onResponse(JSONObject response) {
                         try {
                             Log.d("TYPE",type +"");
-                            String urlApp;
                             switch (type){
                                 case Constants.SHARE:
                                     usersFB.shareLink(response);
                                     break;
 
                                 case Constants.INVITE:
-                                    usersFB.inviteFriends(response);
+                                    usersFB.shareLink(response);
                                     break;
 
                                 default:{
@@ -602,6 +601,11 @@ public class ServerAPI {
         dialog = new ProgressDialog(activity);
         dialog.setMessage(activity.getString(R.string.pleaseWait));
         dialog.setCancelable(true);
+        try {
+            dialog.dismiss();
+        }catch (Exception e){
+            e.fillInStackTrace();
+        }
         dialog.show();
     }
 }

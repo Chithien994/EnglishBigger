@@ -32,6 +32,7 @@
     <string name="errorInternetConnectionProblems">インターネット接続の問題によるエラー！</string>
     <string name="errorInputParameters">エラー入力パラメータ！</string>
     <string name="pleaseWait">お待ちください...</string>
+    <string name="loading">読み込んでいます...</string>
     <string name="msgYouAreNotLoggedIn">あなたはログインしていません！</string>
     <string name="msgPleaseLoginToUseThisFeature">この機能を使用するにはログインしてください！</string>
     <string name="name">名: </string>
@@ -65,7 +66,8 @@
     <string name="other">その他</string>
     <string name="addAndTranslate">追加と翻訳</string>
     <string name="add">追加</string>
-    <string name="edit">Edit</string>
+    <string name="edit">編集</string>
+    <string name="delete">削除</string>
     <string name="Translate">訳書</string>
     <string name="msgYouHaveNotEnteredAnythingYet">あなたはまだ何も入力していません！</string>
     <string name="msgVocabularyAlreadyExists">語彙はすでに存在します！</string>
@@ -80,6 +82,7 @@
     <string name="changedSuccessfully">変更に成功しました！</string>
     <string name="deletedSuccessfully">正常に削除されました！</string>
     <string name="ok_">チェック</string>
+    <string name="send">送信</string>
     <string name="save">保存</string>
     <string name="functionIsBeingUpdated">機能が更新されています！</string>
     <string name="finish">フィニッシュ！</string>

@@ -35,7 +35,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textStyle="bold"
-        android:textSize="24dp"
+        android:textSize="@dimen/text_actionbar"
         android:textColor="@color/colorTextName"
         android:text="@string/edit"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,16 +70,16 @@
             android:layout_marginEnd="16dp">
 
             <ImageView
-                android:layout_width="72px"
-                android:layout_height="74px"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:src="@drawable/ic_name_big"
                 tools:ignore="ContentDescription,PxUsage" />
 
             <EditText
                 android:id="@+id/txtNoteSourceDialog"
                 android:layout_width="match_parent"
-                android:layout_height="74px"
-                android:textSize="28px"
+                android:layout_height="36dp"
+                android:textSize="@dimen/text_content"
                 android:background="#00ffffff"
                 android:gravity="center_vertical"
                 android:inputType="textImeMultiLine"
@@ -94,7 +94,6 @@
             android:background="@drawable/layout_border_txt_gray"
             android:orientation="horizontal"
             tools:ignore="PxUsage"
-            android:padding="1px"
             android:layout_marginLeft="16dp"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginRight="16dp"
@@ -107,17 +106,17 @@
             android:layout_marginBottom="8dp">
 
             <ImageView
-                android:layout_width="72px"
-                android:layout_height="74px"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:src="@drawable/ic_name_big"
                 tools:ignore="ContentDescription,PxUsage" />
 
             <EditText
                 android:id="@+id/txtNoteMeaningDialog"
                 android:layout_width="match_parent"
-                android:layout_height="74px"
+                android:layout_height="36dp"
                 android:background="#00ffffff"
-                android:textSize="28px"
+                android:textSize="@dimen/text_content"
                 android:gravity="center_vertical"
                 android:inputType="textImeMultiLine"
                 android:paddingLeft="10dp"
@@ -130,11 +129,11 @@
     <Button
         android:id="@+id/btnSave"
         android:layout_width="0dp"
-        android:layout_height="72px"
+        android:layout_height="36dp"
         android:background="@drawable/layout_border_full_green"
         android:text="@string/save"
         android:textAllCaps="false"
-        android:textSize="28px"
+        android:textSize="@dimen/text_buttom"
         android:textColor="@color/colorWhite"
         android:layout_marginTop="48dp"
         android:layout_marginRight="16dp"
