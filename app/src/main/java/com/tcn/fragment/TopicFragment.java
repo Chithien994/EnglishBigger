@@ -18,6 +18,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,7 +109,7 @@ public class TopicFragment extends Fragment {
         layoutGrid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handle.saveInfoView(topicActivity, "grid");
+                MyAction.setNumItemView(topicActivity, MyAction.GRID_VIEW);
                 checkInfoShowView();
             }
         });
@@ -116,7 +117,7 @@ public class TopicFragment extends Fragment {
         layoutList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                handle.saveInfoView(topicActivity, "list");
+                MyAction.setNumItemView(topicActivity, MyAction.LIST_VIEW);
                 checkInfoShowView();
 
             }
@@ -194,20 +195,32 @@ public class TopicFragment extends Fragment {
     private void checkInfoShowView() {
         imgTrueGrid.setVisibility(View.GONE);
         imgTrueList.setVisibility(View.GONE);
-        if (spf.getString("view","list").equals("grid")){
 
-            imgView.setImageResource(R.drawable.ic_grid);
-            txtNameView.setText(getActivity().getString(R.string.grid));
-            imgTrueGrid.setVisibility(View.VISIBLE);
-            handleShowView(R.layout.item_topic_grid, 2, true);//show list view topic
-        }else {
+        switch (MyAction.getNumItemView(topicActivity)){
+            case MyAction.GRID_VIEW:
+                imgView.setImageResource(R.drawable.ic_grid);
+                txtNameView.setText(getActivity().getString(R.string.grid));
+                imgTrueGrid.setVisibility(View.VISIBLE);
+                handleShowView(R.layout.item_topic_grid, getNumItem(), true);//show grid view topic
+                break;
 
-            imgView.setImageResource(R.drawable.ic_list);
-            txtNameView.setText(getActivity().getString(R.string.list));
-            imgTrueList.setVisibility(View.VISIBLE);
-            handleShowView(R.layout.item_topic_list, 1, false);//show list view topic
+            case MyAction.LIST_VIEW:
+                imgView.setImageResource(R.drawable.ic_list);
+                txtNameView.setText(getActivity().getString(R.string.list));
+                imgTrueList.setVisibility(View.VISIBLE);
+                handleShowView(R.layout.item_topic_list, 1, false);//show list view topic
+                break;
+            default:break;
         }
-        hideOptionView();
+
+        hideOptionView(); //close option view
+    }
+
+    //Calculates the number of items displayed per line, to fit the screen size
+    private int getNumItem(){
+        Display display = topicActivity.getWindowManager().getDefaultDisplay(); //get the screen size
+        int inWidth = display.getWidth(); //get the screen width
+        return (inWidth/288 >= 2) ? inWidth/288 : 2; //Estimate the size of each item: 288 px
     }
 
     //show list view topic
@@ -248,7 +261,7 @@ public class TopicFragment extends Fragment {
         layoutOptionView.animate()
                 .translationY(-layoutOptionView.getHeight())
                 .setInterpolator(new LinearInterpolator())
-                .setDuration(500)
+                .setDuration(400)
                 .setListener(new AnimatorListenerAdapter() {
                     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
@@ -262,7 +275,7 @@ public class TopicFragment extends Fragment {
         layoutOptionView.animate()
                 .translationY(0)
                 .setInterpolator(new LinearInterpolator())
-                .setDuration(500)
+                .setDuration(400)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationStart(Animator animation) {;

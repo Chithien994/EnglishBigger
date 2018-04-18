@@ -31,6 +31,10 @@ public class MyAction {
     public static final int TAB_BF_FRAGMENT = 9;
     public static final int TAB_BO_FRAGMENT = 10;
 
+    public static final int LIST_VIEW = 1;
+    public static final int GRID_VIEW = 2;
+
+
     private static SharedPreferences preferences;
     private static SharedPreferences.Editor editor;
     private static String TAG = "MyAction";
@@ -158,7 +162,7 @@ public class MyAction {
 
     public static int getIdTopic(Context context){
         preferences = context.getSharedPreferences(context.getString(R.string.saveInfoApp), context.MODE_PRIVATE);
-        return preferences.getInt("ID_TOPIC",0);
+        return preferences.getInt("ID_TOPIC",-1);
     }
 
     public static void setPosition(Context context, int id ){
@@ -215,5 +219,19 @@ public class MyAction {
     public static boolean getRefreshTopic(Context context) {
         preferences = context.getSharedPreferences(context.getString(R.string.saveInfoApp), context.MODE_PRIVATE);
         return preferences.getBoolean("REFRESH_TOPIC", true);
+    }
+
+    public static void setNumItemView(Context context, int view){
+        preferences = context.getSharedPreferences(context.getString(R.string.saveInfoApp), context.MODE_PRIVATE);
+        editor = preferences.edit();
+        editor.putInt("VIEW_ITEM", view);
+        editor.commit();
+        editor.clear();
+        Log.d(TAG, "Save VIEW_ITEM: "+preferences.getInt("VIEW_ITEM",1));
+    }
+
+    public static int getNumItemView(Context context) {
+        preferences = context.getSharedPreferences(context.getString(R.string.saveInfoApp), context.MODE_PRIVATE);
+        return preferences.getInt("VIEW_ITEM", 1);
     }
 }

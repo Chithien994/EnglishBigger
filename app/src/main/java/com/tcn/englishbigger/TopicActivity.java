@@ -47,9 +47,7 @@ public class TopicActivity extends AppCompatActivity {
     public boolean cfFinish; //cfFinish = true: Closes the current activity when the back button is pressed
     public View view;
 
-    public static final String broadcastAction = "BroadcastAction";
-    public static final int STORAGE_PERMISSION_CODE = 123; //storage permission code
-    public static final int CAMERA_PERMISSION_CODE = 321; //camera permission code
+    public static final String broadcastAction = "BroadcastAction_TOPIC";
 
     public ServerAPI serverAPI;
     public UsersFB usersFB;
@@ -67,8 +65,6 @@ public class TopicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d("TOPIC_ACTIVITY","Action: onCreate");
         setContentView(R.layout.activity_topic);
-        //Requesting storage permission
-        requestStoragePermission();
         addControls();
         addEvents();
     }
@@ -81,65 +77,7 @@ public class TopicActivity extends AppCompatActivity {
         cfFinish = false;
         fragmentBack = fragment;
     }
-    //Requesting permission
-    public void requestStoragePermission() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-            return;
 
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            //If the user has denied the permission previously your code will come to this block
-            //Here you can explain why you need this permission
-            //Explain here why you need this permission
-        }
-        //And finally ask for the permission
-        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-    }
-
-    //Requesting permission
-    public void requestCameraPermission() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
-            return;
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.CAMERA)) {
-            //If the user has denied the permission previously your code will come to this block
-            //Here you can explain why you need this permission
-            //Explain here why you need this permission
-        }
-        //And finally ask for the permission
-        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        //Checking the request code of our request
-        if (requestCode == STORAGE_PERMISSION_CODE) {
-            //If permission is granted
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //Displaying a toast
-                Toast.makeText(this, getString(R.string.permissionGrantedNowYouCanReadTheStorage), Toast.LENGTH_LONG).show();
-                //Requesting camera permission
-                requestCameraPermission();
-            } else {
-                //Displaying another toast if permission is not granted
-                Toast.makeText(this, getString(R.string.oopsYouJustDeniedThePermission), Toast.LENGTH_LONG).show();
-                //Requesting storage permission
-                requestStoragePermission();
-            }
-
-        }else if (requestCode == CAMERA_PERMISSION_CODE){
-
-            //If permission is granted
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //Displaying a toast
-                Toast.makeText(this, getString(R.string.permissionGrantedNowYouCanOpenTheCamera), Toast.LENGTH_LONG).show();
-            } else {
-                //Displaying another toast if permission is not granted
-                Toast.makeText(this,getString(R.string.oopsYouJustDeniedThePermission), Toast.LENGTH_LONG).show();
-                //Requesting camera permission
-                requestCameraPermission();
-            }
-        }
-    }
     private void addControls() {
         size = -1;
         toolbarTopic = (Toolbar) findViewById(R.id.toolbarTopic);

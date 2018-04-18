@@ -88,6 +88,8 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
     private ProgressBar pbLoading;
     private ProgressDialog dialog;
 
+    public static final int STORAGE_PERMISSION_CODE = 123; //storage permission code
+    public static final int CAMERA_PERMISSION_CODE = 321; //camera permission code
     private int PICK_IMAGE_REQUEST = 1; //Image request code
     private int RESQUEST_TAKE_PHOTO = 2;
     private Bitmap bitmap; //Bitmap to get image from gallery
@@ -331,6 +333,67 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
 //        }
 //    }
 
+    //Requesting permission
+    public void requestStoragePermission() {
+        if (ActivityCompat.checkSelfPermission(topicActivity, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+            return;
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(topicActivity, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            //If the user has denied the permission previously your code will come to this block
+            //Here you can explain why you need this permission
+            //Explain here why you need this permission
+        }
+        //And finally ask for the permission
+        requestPermissions(new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+    }
+
+    //Requesting permission
+    public void requestCameraPermission() {
+        if (ActivityCompat.checkSelfPermission(topicActivity, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+            return;
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(topicActivity, android.Manifest.permission.CAMERA)) {
+            //If the user has denied the permission previously your code will come to this block
+            //Here you can explain why you need this permission
+            //Explain here why you need this permission
+        }
+        //And finally ask for the permission
+        requestPermissions(new String[]{android.Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //Checking the request code of our request
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+            //If permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Displaying a toast
+               // handleChoosePhoto();
+                Toast.makeText(topicActivity, getString(R.string.permissionGrantedNowYouCanReadTheStorage), Toast.LENGTH_LONG).show();
+
+            } else {
+                //Displaying another toast if permission is not granted
+                Toast.makeText(topicActivity, getString(R.string.oopsYouJustDeniedThePermission), Toast.LENGTH_LONG).show();
+                //Requesting storage permission
+                requestStoragePermission();
+            }
+
+        }else if (requestCode == CAMERA_PERMISSION_CODE){
+
+            //If permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Displaying a toast
+                handleOpenCamera();
+                Toast.makeText(topicActivity, getString(R.string.permissionGrantedNowYouCanOpenTheCamera), Toast.LENGTH_LONG).show();
+            } else {
+                //Displaying another toast if permission is not granted
+                Toast.makeText(topicActivity,getString(R.string.oopsYouJustDeniedThePermission), Toast.LENGTH_LONG).show();
+                //Requesting camera permission
+                requestCameraPermission();
+            }
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -365,6 +428,9 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
     }
 
     private void handleDefaultPhoto() {
+        //Requesting storage permission
+        requestStoragePermission();
+
         new AlertDialog.Builder(topicActivity)
         .setMessage(getActivity().getString(R.string.defaultPhoto))
         .setCancelable(false)
@@ -414,10 +480,12 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
         }
     }
 
+
+
     // Used to select images from the library
     //method to show file chooser
     private void handleChoosePhoto() {
-        topicActivity.requestStoragePermission();
+        requestStoragePermission();
         try {
 
             Intent intent = new Intent();
@@ -433,7 +501,7 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
 
     //Used to opening camera
     private void handleOpenCamera() {
-        topicActivity.requestCameraPermission();
+        requestCameraPermission();
         try {
             Intent i = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(i, RESQUEST_TAKE_PHOTO);

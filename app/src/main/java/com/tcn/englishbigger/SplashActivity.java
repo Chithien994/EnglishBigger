@@ -84,12 +84,6 @@ public class SplashActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        try {
-                            unregisterReceiver(mReceiver);
-                            Log.d("unregisterReceiver","Unregister Receiver");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                         openListActivity();
                     }
                 });
@@ -105,13 +99,12 @@ public class SplashActivity extends AppCompatActivity {
     }
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, Intent intent) {
             if (intent.getAction().equals(BROADCAST_ACTION_SPLASH)) {
                 try {
                     if (intent.getStringExtra("VERSION")!=null){
                         String newVersion = intent.getStringExtra("VERSION");
                         final String url = intent.getStringExtra("URL");
-                        Log.d("unregisterReceiver","Unregister Receiver");
 
                         if (!versionName.equalsIgnoreCase(newVersion)){
                             SPLASH_DISPLAY_LENGTH *=2;
@@ -152,13 +145,8 @@ public class SplashActivity extends AppCompatActivity {
     };
 
     private void openListActivity(){
+        Handle.unregisterReceiver(this, mReceiver);
         mTimer.cancel();
-        try {
-            unregisterReceiver(mReceiver);
-            Log.d("unregisterReceiver","Unregister Receiver");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         IntentActivity.handleOpenListActivity(this);
         finish();
     }

@@ -414,9 +414,12 @@ public class ServerAPI {
             JSONArray json = response.getJSONArray("vocabulary");
             if (response.getString("vocabulary").equals("[]")){
                 //empty
-                Toast.makeText(activity, activity.getString(R.string.empty), Toast.LENGTH_LONG).show();
+                if (type == Constants.LEARN){
 
-                if (type == Constants.LEARN) activity.finish();
+                    Toast.makeText(activity, activity.getString(R.string.chooseATopicToLearn), Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(activity, activity.getString(R.string.empty), Toast.LENGTH_LONG).show();
+                }
 
             }else {
                 for (int i = 0; i < json.length(); i++){
@@ -430,9 +433,8 @@ public class ServerAPI {
                             b));
 
                 }
-                handle.sendBroadCastToNoteFragment(activity, noteModels);
-
             }
+            handle.sendBroadCastToNoteFragment(activity, noteModels);
 
         }catch (Exception e){
             e.printStackTrace();

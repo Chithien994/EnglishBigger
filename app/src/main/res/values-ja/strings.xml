@@ -16,6 +16,7 @@
     <string name="share">シェア</string>
     <string name="inviteFriends">友達を招待</string>
     <string name="youHaveNoTopic">あなたはトピックがありません！</string>
+    <string name="chooseATopicToLearn">学ぶトピックを選んでください！</string>
     <string name="empty">空</string>
     <string name="doYouWantToDeleteIt">削除しますか？</string>
     <string name="thisDeviceHasNoCamera">このデバイスにはカメラがありません！</string>

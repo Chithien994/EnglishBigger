@@ -87,6 +87,7 @@ public class LearnActivity extends AppCompatActivity {
             openedLearn = false;
             MyAction.setRefreshTopic(this,false);
         }
+        Log.d("LearnActivity","cfRefresh: "+cfRefresh);
         if (cfRefresh){
             loadAdFull(getString(R.string.ad_id_full_1));
             cfRefresh = false;
@@ -187,7 +188,7 @@ public class LearnActivity extends AppCompatActivity {
                                 }).show();
                     }
 
-                    unregisterReceiver(mReceiver);
+                    Handle.unregisterReceiver(context, mReceiver);
 
                 }
             }

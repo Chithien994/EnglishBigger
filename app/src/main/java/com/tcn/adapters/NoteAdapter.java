@@ -264,8 +264,9 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
             if (intent.getAction().equals(MY_BRC_NOTE_ADAPTER)) {
                 Log.d("unregisterReceiver","Unregister Receiver");
 
-                handleShowListNote(intent.getIntExtra("TYPE",0), intent.getBooleanExtra("CF",false));
-                context.unregisterReceiver(mReceiver);
+                handleShowListNote(intent.getIntExtra("TYPE",0),
+                        intent.getBooleanExtra("CF",false));
+                Handle.unregisterReceiver(context, mReceiver);
             }
         }
     };

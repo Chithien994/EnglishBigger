@@ -62,7 +62,7 @@ import com.tcn.models.LocaleModels;
 
 public class AddFragment extends Fragment {
 
-    public static String cfAdded = "BroadcastAction";
+    public static String cfAdded = "BroadcastAction_ADD";
     private LearnActivity learnActivity;
     private EditText txtAdd;
     private EditText txtTranslated;

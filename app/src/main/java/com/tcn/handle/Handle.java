@@ -1,6 +1,7 @@
 package com.tcn.handle;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -263,17 +264,6 @@ public class Handle {
         activity.sendBroadcast(broadCastIntent);
     }
 
-    public void saveInfoView(Activity activity, String view) {
-        try {
-            SharedPreferences pf = activity.getSharedPreferences(activity.getString(R.string.saveInfoApp), activity.MODE_PRIVATE);
-            SharedPreferences.Editor editor = pf.edit();
-            editor.putString("view",view);
-            editor.commit();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
     public Bitmap cropBitmap(Bitmap inBitmap){
 
         int inWidth = inBitmap.getWidth();
@@ -398,6 +388,15 @@ public class Handle {
             canvas.drawText(inText, xPos, yPos, textPaint);
         }
         return bmp;
+    }
+
+    public static void unregisterReceiver(Context context, BroadcastReceiver receiver){
+        try {
+            context.unregisterReceiver(receiver);
+            Log.d("unregisterReceiver","Unregister Receiver");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     //check keyboard hide or show

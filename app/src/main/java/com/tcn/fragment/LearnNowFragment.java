@@ -299,15 +299,11 @@ public class LearnNowFragment extends Fragment {
         }
 
         if (layoutTrueFalse_2.getVisibility() == View.VISIBLE){
-            layoutTrueFalse_2.setVisibility(View.GONE);
+            layoutTrueFalse_2.setVisibility(View.INVISIBLE);
         }
 
         if (imgTrueFalse.getVisibility() == View.VISIBLE){
             imgTrueFalse.setVisibility(View.GONE);
-        }
-
-        if (layoutCheck_1.getVisibility() == View.VISIBLE){
-            txtInput.setText("");
         }
 
         Random rd = new Random();
@@ -352,6 +348,7 @@ public class LearnNowFragment extends Fragment {
                 layoutCheck_2.setVisibility(View.GONE);
                 //Show: word fill
                 layoutCheck_1.setVisibility(View.VISIBLE);
+                txtInput.setText("");
 
             }else {
                 //Hide: word fill
@@ -364,22 +361,6 @@ public class LearnNowFragment extends Fragment {
 
         }catch (Exception e){
             e.printStackTrace();
-
-
-            if (learnActivity.topicModes.size() > 0){
-                JSONObject object = new JSONObject();
-                try {
-                    object.put("idTopic", learnActivity.topicModes.get(0).getId());
-                    object.put("type","_SHOW");
-                    learnActivity.serverAPI.getVocabulary(learnActivity, object, Constants.LEARN);
-                } catch (JSONException ex) {
-                    ex.printStackTrace();
-                }
-
-            }else {
-
-
-            }
 
         }
 
@@ -569,15 +550,19 @@ public class LearnNowFragment extends Fragment {
 
 
         imgTrueFalse.setVisibility(View.GONE);
-        layoutTrueFalse_2.setVisibility(View.GONE);
+        layoutTrueFalse_2.setVisibility(View.INVISIBLE);
 
         handleGET();
     }
 
     private void handleGET() {
-        if (!learnActivity.openedLearn || learnActivity.id == -1 || learnActivity.id != MyAction.getIdTopic(learnActivity)){
+        if (!learnActivity.openedLearn ||
+                learnActivity.id == -1 ||
+                learnActivity.id != MyAction.getIdTopic(learnActivity)){
             learnActivity.id = MyAction.getIdTopic(learnActivity);
             myIntentFilter();
+            learnActivity.id = (learnActivity.id==-1) ? learnActivity.topicModes.get(learnActivity.id).getId() :
+                    learnActivity.id;
             learnActivity.serverAPI.getVocabulary(learnActivity, learnActivity.id, Constants.LEARN);
         }
     }
@@ -593,18 +578,25 @@ public class LearnNowFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(MY_BRC_NOTE)) {
-                Log.d("unregisterReceiver","Unregister Receiver");
+                Handle.unregisterReceiver(context,mReceiver);
                 if (intent.getSerializableExtra("NOTE") != null){
                     noteModels = new ArrayList<>();
                     learned = new ArrayList<Integer>();
                     noteModels = (ArrayList<NoteModels>) intent.getSerializableExtra("NOTE");
                     number = 1;
-                    handleShow(true);
+                    if (noteModels.size()>0)
+                        handleShow(true);
+                    else {
+                        learnActivity.openedLearn = false;
+                        MyAction.setActivityBulb(learnActivity, MyAction.LIST_ACTIVITY);
+                        MyAction.setFragmentNew(learnActivity, MyAction.TOPIC_FRAGMENT);
+                        IntentActivity.handleOpenTopicActivy(learnActivity);
+                        learnActivity.finish();
+                    }
                 }else {
                     learnActivity.openedLearn = false;
                     learnActivity.onBackPressed();
                 }
-                getActivity().unregisterReceiver(mReceiver);
             }
         }
     };

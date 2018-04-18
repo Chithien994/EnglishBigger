@@ -30,6 +30,7 @@
     <string name="share">Share</string>
     <string name="inviteFriends">Invite friends</string>
     <string name="youHaveNoTopic">You have no topic!</string>
+    <string name="chooseATopicToLearn">Choose a topic to learn!</string>
     <string name="empty">Empty</string>
     <string name="doYouWantToDeleteIt">Do you want to delete it?</string>
     <string name="thisDeviceHasNoCamera">This device has no camera!</string>

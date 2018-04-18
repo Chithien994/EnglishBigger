@@ -234,7 +234,7 @@ public class BackupTopicAdapter extends RecyclerView.Adapter<BackupTopicAdapter.
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(MY_BRC_TOPIC_ADAPTER)) {
-                topicActivity.unregisterReceiver(mReceiver);
+                Handle.unregisterReceiver(context, mReceiver);
                 Log.d("unregisterReceiver","Unregister Receiver");
                 if(!intent.getBooleanExtra("ERR",false))
                     try {

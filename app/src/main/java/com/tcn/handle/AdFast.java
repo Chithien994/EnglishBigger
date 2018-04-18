@@ -87,5 +87,7 @@ public class AdFast {
         adView.setBackgroundColor(Color.BLACK);
         adView.setBackgroundColor(0);
         totalLayout.addView(mFrameLayout);
+
     }
+
 }

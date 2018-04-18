@@ -24,6 +24,7 @@ import com.tcn.adapters.BackupTopicAdapter;
 import com.tcn.englishbigger.R;
 import com.tcn.englishbigger.TopicActivity;
 import com.tcn.handle.Constants;
+import com.tcn.handle.Handle;
 import com.tcn.models.TopicModels;
 
 public class TabBackupOthersFragment extends Fragment {
@@ -98,7 +99,7 @@ public class TabBackupOthersFragment extends Fragment {
             if (intent.getAction().equals(BROADCAST_ACTION_OTHERS)) {
                 topicActivity.topicModes = (ArrayList<TopicModels>) intent.getSerializableExtra("TOPIC");
                 showTopicOther();
-                topicActivity.unregisterReceiver(mReceiver);
+                Handle.unregisterReceiver(topicActivity, mReceiver);
             }
         }
     };

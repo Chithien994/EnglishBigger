@@ -432,7 +432,7 @@ public class DrawerAdapter extends ArrayAdapter<DrawerModels> {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(MY_BRC_DRAWER_ADAPTER)) {
-                context.unregisterReceiver(mReceiver);
+                Handle.unregisterReceiver(context, mReceiver);
                 Log.d("unregisterReceiver","Unregister Receiver");
                 if(!intent.getBooleanExtra("ERR",true))
                     try {

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -73,14 +75,23 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
     public TopicAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(resource, parent,false);
-        ViewHolder viewHolder = new  ViewHolder(view);
-        return viewHolder;
+
+//        RecyclerView.LayoutParams lp;
+//        if (type){// for grid view
+//            lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//        }else{// for list view
+//            lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//        }
+//        view.setLayoutParams(lp);
+
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final TopicAdapter.ViewHolder holder, final int position) {
         topicActivity = (TopicActivity) context;
         final TopicModels topicModels = this.objects.get(position);
+
         holder.txtNameTopic.setText(topicModels.getName());
 
         holder.pbLoading.setVisibility(View.VISIBLE);
@@ -122,6 +133,30 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
         if (length != objects.size() - 1 || length == 0){
 
             if (type){
+                // Get item width
+                // Set item height equal to item width
+                ViewTreeObserver vto = holder.layoutItem.getViewTreeObserver();
+                vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                            holder.layoutItem.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        } else {
+                            holder.layoutItem.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        }
+                        int width = holder.layoutItem.getMeasuredWidth();
+                        Log.d("TopicAdapter","Width item: "+width);
+                        //int height = holder.layoutItem.getMeasuredHeight();
+
+                        //Set item height
+                        ViewGroup.LayoutParams params = holder.layoutItem.getLayoutParams();
+                        params.height = width;
+                        holder.layoutItem.setLayoutParams(params);
+
+                    }
+                });
+
+
 
             }else {
                 String learned = "You've learned " + topicModels.getPercent() +"%\n (out of "+ topicModels.getTotal()+" words)";
@@ -305,7 +340,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
                 Log.d("unregisterReceiver","Unregister Receiver");
 
                 handleShowListNote();
-                context.unregisterReceiver(mReceiver);
+                Handle.unregisterReceiver(context, mReceiver);
             }
         }
     };
