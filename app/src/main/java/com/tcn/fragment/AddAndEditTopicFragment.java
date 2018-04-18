@@ -105,6 +105,7 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
     private String path = "";
     private String mySelect;
     private String name;
+    private boolean clickSave = false;
 
 
     public AddAndEditTopicFragment() {
@@ -369,6 +370,7 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //Displaying a toast
                // handleChoosePhoto();
+                if (clickSave) handleSaveTopic();
                 Toast.makeText(topicActivity, getString(R.string.permissionGrantedNowYouCanReadTheStorage), Toast.LENGTH_LONG).show();
 
             } else {
@@ -398,7 +400,11 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btnSave:
-                handleSaveTopic(); //Used to upload topic to server
+                //Requesting storage permission
+                requestStoragePermission();
+                clickSave = true;
+                if (ActivityCompat.checkSelfPermission(topicActivity, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+                    handleSaveTopic(); //Used to upload topic to server
                 break;
 
             case R.id.btnBack:

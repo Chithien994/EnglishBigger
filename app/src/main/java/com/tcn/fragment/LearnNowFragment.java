@@ -562,7 +562,7 @@ public class LearnNowFragment extends Fragment {
             learnActivity.id = MyAction.getIdTopic(learnActivity);
             learnActivity.noteModels = new ArrayList<>();
             myIntentFilter();
-            learnActivity.id = (learnActivity.id==-1) ? learnActivity.topicModes.get(learnActivity.id).getId() :
+            learnActivity.id = (learnActivity.id==-1) ? learnActivity.topicModes.get(0).getId() :
                     learnActivity.id;
             learnActivity.serverAPI.getVocabulary(learnActivity, learnActivity.id, Constants.LEARN);
         }else {
