@@ -57,24 +57,24 @@ import com.tcn.handle.MyAction;
 import com.tcn.models.NoteModels;
 
 
-public class LearnNowFragment extends Fragment {
+public class LearnNowFragment extends Fragment implements View.OnClickListener{
     private LearnActivity learnActivity;
     public static String MY_BRC_NOTE = "MY_BRC_NOTE";
     private static String TAG = "LEARN_NOW_FRAGMENT";
     private View thisView;
 
     private ImageView imgVocabulary, imgTrueFalse, imgTrueFalse_2, imgBack;
-    private TextView txtVocabulary, txtNumber, txtTrueFalse;
+    private TextView txtVocabulary, txtNumber, txtTrueFalse_2;
     private EditText txtInput;
-    private Button btnOK, btnOK_2, btnBack, btnContinue, btnSound, btnShow;
+    private Button btnOK, btnOK_2, btnPrevious, btnContinue, btnSound, btnShow;
     private RadioButton radA, radB, radC, radD;
     private LinearLayout layoutTrueFalse_2;
     private ConstraintLayout layoutCheck_1, layoutCheck_2;
 
-    private String en,vi,sound;
+    private String thisLanguage = "";
+    private String original, means; //
     private TextToSpeech t1;
     private String languageSpeak;
-   // private boolean cf = false; //Report true and false
     private boolean up = true; //In this session: Marked "memorized" when first responded correctly
     private ArrayList<Integer> positionLearn;
     private int position = 0;
@@ -108,37 +108,14 @@ public class LearnNowFragment extends Fragment {
     }
 
     private void addEvents() {
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleBack();
-            }
-        });
-        btnContinue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleContinue();
-            }
-        });
-        btnOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                btnOK.setBackgroundResource(R.color.colorAccent);
-                handleCheck();
-            }
-        });
-        btnOK_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleCheck_2();
-            }
-        });
-        imgBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                learnActivity.onBackPressed();
-            }
-        });
+        btnPrevious.setOnClickListener(this);
+        btnContinue.setOnClickListener(this);
+        btnOK.setOnClickListener(this);
+        btnOK_2.setOnClickListener(this);
+        imgBack.setOnClickListener(this);
+        imgTrueFalse.setOnClickListener(this);
+        btnShow.setOnClickListener(this);
+        btnSound.setOnClickListener(this);
 
         txtInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -158,38 +135,45 @@ public class LearnNowFragment extends Fragment {
             }
         });
 
-        imgTrueFalse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                txtInput.setText("");
-                imgTrueFalse.setVisibility(View.GONE);
-            }
-        });
-
-        btnShow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleShowEN(en, view);
-            }
-        });
-        btnSound.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                btnSound.setBackgroundResource(R.drawable.ic_sound2);
-                String inputText = en;
-//                String [] strings = inputText.split(" ");
-//                String sourceText = strings[0];
-//                for(int i = 1; i < strings.length; i++){
-//                    sourceText += "+"+strings[i];
-//                }
-                sound = learnActivity.noteModels.get(position).getLangguageSource();
-                speakOutOnline(inputText, languageSpeak);
-            }
-        });
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btnOK:
+                handleCheck();
+                break;
+            case R.id.btnOK_2:
+                handleCheck_2();
+                break;
+            case R.id.btnContinue:
+                handleContinue();
+                break;
+            case R.id.btnPrevious:
+                handlePrevious();
+                break;
+            case R.id.imgBack:
+                learnActivity.onBackPressed();
+                break;
+            case R.id.imgTrueFalse:
+                txtInput.setText("");
+                imgTrueFalse.setVisibility(View.GONE);
+                break;
+            case R.id.btnShow:
+                handleShowResult(original, view);
+                break;
+            case R.id.btnSound:
+                speakOutOnline(original, languageSpeak);
+                break;
+            default:break;
+        }
+    }
+
+    //Show dialog box confirming topic transfer
     private void confirmTopicTransfer(){
+        //Check whether the ad has loaded
         if (mInterstitialAd.isLoaded()) {
+            //Show ad
             mInterstitialAd.show();
         }
         new AlertDialog.Builder(learnActivity)
@@ -198,8 +182,9 @@ public class LearnNowFragment extends Fragment {
                 .setNegativeButton(getActivity().getString(R.string.repeat), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        loadAdFull(getString(R.string.ad_id_full_2));
-
+                        loadAdFull(getString(R.string.ad_id_full_2));//Reload the new ad
+                        //Set up random vocabulary for the next session
+                        //And perform the next "learn" session
                         addRadPositionArrAndShow();
                     }
                 })
@@ -217,6 +202,7 @@ public class LearnNowFragment extends Fragment {
 
     private void handleCheck_2() {
         String inputText = null;
+        //Check which user selects the answer: A or B or C or D
         if (radA.isChecked()){
             inputText = radA.getText().toString();
         }else if (radB.isChecked()){
@@ -227,44 +213,55 @@ public class LearnNowFragment extends Fragment {
             inputText = radD.getText().toString();
         }
 
-        layoutTrueFalse_2.setVisibility(View.VISIBLE);//layout notify
-        if (en.equalsIgnoreCase(inputText)){
+        layoutTrueFalse_2.setVisibility(View.VISIBLE);//Show layout notify
+        //Check the answer
+        if (original.equalsIgnoreCase(inputText)){
+            //It's correct
 
+            //Message to server: Remember this vocabulary
             if (learnActivity.noteModels.get(position).getLearned() == (byte) 0 && up){
                 MyAction.setLoadedTopic(learnActivity, false);
                 learnActivity.serverAPI.setLearned(learnActivity, learnActivity.noteModels.get(position).getId(), (byte) 1);
             }
-
+            //Notify: Correct
             imgTrueFalse_2.setImageResource(R.drawable.ic_true);
-            txtTrueFalse.setText(R.string.exactly);
+            txtTrueFalse_2.setText(R.string.exactly);
         }else {
-            up = false;
+            //Wrong answer
+
+            up = false;//The second answer will not be recognized
+            //Message to server: Forget this vocabulary
             if (learnActivity.noteModels.get(position).getLearned() == (byte) 1){
                 MyAction.setLoadedTopic(learnActivity, false);
                 learnActivity.serverAPI.setLearned(learnActivity, learnActivity.noteModels.get(position).getId(), (byte) 0);
             }
+            //Notify: Wrong answer
             imgTrueFalse_2.setImageResource(R.drawable.ic_false);
-            txtTrueFalse.setText(R.string.wrong);
+            txtTrueFalse_2.setText(R.string.wrong);
         }
     }
 
     private void handleCheck() {
-        Handle.hideKeyboard(learnActivity, thisView);
-        btnOK.setBackgroundResource(R.drawable.layout_border_full_green);
-        imgTrueFalse.setVisibility(View.VISIBLE);////img notify
-        String inputText = txtInput.getText().toString();
-        if (en.equalsIgnoreCase(inputText)){
+        imgTrueFalse.setVisibility(View.VISIBLE);//Show notify
+        String inputText = txtInput.getText().toString(); //Get the answer content
+        //Check the answer
+        if (original.equalsIgnoreCase(inputText)){
+            //It's correct
+            Handle.hideKeyboard(learnActivity, thisView);//Close the keyboard
             imgTrueFalse.setImageResource(R.drawable.ic_true);
-            txtInput.setText(en);
-            txtInput.setEnabled(false);
-            txtInput.setEnabled(true);
+            txtInput.setText(original);
 
+
+            //Message to server: Remember this vocabulary
             if (learnActivity.noteModels.get(position).getLearned() == (byte) 0 && up){
                 learnActivity.serverAPI.setLearned(learnActivity, learnActivity.noteModels.get(position).getId(), (byte) 1);
                 MyAction.setLoadedTopic(learnActivity, false);
             }
 
         }else {
+            //Wrong answer
+
+            //Message to server: Forget this vocabulary
             if (learnActivity.noteModels.get(position).getLearned() == (byte) 1){
                 learnActivity.serverAPI.setLearned(learnActivity, learnActivity.noteModels.get(position).getId(), (byte) 0);
                 MyAction.setLoadedTopic(learnActivity, false);
@@ -273,43 +270,46 @@ public class LearnNowFragment extends Fragment {
             imgTrueFalse.setImageResource(R.drawable.ic_false);
         }
     }
-
-    private void handleBack() {
+    //Previous vocabulary
+    private void handlePrevious() {
         up = false;
         position--;
         if(position < 0)
             position = learnActivity.noteModels.size()-1;
-
+        //Execute session with position from: positionLearn.get(position)
         handleShow(positionLearn.get(position));
 
     }
 
+    //The next vocabulary
     private void handleContinue() {
         up = true;
         position++;
         if(position < learnActivity.noteModels.size()){
+            //Execute session with position from: positionLearn.get(position)
             handleShow(positionLearn.get(position));
         }else {
             position = 0;
+            //Show dialog box confirming topic transfer
             confirmTopicTransfer();
         }
     }
-
+    //Execute session with position from: position
     private void handleShow(final int position) {
 
+        //Hide the "notify" response
         if (layoutTrueFalse_2.getVisibility() == View.VISIBLE)
             layoutTrueFalse_2.setVisibility(View.INVISIBLE);
 
         if (imgTrueFalse.getVisibility() == View.VISIBLE)
             imgTrueFalse.setVisibility(View.GONE);
 
-
         Random rd = new Random();
 
         txtNumber.setText((this.position+1)+"/"+learnActivity.noteModels.size());
-        en = learnActivity.noteModels.get(position).getNoteSource();
-        vi = learnActivity.noteModels.get(position).getNoteMeaning();
-        txtVocabulary.setText(vi);
+        original = learnActivity.noteModels.get(position).getNoteSource();
+        means = learnActivity.noteModels.get(position).getNoteMeaning();
+        txtVocabulary.setText(means);
         languageSpeak = learnActivity.noteModels.get(position).getLangguageSource();;
 
         // rd.nextBoolean() == true || noteModels.size() < 4: word fill
@@ -336,6 +336,7 @@ public class LearnNowFragment extends Fragment {
         Random rd = new Random();
         int i1, i2, i3;
 
+        //Take out 3 different words and different from the results
         while (true){
             i1 = rd.nextInt(learnActivity.noteModels.size());
             if (i1 != position){
@@ -357,7 +358,7 @@ public class LearnNowFragment extends Fragment {
             }
         }
 
-        int kq = rd.nextInt(4) + 1;
+        int kq = rd.nextInt(4) + 1;//Get the resultant position random.
 
         switch (kq){
             case 1:
@@ -390,10 +391,9 @@ public class LearnNowFragment extends Fragment {
     }
 
     private void speakOutOnline(final String soundText, final String languageSpeak) {
+        btnSound.setBackgroundResource(R.drawable.ic_sound2);
         String url = "https://code.responsivevoice.org/getvoice.php?t="+soundText+"&tl="+languageSpeak+"&sv=&vn=&pitch=0.5&rate=0.5&vol=1";
         final MediaPlayer mediaPlayer = new MediaPlayer();
-
-        Log.i("LINK","Link sound: "+url);
 
         try {
             mediaPlayer.setDataSource(url);
@@ -402,7 +402,6 @@ public class LearnNowFragment extends Fragment {
 
         } catch (IOException e) {
             e.printStackTrace();
-            Log.i("SpeakOutOffline","IN1: "+soundText);
             speakOutOffline(soundText, languageSpeak);
         }
 
@@ -423,7 +422,6 @@ public class LearnNowFragment extends Fragment {
         mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
-                Log.i("SpeakOutOffline","IN2: "+soundText);
                 speakOutOffline(soundText, languageSpeak);
                 return false;
             }
@@ -432,14 +430,11 @@ public class LearnNowFragment extends Fragment {
 
     private  void speakOutOffline(final String toSpeak, final String languageSpeak){
         final Locale locale = new Locale(languageSpeak);
-
         t1=new TextToSpeech(learnActivity.getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR) {
                     t1.setLanguage(locale);
-                    Log.i("SpeakOutOffline","soundText: "+toSpeak);
-                    Log.i("SpeakOutOffline","languageSpeak: " + locale.getLanguage());
                     btnSound.setBackgroundResource(R.drawable.ic_sound);
                     t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH,null);
                 }
@@ -449,8 +444,7 @@ public class LearnNowFragment extends Fragment {
 
     }
 
-    private void handleShowEN(String en, View view) {
-
+    private void handleShowResult(String en, View view) {
         Tooltip.make(this.learnActivity,
                 new Tooltip.Builder(101)
                         .anchor(view, Tooltip.Gravity.BOTTOM)
@@ -472,49 +466,59 @@ public class LearnNowFragment extends Fragment {
     }
 
     private void addControls(View view) {
-        imgVocabulary = view.findViewById(R.id.imgVocabulary);
         txtVocabulary = view.findViewById(R.id.txtVocabulary);
-        txtNumber = view.findViewById(R.id.txtNumber);
-        txtInput = view.findViewById(R.id.txtInput);
-        btnOK = view.findViewById(R.id.btnOK);
-        btnBack = view.findViewById(R.id.btnBack);
+        btnPrevious = view.findViewById(R.id.btnPrevious);
         imgBack = view.findViewById(R.id.imgBack);
         btnContinue = view.findViewById(R.id.btnContinue);
         btnShow = view.findViewById(R.id.btnShow);
         btnSound = view.findViewById(R.id.btnSound);
+        txtNumber = view.findViewById(R.id.txtNumber);
+
+        //Learning style: 1
+        layoutCheck_1 = view.findViewById(R.id.layoutCheck1);
+        imgVocabulary = view.findViewById(R.id.imgVocabulary);
+        txtInput = view.findViewById(R.id.txtInput);
+        btnOK = view.findViewById(R.id.btnOK);
         imgTrueFalse = view.findViewById(R.id.imgTrueFalse);
+        imgTrueFalse.setVisibility(View.GONE);
+
+        //Learning style: 2
+        layoutCheck_2 = view.findViewById(R.id.layoutCheck2);
         imgTrueFalse_2 = view.findViewById(R.id.imgTrueFalse2);
         layoutTrueFalse_2 = view.findViewById(R.id.layoutTrueFalse2);
-        txtTrueFalse = view.findViewById(R.id.txtTrueFalse);
+        txtTrueFalse_2 = view.findViewById(R.id.txtTrueFalse_2);
         radA = view.findViewById(R.id.radA);
         radB = view.findViewById(R.id.radB);
         radC = view.findViewById(R.id.radC);
         radD = view.findViewById(R.id.radD);
         btnOK_2 = view.findViewById(R.id.btnOK_2);
-        layoutCheck_1 = view.findViewById(R.id.layoutCheck1);
-        layoutCheck_2 = view.findViewById(R.id.layoutCheck2);
-
-        imgTrueFalse.setVisibility(View.GONE);
         layoutTrueFalse_2.setVisibility(View.INVISIBLE);
 
-        handleGET();
+        //If the vocabulary was taken earlier
+        if (learnActivity.noteModels != null
+                && learnActivity.noteModels.size() > 0)
+            addRadPositionArrAndShow();
 
     }
 
+    //
     private void handleGET() {
-        if (!learnActivity.openedLearn ||
-                learnActivity.id == -1 ||
+
+        //learnActivity.id == -1: Did not learn any previous lessons
+        //learnActivity.id != MyAction.getIdTopic(learnActivity): The previous lesson id is different from the current lesson id
+        //(learnActivity.noteModels != null && learnActivity.noteModels.size() == 0): Vocabulary list is empty
+        if (learnActivity.id == -1 ||
                 learnActivity.id != MyAction.getIdTopic(learnActivity) ||
-                (learnActivity.noteModels != null && learnActivity.noteModels.size() == 0)){
+                (learnActivity.noteModels != null && learnActivity.noteModels.size() == 0)) {
+
+            //If the vocabulary has not been previously retrieved
             learnActivity.id = MyAction.getIdTopic(learnActivity);
             learnActivity.noteModels = new ArrayList<>();
             myIntentFilter();
-            learnActivity.id = (learnActivity.id==-1) ? learnActivity.topicModes.get(0).getId() :
+            learnActivity.id = (learnActivity.id == -1) ? learnActivity.topicModes.get(0).getId() :
                     learnActivity.id;
+            //Get the list of words from the server, with idTopic: learnActivity.id
             learnActivity.serverAPI.getVocabulary(learnActivity, learnActivity.id, Constants.LEARN);
-        }else {
-            if (learnActivity.noteModels != null && learnActivity.noteModels.size() > 0)
-                addRadPositionArrAndShow();
         }
     }
 
@@ -549,6 +553,8 @@ public class LearnNowFragment extends Fragment {
         }
     };
 
+    //Set up random vocabulary for the next session
+    //And perform the next "learn" session
     private void addRadPositionArrAndShow() {
         position = 0;
         Set arrPosition = new LinkedHashSet<Integer>();
@@ -556,6 +562,7 @@ public class LearnNowFragment extends Fragment {
         while (arrPosition.size() < learnActivity.noteModels.size())
             arrPosition.add(rd.nextInt(learnActivity.noteModels.size()));
         positionLearn = new ArrayList<>(arrPosition);
+        //Execute session with position from: positionLearn.get(position)
         handleShow(positionLearn.get(position));
 
 
@@ -564,6 +571,8 @@ public class LearnNowFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (MyAction.getFragmentNew(learnActivity)==MyAction.LEARN_FRAGMENT)
+            handleGET();
     }
 
     @Override
@@ -575,16 +584,6 @@ public class LearnNowFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
 }

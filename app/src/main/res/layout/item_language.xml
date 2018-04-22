@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/txtLanguage"
-        android:layout_width="83dp"
+        android:layout_width="84dp"
         android:layout_height="29dp"
         android:textColor="#039ce9"
         android:textSize="@dimen/text_content"

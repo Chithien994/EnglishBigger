@@ -42,7 +42,7 @@ import com.tcn.handle.MyAction;
 import com.tcn.models.TopicModels;
 
 
-public class TopicFragment extends Fragment {
+public class TopicFragment extends Fragment implements View.OnClickListener{
     public TopicActivity topicActivity;
 
     private ImageView btnBack, btnAdd, imgView, imgTrueList, imgTrueGrid;
@@ -50,7 +50,7 @@ public class TopicFragment extends Fragment {
     public ImageView btnEdit;
     public LinearLayout layoutOptionView, layoutList, layoutGrid;
     public Toolbar toolbarViewTopic;
-    private ConstraintLayout layoutView;
+    private ConstraintLayout layoutView, layoutRVTopic;
     private CoordinatorLayout layoutFragmentTopic;
     private AppBarLayout appBarLayout;
 
@@ -85,44 +85,54 @@ public class TopicFragment extends Fragment {
     }
 
     private void addEvents() {
-        //back
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                topicActivity.onBackPressed();
-            }
-        });
-        //add Topic
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnAdd.setOnClickListener(this);
+        btnBack.setOnClickListener(this);//back
+        layoutFragmentTopic.setOnClickListener(this); //close option view
+        rvTopic.setOnClickListener(this);
+        layoutRVTopic.setOnClickListener(this);
+        layoutView.setOnClickListener(this);//open option view or close option view
+        layoutList.setOnClickListener(this);//handle select List view
+        layoutGrid.setOnClickListener(this);//handle select Grid view
+      //  handleScrollRecyclerView();//Hide or show when scrolling RecyclerView
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btnAdd:
                 topicActivity.type = MyAction.ADD_TOPIC_FRAGMENT;
+                MyAction.setFragmentNew(topicActivity, MyAction.ADD_TOPIC_FRAGMENT);
                 topicActivity.saveFragmen(new TopicFragment());
                 topicActivity.callFragment(new AddAndEditTopicFragment(), "add", 0);
-            }
-        });
-
-        layoutFragmentTopic.setOnClickListener(hideViewOption);
-        layoutView.setOnClickListener(mView); //open option view or close option view
-        //handle select Grid view
-        layoutGrid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case R.id.btnBack:
+                topicActivity.onBackPressed();
+                break;
+            case R.id.layoutRVTopic:
+            case R.id.rvTopic:
+            case R.id.layoutFragmentTopic:
+                if (layoutOptionView.getVisibility() == View.VISIBLE)
+                    hideOptionView();
+                break;
+            case R.id.layoutView:
+                if (!cfEdit){
+                    if (layoutOptionView.getVisibility() == View.GONE){
+                        showOptionView();
+                    }else {
+                        hideOptionView();
+                    }
+                }
+                break;
+            case R.id.layoutGrid:
                 MyAction.setNumItemView(topicActivity, MyAction.GRID_VIEW);
                 checkInfoShowView();
-            }
-        });
-        //handle select List view
-        layoutList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case R.id.layoutList:
                 MyAction.setNumItemView(topicActivity, MyAction.LIST_VIEW);
                 checkInfoShowView();
-
-            }
-        });
-
-      //  handleScrollRecyclerView();//Hide or show when scrolling RecyclerView
+                break;
+            default:break;
+        }
     }
 
     private void handleScrollRecyclerView() {
@@ -179,6 +189,7 @@ public class TopicFragment extends Fragment {
         layoutOptionView = view.findViewById(R.id.layoutOptionView);
         layoutList = view.findViewById(R.id.layoutList);
         layoutGrid = view.findViewById(R.id.layoutGrid);
+        layoutRVTopic = view.findViewById(R.id.layoutRVTopic);
         rvTopic = view.findViewById(R.id.rvTopic);
         layoutView = view.findViewById(R.id.layoutView);
         layoutFragmentTopic = view.findViewById(R.id.layoutFragmentTopic);
@@ -190,8 +201,8 @@ public class TopicFragment extends Fragment {
 
     //check user selected view? (Grid view or List view)
     private void checkInfoShowView() {
-        imgTrueGrid.setVisibility(View.GONE);
-        imgTrueList.setVisibility(View.GONE);
+        imgTrueGrid.setVisibility(View.INVISIBLE);
+        imgTrueList.setVisibility(View.INVISIBLE);
 
         switch (MyAction.getNumItemView(topicActivity)){
             case MyAction.GRID_VIEW:
@@ -231,28 +242,6 @@ public class TopicFragment extends Fragment {
         topicAdapter.notifyDataSetChanged();
     }
 
-    //open option view or close option view
-    View.OnClickListener mView = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (cfEdit == false){
-                if (layoutOptionView.getVisibility() == View.GONE){
-                    showOptionView();
-                }else {
-                    hideOptionView();
-                }
-            }
-        }
-    };
-
-    View.OnClickListener hideViewOption = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (layoutOptionView.getVisibility() == View.VISIBLE){
-                hideOptionView();
-            }
-        }
-    };
 
     public void hideOptionView(){
         layoutOptionView.animate()
@@ -294,4 +283,5 @@ public class TopicFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
+
 }

@@ -141,15 +141,17 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
 
     //
     private void hideOrShowLearnNow(int position) {
-        if (scroll - position >= 0 && !leanrnShow){
-            leanrnShow = true;
-            noteFragment.showLearnNow();//Show learning button when scrolling up
-        }else if (scroll - position < 0 && leanrnShow){
-            leanrnShow = false;
-            noteFragment.hideLearnNow();//Hide learning button when scrolling down
+        int minus = (scroll-position)>0 ? scroll-position : (scroll-position)*(-1);
+        if (minus==1){
+            if (scroll - position > 0 && !leanrnShow){
+                leanrnShow = true;
+                noteFragment.showLearnNow();//Show learning button when scrolling up
+            }else if (scroll - position < 0 && leanrnShow){
+                leanrnShow = false;
+                noteFragment.hideLearnNow();//Hide learning button when scrolling down
+            }
         }
         scroll = position;
-
     }
 
     private void handleBackupWord(final NoteModels noteModels) {

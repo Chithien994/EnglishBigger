@@ -107,7 +107,8 @@ public class TopicActivity extends AppCompatActivity {
             //type = 7 Open a WhatDoPeopleLearn
             //type = 9 Open a friend's topic
             type = MyAction.getFragmentNew(this);
-            if (!MyAction.getLoadedTopic(this) && type!=MyAction.ADD_TOPIC_FRAGMENT && type!=MyAction.EDIT_TOPIC_FRAGMENT){
+            if (!MyAction.getLoadedTopic(this) && type!=MyAction.ADD_TOPIC_FRAGMENT && type!=MyAction.EDIT_TOPIC_FRAGMENT
+                    || (topicYourModes != null && topicYourModes.isEmpty())){
                 loadingTopic();
             }else{
                 handleOpenFragment();
@@ -146,12 +147,11 @@ public class TopicActivity extends AppCompatActivity {
 
     public void callFragment(Fragment fragment) {
         showFragmentTop();
-        android.support.v4.app.FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.layoutFragmentTopic, fragment);
-        transaction.commit();
-        manager.executePendingTransactions();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.layoutFragmentTopic, fragment);
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
     }
     public void callFragment(Fragment fragment, int rs) {
         showFragmentBottom();
@@ -222,7 +222,9 @@ public class TopicActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        handleGET();
+        if (MyAction.getFragmentNew(this) != MyAction.EDIT_TOPIC_FRAGMENT &&
+                MyAction.getFragmentNew(this) != MyAction.ADD_TOPIC_FRAGMENT)
+            handleGET();
         Log.d(TAG,"Action: onResume");
     }
 

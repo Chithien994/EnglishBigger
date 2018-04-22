@@ -47,15 +47,16 @@ public class LearnActivity extends AppCompatActivity {
     private LinearLayout fragmentLearn, fragmentAdd;
     public ArrayList<TopicModels> topicModes;
     public ArrayList<NoteModels> noteModels;
+    public Language language;
     public ServerAPI serverAPI;
     public Handle handle;
     public int pst;
     public int id = -1;
     private int open = 1;
-    public boolean cfRefresh = true;
-    public boolean openedLearn = false;
-    public boolean openedAdd = false;
-    public boolean topicLoaded = false;
+    private String thisLanguage = "";
+    public boolean openedLearn = false; //openedLearn == false: First open this screen
+    public boolean openedAdd = false; //openedAdd == false: First open this screen
+    public boolean topicLoaded = false; //topicLoaded == false: Topic list not loaded
     private InterstitialAd mInterstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,45 +79,46 @@ public class LearnActivity extends AppCompatActivity {
         topicModes = new ArrayList<>();
         serverAPI = new ServerAPI();
         handle = new Handle();
+        language = new Language();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         fragmentLearn = findViewById(R.id.fragmentLearn);
         fragmentAdd = findViewById(R.id.fragmentAdd);
         setSupportActionBar(toolbar);
         getSupportActionBar().hide();
-        handleGET();
     }
 
     private void handleGET(){
+
+        if (!thisLanguage.equalsIgnoreCase(language.getLanguage(this))){
+            thisLanguage = language.getLanguage(this);
+            openedAdd = false;
+            openedLearn = false;
+        }
         if (MyAction.getRefreshTopic(this)){
-            cfRefresh = true;
             openedAdd = false;
             openedLearn = false;
             topicLoaded = false;
             MyAction.setRefreshTopic(this,false);
         }
-        Log.d("LearnActivity","cfRefresh: "+cfRefresh);
-        if (cfRefresh){
-            loadAdFull(getString(R.string.ad_id_full_1));
-            cfRefresh = false;
-            pst = MyAction.getPosition(this);
-            Log.d("pst",pst+"");
-            open = MyAction.getFragmentNew(this);
-            //Get the topic name from the server
-            if(!topicLoaded){
-                handleGetNameTopic();
+        loadAdFull(getString(R.string.ad_id_full_1));
+        pst = MyAction.getPosition(this);
+        Log.d("pst",pst+"");
+        open = MyAction.getFragmentNew(this);
+        //Get the topic name from the server
+        if(!topicLoaded){
+            handleGetNameTopic();
 
-            }else if (openedLearn && open == MyAction.LEARN_FRAGMENT){
-                Log.d("LearnActivity","fragmentLearn");
-                fragmentAdd.setVisibility(View.GONE);
-                fragmentLearn.setVisibility(View.VISIBLE);
+        }else if (openedLearn && open == MyAction.LEARN_FRAGMENT){
+            Log.d("LearnActivity","fragmentLearn");
+            fragmentAdd.setVisibility(View.GONE);
+            fragmentLearn.setVisibility(View.VISIBLE);
 
-            }else if (openedAdd && open == MyAction.ADD_NEW_WORD_FRAGMENT){
-                Log.d("LearnActivity","fragmentAdd");
-                fragmentAdd.setVisibility(View.VISIBLE);
-                fragmentLearn.setVisibility(View.GONE);
-            }else {
-                handleOpenFragment();
-            }
+        }else if (openedAdd && open == MyAction.ADD_NEW_WORD_FRAGMENT){
+            Log.d("LearnActivity","fragmentAdd");
+            fragmentAdd.setVisibility(View.VISIBLE);
+            fragmentLearn.setVisibility(View.GONE);
+        }else {
+            handleOpenFragment();
         }
 
     }
@@ -221,7 +223,6 @@ public class LearnActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        cfRefresh = true;
         Log.d(TAG,"onPause\nopenedLearn: "+openedLearn+"\nopenedAdd: "+openedAdd);
         if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
@@ -252,7 +253,6 @@ public class LearnActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        cfRefresh = true;
         switch (MyAction.getActivityBulb(this)){
             case MyAction.LIST_ACTIVITY:
                 MyAction.setActivityBulb(this, MyAction.LEARN_ACTIVITY);

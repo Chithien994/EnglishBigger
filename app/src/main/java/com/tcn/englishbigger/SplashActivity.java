@@ -64,6 +64,7 @@ public class SplashActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        //check version
         serverAPI.checkUpdateVersion(SplashActivity.this, object);
         MyAction.setAction(this,true);
         MyAction.setRefreshTopic(this, true);
@@ -108,6 +109,7 @@ public class SplashActivity extends AppCompatActivity {
                         final String url = intent.getStringExtra("URL");
 
                         if (newVersion.compareTo(versionName) > 0){
+                            //There is a new version
                             SPLASH_DISPLAY_LENGTH *=2;
                             new AlertDialog.Builder(SplashActivity.this)
                                     .setTitle(getString(R.string.detectNewVersion))
