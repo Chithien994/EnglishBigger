@@ -49,13 +49,15 @@ import com.tcn.models.TopicModels;
  */
 
 public class BackupTopicAdapter extends RecyclerView.Adapter<BackupTopicAdapter.ViewHolder> {
-    TopicActivity topicActivity;
-    Activity context;
-    int resource;
-    ArrayList<TopicModels> objects;
-    String nameTopic = null;
-    AlertDialog alertDialog;
-    public static String MY_BRC_TOPIC_ADAPTER = "MY_BRC_TOPIC_ADAPTER";
+    private TopicActivity topicActivity;
+    private Activity context;
+    private int resource;
+    private ArrayList<TopicModels> objects;
+    private String nameTopic = null;
+    private AlertDialog alertDialog;
+    private boolean spIsChecked = false;
+    public static String MY_BRC_TOPIC_ADAPTER = "MY_BACKUP_TOPIC_ADAPTER";
+    public static String TAG = "BACKUP_TOPIC_ADAPTER";
 
     public BackupTopicAdapter(Activity context, int resource, ArrayList<TopicModels> objects){
         this.context = context;
@@ -182,8 +184,17 @@ public class BackupTopicAdapter extends RecyclerView.Adapter<BackupTopicAdapter.
             public void onClick(View view) {
                 Handle.hideKeyboard(topicActivity, topicActivity.view);
 
-                if (radShowTXTNewName.isChecked())
+                if (radShowTXTNewName.isChecked()){
                     nameTopic = txtNewNameTopicDialog.getText().toString();
+                    for (int i = 0; i < topicActivity.topicYourModes.size(); i++){
+                        if (nameTopic.equals(topicActivity.topicYourModes.get(i).getName())){
+                            Toast.makeText(topicActivity, topicActivity.getString(R.string.topicAlreadyExists), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    }
+                }
+
+                else spIsChecked = true;
                 if(!nameTopic.equalsIgnoreCase(context.getString(R.string.select_))){
                     JSONObject object = new JSONObject();
                     try {
@@ -238,8 +249,8 @@ public class BackupTopicAdapter extends RecyclerView.Adapter<BackupTopicAdapter.
                 Log.d("unregisterReceiver","Unregister Receiver");
                 if(!intent.getBooleanExtra("ERR",false))
                     try {
-                        MyAction.setRefreshTopic(context,true);
-                        topicActivity.loadedTopic = false;
+                        if (!spIsChecked)
+                            MyAction.setRefreshTopic(context,true);
                         alertDialog.cancel();
                     }catch (Exception e){
                         e.printStackTrace();

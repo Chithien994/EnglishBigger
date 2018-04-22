@@ -65,6 +65,7 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
     private String noteMeaning;
     private String noteSource;
     public static String MY_BRC_NOTE_ADAPTER = "MY_BRC_NOTE_ADAPTER";
+    private static String TAG = "NOTE_ADAPTER";
     private AlertDialog alertDialog;
     private String nameTopic;
     private int scroll = 0;
@@ -84,8 +85,9 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
     public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater = this.context.getLayoutInflater();
         View view = inflater.inflate(this.resource, null);
-
-        if (objects.size() > 0 && position == 1) noteFragment.showLearnNow();//Show learning node when the list has one or more objects
+        if (position == 0
+                && MyAction.getFragmentBulb(topicActivity) != MyAction.WDPL_FRAGMENT)
+            noteFragment.showLearnNow();//Show learning node when the list has one or more objects
 
         TextView txtNote = view.findViewById(R.id.txtNote);
         final LinearLayout layoutItem = view.findViewById(R.id.layoutItem);
@@ -216,8 +218,15 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
 
                 Handle.hideKeyboard(topicActivity, noteFragment.thisView);
 
-                if (radShowTXTNewName.isChecked())
+                if (radShowTXTNewName.isChecked()){
                     nameTopic = txtNewNameTopicDialog.getText().toString();
+                    for (int i = 0; i < topicActivity.topicYourModes.size(); i++){
+                        if (nameTopic.equals(topicActivity.topicYourModes.get(i).getName())){
+                            Toast.makeText(topicActivity, topicActivity.getString(R.string.topicAlreadyExists), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    }
+                }
                 if(!nameTopic.equalsIgnoreCase(context.getString(R.string.select_))){
                     JSONObject object = new JSONObject();
                     try {
@@ -229,8 +238,8 @@ public class NoteAdapter extends ArrayAdapter<NoteModels> {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    MyAction.setRefreshTopic(topicActivity,true);
-                    topicActivity.loadedTopic = false;
+                    if (!radShowSPNewName.isChecked())
+                        MyAction.setRefreshTopic(topicActivity,true);
                     alertDialog.cancel();
                 }else {
                     Toast.makeText(topicActivity, context.getString(R.string.msgPleaseSelectAValidTopicName), Toast.LENGTH_LONG).show();

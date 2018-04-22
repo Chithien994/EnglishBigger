@@ -48,6 +48,7 @@ public class TopicActivity extends AppCompatActivity {
     public View view;
 
     public static final String broadcastAction = "BroadcastAction_TOPIC";
+    private static String TAG = "TOPIC_ACTIVITY";
 
     public ServerAPI serverAPI;
     public UsersFB usersFB;
@@ -58,12 +59,11 @@ public class TopicActivity extends AppCompatActivity {
     public int sizeNow; //Saves the number of words of a selected topic
     public int position = -1; //The updated image position will be assigned to it
     public boolean cfRefresh = true;
-    public boolean loadedTopic = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("TOPIC_ACTIVITY","Action: onCreate");
+        Log.d(TAG,"Action: onCreate");
         setContentView(R.layout.activity_topic);
         addControls();
         addEvents();
@@ -95,7 +95,7 @@ public class TopicActivity extends AppCompatActivity {
     }
 
     private void handleGET(){
-        if (!loadedTopic){
+        if (!MyAction.getLoadedTopic(this)){
             cfRefresh = true;
         }
         if (cfRefresh){
@@ -107,7 +107,7 @@ public class TopicActivity extends AppCompatActivity {
             //type = 7 Open a WhatDoPeopleLearn
             //type = 9 Open a friend's topic
             type = MyAction.getFragmentNew(this);
-            if (!loadedTopic && type!=MyAction.ADD_TOPIC_FRAGMENT && type!=MyAction.EDIT_TOPIC_FRAGMENT){
+            if (!MyAction.getLoadedTopic(this) && type!=MyAction.ADD_TOPIC_FRAGMENT && type!=MyAction.EDIT_TOPIC_FRAGMENT){
                 loadingTopic();
             }else{
                 handleOpenFragment();
@@ -117,7 +117,7 @@ public class TopicActivity extends AppCompatActivity {
     }
 
     public void loadingTopic() {
-        loadedTopic = true;
+        MyAction.setLoadedTopic(this,true);
         myIntentFilter();
         Users users = new Users(TopicActivity.this);
         JSONObject object = new JSONObject();
@@ -179,7 +179,7 @@ public class TopicActivity extends AppCompatActivity {
         IntentFilter mIntentFilter = new IntentFilter();
         mIntentFilter.addAction(broadcastAction);
         registerReceiver(mReceiver,mIntentFilter);
-        Log.i("DK","mReceiver");
+        Log.i(TAG,"DK: mReceiver");
     }
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -188,7 +188,7 @@ public class TopicActivity extends AppCompatActivity {
                 try {
                     topicYourModes = (ArrayList<TopicModels>) intent.getSerializableExtra("TOPIC");
                     unregisterReceiver(mReceiver);
-                    Log.d("unregisterReceiver","Unregister Receiver");
+                    Log.d(TAG,"Unregister Receiver");
                     handleOpenFragment();
 
                 }catch (Exception e){
@@ -223,12 +223,13 @@ public class TopicActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         handleGET();
-        Log.d("TOPIC_ACTIVITY","Action: onResume");
+        Log.d(TAG,"Action: onResume");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG,"Action: onResume");
         cfRefresh = true;
     }
 
@@ -245,7 +246,7 @@ public class TopicActivity extends AppCompatActivity {
             }else {
                 if (size != sizeNow && size != -1){
                     cfRefresh = true;
-                    loadedTopic = false;
+                    MyAction.setLoadedTopic(this, false);
                     IntentActivity.handleOpenTopicActivy(this);
                 }else {
                     if(type==MyAction.WDPL_FRAGMENT || type==MyAction.TOPIC_FRIEND_FRAGMENT) showFragmentBottom();

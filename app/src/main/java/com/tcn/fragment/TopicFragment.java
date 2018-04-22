@@ -56,9 +56,8 @@ public class TopicFragment extends Fragment {
 
     private RecyclerView rvTopic;
     private TopicAdapter topicAdapter;
-    private SharedPreferences spf;
-    private Handle handle;
 
+    private static String TAG = "TOPIC_FRAGMENT";
     private static final float APPBAR_ELEVATION = 14f;
     private static final int HIDE_THRESHOLD = 20;
     private int scrolledDistance = 0;
@@ -72,13 +71,13 @@ public class TopicFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("TOPIC_FRAGMENT","Action: onCreate");
+        Log.d(TAG,"Action: onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("TOPIC_FRAGMENT","Action: onCreateView");
+        Log.d(TAG,"Action: onCreateView");
         View view = inflater.inflate(R.layout.fragment_topic, container, false);
         addControls(view);
         addEvents();
@@ -184,8 +183,6 @@ public class TopicFragment extends Fragment {
         layoutView = view.findViewById(R.id.layoutView);
         layoutFragmentTopic = view.findViewById(R.id.layoutFragmentTopic);
         hideOptionView();
-        handle = new Handle();
-        spf = getActivity().getSharedPreferences(getActivity().getString(R.string.saveInfoApp), getActivity().MODE_PRIVATE);
         checkInfoShowView(); //check user selected view?(Grid view or List view)
     }
 
@@ -227,7 +224,7 @@ public class TopicFragment extends Fragment {
     //resource: layout item displayed
     //The number of columns displayed
     private void handleShowView(int resource, int column, boolean type) {
-        Log.d("Tab_View","Column: "+column);
+        Log.d(TAG,"Tab_View: Column: "+column);
         rvTopic.setLayoutManager(new GridLayoutManager(this.topicActivity, column));
         topicAdapter = new TopicAdapter(topicActivity,this,resource,topicActivity.topicYourModes,type);
         rvTopic.setAdapter(topicAdapter);
@@ -288,7 +285,7 @@ public class TopicFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
-        Log.d("TOPIC_FRAGMENT","Action: onAttach");
+        Log.d(TAG,"Action: onAttach");
         super.onAttach(context);
         if (context instanceof TopicActivity) {
             topicActivity = (TopicActivity) context;

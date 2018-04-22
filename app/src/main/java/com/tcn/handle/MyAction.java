@@ -27,7 +27,7 @@ public class MyAction {
     public static final int EDIT_TOPIC_FRAGMENT = 5;
     public static final int NOTE_FRAGMENT = 6;
     public static final int WDPL_FRAGMENT = 7;
-    public static final int TOPIC_FRIEND_FRAGMENT = 8;
+    public static final int TOPIC_FRIEND_FRAGMENT = 8;//By WDPL_FRAGMENT: Show only topics of a particular friend
     public static final int TAB_BF_FRAGMENT = 9;
     public static final int TAB_BO_FRAGMENT = 10;
 
@@ -205,6 +205,20 @@ public class MyAction {
     public static String getNameFriend(Context context) {
         preferences = context.getSharedPreferences(context.getString(R.string.saveInfoApp), context.MODE_PRIVATE);
         return preferences.getString("NAME_FRIEND", "");
+    }
+
+    public static void setLoadedTopic(Context context, boolean loaded){
+        preferences = context.getSharedPreferences(context.getString(R.string.saveInfoApp), context.MODE_PRIVATE);
+        editor = preferences.edit();
+        editor.putBoolean("LOADED_TOPIC", loaded);
+        editor.commit();
+        editor.clear();
+        Log.d(TAG, "Save LOADED_TOPIC: "+preferences.getBoolean("LOADED_TOPIC",false));
+    }
+
+    public static boolean getLoadedTopic(Context context) {
+        preferences = context.getSharedPreferences(context.getString(R.string.saveInfoApp), context.MODE_PRIVATE);
+        return preferences.getBoolean("LOADED_TOPIC", false);
     }
 
     public static void setRefreshTopic(Context context, boolean cfRefresh){

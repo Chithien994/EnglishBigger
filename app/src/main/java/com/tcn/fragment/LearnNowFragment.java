@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -38,8 +39,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Random;
+import java.util.Set;
 
 import com.tcn.englishbigger.TopicActivity;
 import com.tcn.handle.AdFast;
@@ -57,6 +60,7 @@ import com.tcn.models.NoteModels;
 public class LearnNowFragment extends Fragment {
     private LearnActivity learnActivity;
     public static String MY_BRC_NOTE = "MY_BRC_NOTE";
+    private static String TAG = "LEARN_NOW_FRAGMENT";
     private View thisView;
 
     private ImageView imgVocabulary, imgTrueFalse, imgTrueFalse_2, imgBack;
@@ -69,12 +73,11 @@ public class LearnNowFragment extends Fragment {
 
     private String en,vi,sound;
     private TextToSpeech t1;
-    private int number = 1;
     private String languageSpeak;
-    private boolean cf = false;
-    private ArrayList<Integer> learned;
-    private int position;
-    private int positionLearned = 0;
+   // private boolean cf = false; //Report true and false
+    private boolean up = true; //In this session: Marked "memorized" when first responded correctly
+    private ArrayList<Integer> positionLearn;
+    private int position = 0;
     private InterstitialAd mInterstitialAd;
 
     public LearnNowFragment() {
@@ -105,7 +108,6 @@ public class LearnNowFragment extends Fragment {
     }
 
     private void addEvents() {
-
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,10 +148,8 @@ public class LearnNowFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (cf == false){
+                if (imgTrueFalse.getVisibility() == View.VISIBLE)
                     imgTrueFalse.setVisibility(View.GONE);
-                }
-
             }
 
             @Override
@@ -157,95 +157,7 @@ public class LearnNowFragment extends Fragment {
 
             }
         });
-    }
 
-    private void confirmTopicTransfer(){
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        }
-        new AlertDialog.Builder(learnActivity)
-                .setMessage(getActivity().getString(R.string.finish))
-                .setCancelable(false)
-                .setNegativeButton(getActivity().getString(R.string.repeat), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        loadAdFull(getString(R.string.ad_id_full_2));
-                        number = 1;
-                        learned.clear();
-                        handleShow(true);
-                    }
-                })
-                .setPositiveButton(getActivity().getString(R.string.otherTopic), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        MyAction.setFragmentNew(learnActivity, MyAction.TOPIC_FRAGMENT);
-                        MyAction.setActivityBulb(learnActivity, MyAction.LEARN_ACTIVITY);
-                        MyAction.setFragmentBulb(learnActivity, MyAction.LEARN_FRAGMENT);
-                        if (learnActivity.cfUpdate) {
-                            learnActivity.cfUpdate = false;
-                            IntentActivity.openAndUpdateTopicActivy(learnActivity);
-                        }
-                        else IntentActivity.handleOpenTopicActivy(learnActivity);
-                    }
-                }).show();
-        Log.i("MOVE","Move To First");
-    }
-
-    private void handleCheck_2() {
-        String inputText = null;
-        if (radA.isChecked()){
-            inputText = radA.getText().toString();
-        }else if (radB.isChecked()){
-            inputText = radB.getText().toString();
-        }else if (radC.isChecked()){
-            inputText = radC.getText().toString();
-        }else if (radD.isChecked()){
-            inputText = radD.getText().toString();
-        }
-
-        layoutTrueFalse_2.setVisibility(View.VISIBLE);
-        if (en.equalsIgnoreCase(inputText)){
-
-            if (learnActivity.noteModels.get(position).getLearned() == (byte) 0){
-                learnActivity.serverAPI.setLearned(learnActivity, learnActivity.noteModels.get(position).getId(), (byte) 1);
-                learnActivity.cfUpdate = true;
-            }
-
-            imgTrueFalse_2.setImageResource(R.drawable.ic_true);
-            txtTrueFalse.setText(R.string.exactly);
-        }else {
-
-            imgTrueFalse_2.setImageResource(R.drawable.ic_false);
-            txtTrueFalse.setText(R.string.wrong);
-        }
-    }
-
-    private void handleCheck() {
-        Handle.hideKeyboard(learnActivity, thisView);
-        btnOK.setBackgroundResource(R.drawable.layout_border_full_green);
-        imgTrueFalse.setVisibility(View.VISIBLE);
-        String inputText = txtInput.getText().toString();
-        if (en.equalsIgnoreCase(inputText) == true){
-            imgTrueFalse.setImageResource(R.drawable.ic_true);
-            cf = true;
-            txtInput.setText(en);
-            cf = false;
-            txtInput.setEnabled(false);
-            txtInput.setEnabled(true);
-
-            if (learnActivity.noteModels.get(position).getLearned() == (byte) 0){
-                learnActivity.serverAPI.setLearned(learnActivity, learnActivity.noteModels.get(position).getId(), (byte) 1);
-                learnActivity.cfUpdate = true;
-            }
-
-            if (number == learnActivity.noteModels.size()){
-                confirmTopicTransfer();
-            }
-
-        }else {
-            cf = false;
-            imgTrueFalse.setImageResource(R.drawable.ic_false);
-        }
         imgTrueFalse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -253,116 +165,6 @@ public class LearnNowFragment extends Fragment {
                 imgTrueFalse.setVisibility(View.GONE);
             }
         });
-    }
-
-    private void handleBack() {
-
-        if (number == 1){
-            number = learnActivity.noteModels.size();
-            Log.i("MOVE","Move To Last");
-
-        }else {
-            number--;
-        }
-        positionLearned ++;
-        Log.i("Back_positionLearned",positionLearned +"");
-        handleShow(false);
-    }
-
-    private void handleContinue() {
-        if(learnActivity.noteModels.size() == number){
-            confirmTopicTransfer();
-        }else {
-
-            number++;
-
-            if (positionLearned > 0){
-
-                positionLearned --;
-                handleShow(false);
-
-            }else {
-                positionLearned = 0;
-                handleShow(true);
-            }
-        }
-    }
-
-    private void handleShow(boolean rand) {
-
-        if (number == 1){
-            btnBack.setEnabled(false);
-
-        }else {
-            btnBack.setEnabled(true);
-        }
-
-        if (layoutTrueFalse_2.getVisibility() == View.VISIBLE){
-            layoutTrueFalse_2.setVisibility(View.INVISIBLE);
-        }
-
-        if (imgTrueFalse.getVisibility() == View.VISIBLE){
-            imgTrueFalse.setVisibility(View.GONE);
-        }
-
-        Random rd = new Random();
-        if (rand){
-
-            position = rd.nextInt(learnActivity.noteModels.size());
-            Log.i("position",position+" ");
-
-            if (learned != null){
-                for (int i = 0; i < learned.size(); i++){
-
-                    if (position == learned.get(i)){
-                        handleShow(true);
-                        return;
-                    }
-                }
-            }else {
-
-                number = 1;
-            }
-
-            learned.add(position);
-
-        }else {
-
-            position = learned.get(learned.size() - 1 - positionLearned);
-            Log.i("position",position+" ");
-
-        }
-
-        txtNumber.setText(number+"");
-        try {
-            en = learnActivity.noteModels.get(position).getNoteSource();
-            vi = learnActivity.noteModels.get(position).getNoteMeaning();
-            txtVocabulary.setText(vi);
-            languageSpeak = learnActivity.noteModels.get(position).getLangguageSource();;
-
-            // rd.nextBoolean() == true || noteModels.size() < 4: word fill
-            // rd.nextBoolean() == false && noteModels.size() >= 4: Multiple-choice
-            if (rd.nextBoolean() || learnActivity.noteModels.size() < 4){
-                //Hide: Multiple-choice
-                layoutCheck_2.setVisibility(View.GONE);
-                //Show: word fill
-                layoutCheck_1.setVisibility(View.VISIBLE);
-                txtInput.setText("");
-
-            }else {
-                //Hide: word fill
-                layoutCheck_1.setVisibility(View.GONE);
-                //Show: Multiple-choice
-                layoutCheck_2.setVisibility(View.VISIBLE);
-                handleLearn_2();
-
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-
-        }
-
 
         btnShow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -386,27 +188,170 @@ public class LearnNowFragment extends Fragment {
         });
     }
 
-    private void handleLearn_2() {
+    private void confirmTopicTransfer(){
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        }
+        new AlertDialog.Builder(learnActivity)
+                .setMessage(getActivity().getString(R.string.finish))
+                .setCancelable(false)
+                .setNegativeButton(getActivity().getString(R.string.repeat), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        loadAdFull(getString(R.string.ad_id_full_2));
+
+                        addRadPositionArrAndShow();
+                    }
+                })
+                .setPositiveButton(getActivity().getString(R.string.otherTopic), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        MyAction.setFragmentNew(learnActivity, MyAction.TOPIC_FRAGMENT);
+                        MyAction.setActivityBulb(learnActivity, MyAction.LEARN_ACTIVITY);
+                        MyAction.setFragmentBulb(learnActivity, MyAction.LEARN_FRAGMENT);
+                        IntentActivity.handleOpenTopicActivy(learnActivity);
+                    }
+                }).show();
+        Log.i("MOVE","Move To First");
+    }
+
+    private void handleCheck_2() {
+        String inputText = null;
+        if (radA.isChecked()){
+            inputText = radA.getText().toString();
+        }else if (radB.isChecked()){
+            inputText = radB.getText().toString();
+        }else if (radC.isChecked()){
+            inputText = radC.getText().toString();
+        }else if (radD.isChecked()){
+            inputText = radD.getText().toString();
+        }
+
+        layoutTrueFalse_2.setVisibility(View.VISIBLE);//layout notify
+        if (en.equalsIgnoreCase(inputText)){
+
+            if (learnActivity.noteModels.get(position).getLearned() == (byte) 0 && up){
+                MyAction.setLoadedTopic(learnActivity, false);
+                learnActivity.serverAPI.setLearned(learnActivity, learnActivity.noteModels.get(position).getId(), (byte) 1);
+            }
+
+            imgTrueFalse_2.setImageResource(R.drawable.ic_true);
+            txtTrueFalse.setText(R.string.exactly);
+        }else {
+            up = false;
+            if (learnActivity.noteModels.get(position).getLearned() == (byte) 1){
+                MyAction.setLoadedTopic(learnActivity, false);
+                learnActivity.serverAPI.setLearned(learnActivity, learnActivity.noteModels.get(position).getId(), (byte) 0);
+            }
+            imgTrueFalse_2.setImageResource(R.drawable.ic_false);
+            txtTrueFalse.setText(R.string.wrong);
+        }
+    }
+
+    private void handleCheck() {
+        Handle.hideKeyboard(learnActivity, thisView);
+        btnOK.setBackgroundResource(R.drawable.layout_border_full_green);
+        imgTrueFalse.setVisibility(View.VISIBLE);////img notify
+        String inputText = txtInput.getText().toString();
+        if (en.equalsIgnoreCase(inputText)){
+            imgTrueFalse.setImageResource(R.drawable.ic_true);
+            txtInput.setText(en);
+            txtInput.setEnabled(false);
+            txtInput.setEnabled(true);
+
+            if (learnActivity.noteModels.get(position).getLearned() == (byte) 0 && up){
+                learnActivity.serverAPI.setLearned(learnActivity, learnActivity.noteModels.get(position).getId(), (byte) 1);
+                MyAction.setLoadedTopic(learnActivity, false);
+            }
+
+        }else {
+            if (learnActivity.noteModels.get(position).getLearned() == (byte) 1){
+                learnActivity.serverAPI.setLearned(learnActivity, learnActivity.noteModels.get(position).getId(), (byte) 0);
+                MyAction.setLoadedTopic(learnActivity, false);
+            }
+            up = false;
+            imgTrueFalse.setImageResource(R.drawable.ic_false);
+        }
+    }
+
+    private void handleBack() {
+        up = false;
+        position--;
+        if(position < 0)
+            position = learnActivity.noteModels.size()-1;
+
+        handleShow(positionLearn.get(position));
+
+    }
+
+    private void handleContinue() {
+        up = true;
+        position++;
+        if(position < learnActivity.noteModels.size()){
+            handleShow(positionLearn.get(position));
+        }else {
+            position = 0;
+            confirmTopicTransfer();
+        }
+    }
+
+    private void handleShow(final int position) {
+
+        if (layoutTrueFalse_2.getVisibility() == View.VISIBLE)
+            layoutTrueFalse_2.setVisibility(View.INVISIBLE);
+
+        if (imgTrueFalse.getVisibility() == View.VISIBLE)
+            imgTrueFalse.setVisibility(View.GONE);
+
+
+        Random rd = new Random();
+
+        txtNumber.setText((this.position+1)+"/"+learnActivity.noteModels.size());
+        en = learnActivity.noteModels.get(position).getNoteSource();
+        vi = learnActivity.noteModels.get(position).getNoteMeaning();
+        txtVocabulary.setText(vi);
+        languageSpeak = learnActivity.noteModels.get(position).getLangguageSource();;
+
+        // rd.nextBoolean() == true || noteModels.size() < 4: word fill
+        // rd.nextBoolean() == false && noteModels.size() >= 4: Multiple-choice
+        if (rd.nextBoolean() || learnActivity.noteModels.size() < 4){
+            //Hide: Multiple-choice
+            layoutCheck_2.setVisibility(View.GONE);
+            //Show: word fill
+            layoutCheck_1.setVisibility(View.VISIBLE);
+            txtInput.setText("");
+
+        }else {
+            //Hide: word fill
+            layoutCheck_1.setVisibility(View.GONE);
+            //Show: Multiple-choice
+            layoutCheck_2.setVisibility(View.VISIBLE);
+            handleLearn_2(position);
+
+        }
+    }
+
+    private void handleLearn_2(int position) {
 
         Random rd = new Random();
         int i1, i2, i3;
 
         while (true){
-            i1 = rd.nextInt(learnActivity.noteModels.size()-1);
+            i1 = rd.nextInt(learnActivity.noteModels.size());
             if (i1 != position){
                 break;
             }
         }
 
         while (true){
-            i2 = rd.nextInt(learnActivity.noteModels.size()-1);
-            if (i1 != i2 && i2 != position){
+            i2 = rd.nextInt(learnActivity.noteModels.size());
+            if (i2 != i1 && i2 != position){
                 break;
             }
         }
 
         while (true){
-            i3 = rd.nextInt(learnActivity.noteModels.size()-1);
+            i3 = rd.nextInt(learnActivity.noteModels.size());
             if (i3 != i1 && i3 != i2 && i3 != position){
                 break;
             }
@@ -414,30 +359,32 @@ public class LearnNowFragment extends Fragment {
 
         int kq = rd.nextInt(4) + 1;
 
-        if (kq == 1){
-            radA.setText(learnActivity.noteModels.get(position).getNoteSource());
-            radB.setText(learnActivity.noteModels.get(i1).getNoteSource());
-            radC.setText(learnActivity.noteModels.get(i2).getNoteSource());
-            radD.setText(learnActivity.noteModels.get(i3).getNoteSource());
-
-        }else if (kq == 2){
-            radA.setText(learnActivity.noteModels.get(i1).getNoteSource());
-            radB.setText(learnActivity.noteModels.get(position).getNoteSource());
-            radC.setText(learnActivity.noteModels.get(i2).getNoteSource());
-            radD.setText(learnActivity.noteModels.get(i3).getNoteSource());
-
-        }else if (kq == 3){
-            radA.setText(learnActivity.noteModels.get(i1).getNoteSource());
-            radB.setText(learnActivity.noteModels.get(i2).getNoteSource());
-            radC.setText(learnActivity.noteModels.get(position).getNoteSource());
-            radD.setText(learnActivity.noteModels.get(i3).getNoteSource());
-
-        }else if (kq == 4){
-            radA.setText(learnActivity.noteModels.get(i1).getNoteSource());
-            radB.setText(learnActivity.noteModels.get(i2).getNoteSource());
-            radC.setText(learnActivity.noteModels.get(i3).getNoteSource());
-            radD.setText(learnActivity.noteModels.get(position).getNoteSource());
-
+        switch (kq){
+            case 1:
+                radA.setText(learnActivity.noteModels.get(position).getNoteSource());
+                radB.setText(learnActivity.noteModels.get(i1).getNoteSource());
+                radC.setText(learnActivity.noteModels.get(i2).getNoteSource());
+                radD.setText(learnActivity.noteModels.get(i3).getNoteSource());
+                break;
+            case 2:
+                radA.setText(learnActivity.noteModels.get(i1).getNoteSource());
+                radB.setText(learnActivity.noteModels.get(position).getNoteSource());
+                radC.setText(learnActivity.noteModels.get(i2).getNoteSource());
+                radD.setText(learnActivity.noteModels.get(i3).getNoteSource());
+                break;
+            case 3:
+                radA.setText(learnActivity.noteModels.get(i1).getNoteSource());
+                radB.setText(learnActivity.noteModels.get(i2).getNoteSource());
+                radC.setText(learnActivity.noteModels.get(position).getNoteSource());
+                radD.setText(learnActivity.noteModels.get(i3).getNoteSource());
+                break;
+            case 4:
+                radA.setText(learnActivity.noteModels.get(i1).getNoteSource());
+                radB.setText(learnActivity.noteModels.get(i2).getNoteSource());
+                radC.setText(learnActivity.noteModels.get(i3).getNoteSource());
+                radD.setText(learnActivity.noteModels.get(position).getNoteSource());
+                break;
+            default:break;
         }
 
     }
@@ -547,14 +494,14 @@ public class LearnNowFragment extends Fragment {
         layoutCheck_1 = view.findViewById(R.id.layoutCheck1);
         layoutCheck_2 = view.findViewById(R.id.layoutCheck2);
 
-
         imgTrueFalse.setVisibility(View.GONE);
         layoutTrueFalse_2.setVisibility(View.INVISIBLE);
+
+        handleGET();
 
     }
 
     private void handleGET() {
-        learned = new ArrayList<Integer>();
         if (!learnActivity.openedLearn ||
                 learnActivity.id == -1 ||
                 learnActivity.id != MyAction.getIdTopic(learnActivity) ||
@@ -566,8 +513,8 @@ public class LearnNowFragment extends Fragment {
                     learnActivity.id;
             learnActivity.serverAPI.getVocabulary(learnActivity, learnActivity.id, Constants.LEARN);
         }else {
-            if (learnActivity.noteModels != null &&learnActivity.noteModels.size() > 0)
-                handleShow(true);
+            if (learnActivity.noteModels != null && learnActivity.noteModels.size() > 0)
+                addRadPositionArrAndShow();
         }
     }
 
@@ -576,21 +523,20 @@ public class LearnNowFragment extends Fragment {
         IntentFilter mIntentFilter = new IntentFilter();
         mIntentFilter.addAction(MY_BRC_NOTE);
         getActivity().registerReceiver(mReceiver,mIntentFilter);
-        Log.i("DK","mReceiver");
+        Log.i(TAG,"DK: mReceiver");
     }
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(MY_BRC_NOTE)) {
                 Handle.unregisterReceiver(context,mReceiver);
+                learnActivity.topicLoaded = true;
                 if (intent.getSerializableExtra("NOTE") != null){
                     learnActivity.noteModels = (ArrayList<NoteModels>) intent.getSerializableExtra("NOTE");
-                    number = 1;
                     if (learnActivity.noteModels.size()>0)
-                        handleShow(true);
+                        addRadPositionArrAndShow();
                     else {
                         learnActivity.openedLearn = false;
-                        learnActivity.openedAdd = true;
                         MyAction.setActivityBulb(learnActivity, MyAction.LIST_ACTIVITY);
                         MyAction.setFragmentNew(learnActivity, MyAction.TOPIC_FRAGMENT);
                         IntentActivity.handleOpenTopicActivy(learnActivity);
@@ -603,10 +549,21 @@ public class LearnNowFragment extends Fragment {
         }
     };
 
+    private void addRadPositionArrAndShow() {
+        position = 0;
+        Set arrPosition = new LinkedHashSet<Integer>();
+        Random rd = new Random();
+        while (arrPosition.size() < learnActivity.noteModels.size())
+            arrPosition.add(rd.nextInt(learnActivity.noteModels.size()));
+        positionLearn = new ArrayList<>(arrPosition);
+        handleShow(positionLearn.get(position));
+
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        handleGET();
     }
 
     @Override

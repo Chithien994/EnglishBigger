@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -42,7 +43,8 @@ public class LearnActivity extends AppCompatActivity {
     public static String TAG = "LearnActivity";
     public static String MY_BRC_LEARN_ACTIVITY = "MY_BRC_LEARN_ACTIVITY";
     public SQLiteDatabase database;
-    Toolbar toolbar;
+    private Toolbar toolbar;
+    private LinearLayout fragmentLearn, fragmentAdd;
     public ArrayList<TopicModels> topicModes;
     public ArrayList<NoteModels> noteModels;
     public ServerAPI serverAPI;
@@ -50,10 +52,10 @@ public class LearnActivity extends AppCompatActivity {
     public int pst;
     public int id = -1;
     private int open = 1;
-    public boolean cfUpdate = false;
     public boolean cfRefresh = true;
     public boolean openedLearn = false;
     public boolean openedAdd = false;
+    public boolean topicLoaded = false;
     private InterstitialAd mInterstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,8 @@ public class LearnActivity extends AppCompatActivity {
         serverAPI = new ServerAPI();
         handle = new Handle();
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        fragmentLearn = findViewById(R.id.fragmentLearn);
+        fragmentAdd = findViewById(R.id.fragmentAdd);
         setSupportActionBar(toolbar);
         getSupportActionBar().hide();
         handleGET();
@@ -87,6 +91,7 @@ public class LearnActivity extends AppCompatActivity {
             cfRefresh = true;
             openedAdd = false;
             openedLearn = false;
+            topicLoaded = false;
             MyAction.setRefreshTopic(this,false);
         }
         Log.d("LearnActivity","cfRefresh: "+cfRefresh);
@@ -97,12 +102,18 @@ public class LearnActivity extends AppCompatActivity {
             Log.d("pst",pst+"");
             open = MyAction.getFragmentNew(this);
             //Get the topic name from the server
-            if(!openedLearn && !openedAdd){
+            if(!topicLoaded){
                 handleGetNameTopic();
-            }else if (open==MyAction.ADD_NEW_WORD_FRAGMENT){
-                handleOpenFragment();
-            }else if (open==MyAction.LEARN_FRAGMENT){
-                handleOpenFragment();
+
+            }else if (openedLearn && open == MyAction.LEARN_FRAGMENT){
+                Log.d("LearnActivity","fragmentLearn");
+                fragmentAdd.setVisibility(View.GONE);
+                fragmentLearn.setVisibility(View.VISIBLE);
+
+            }else if (openedAdd && open == MyAction.ADD_NEW_WORD_FRAGMENT){
+                Log.d("LearnActivity","fragmentAdd");
+                fragmentAdd.setVisibility(View.VISIBLE);
+                fragmentLearn.setVisibility(View.GONE);
             }else {
                 handleOpenFragment();
             }
@@ -112,6 +123,7 @@ public class LearnActivity extends AppCompatActivity {
 
     //Get the topic name from the server
     private void handleGetNameTopic() {
+        topicLoaded = true;
         myIntentFilter();
 
         Users users = new Users(this);
@@ -126,19 +138,23 @@ public class LearnActivity extends AppCompatActivity {
     }
 
     private void handleOpenFragment(){
+        fragmentLearn.setVisibility(View.GONE);
+        fragmentAdd.setVisibility(View.GONE);
         if (open == MyAction.LEARN_FRAGMENT){
+            fragmentLearn.setVisibility(View.VISIBLE);
             openedLearn = true;
-            callFragment(new  LearnNowFragment());
+            callFragment(R.id.fragmentLearn, new  LearnNowFragment());
         }else if (open == MyAction.ADD_NEW_WORD_FRAGMENT){
+            fragmentAdd.setVisibility(View.VISIBLE);
             openedAdd = true;
-            callFragment(new  AddFragment());
+            callFragment(R.id.fragmentAdd, new  AddFragment());
         }
     }
 
-    public void callFragment(Fragment fragment) {
+    public void callFragment(int idFM, Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.replace(R.id.fragment, fragment);
+        fragmentTransaction.replace(idFM, fragment);
         fragmentTransaction.commit();
         getSupportFragmentManager().executePendingTransactions();
     }
@@ -159,6 +175,7 @@ public class LearnActivity extends AppCompatActivity {
                         handleOpenFragment();
                     }else {
                         // If not topic
+                        topicLoaded = false;
                         new AlertDialog.Builder(LearnActivity.this)
                                 .setMessage(getString(R.string.youHaveNoTopic))
                                 .setCancelable(false)
@@ -168,7 +185,7 @@ public class LearnActivity extends AppCompatActivity {
                                         //close learn now
                                         if ((open == MyAction.LEARN_FRAGMENT))
                                             finish();
-                                        else callFragment(new AddFragment());
+                                        else callFragment(R.id.fragmentAdd, new AddFragment());
                                     }
                                 })
                                 .setPositiveButton(getString(R.string.add), new DialogInterface.OnClickListener() {
@@ -197,6 +214,7 @@ public class LearnActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume\nopenedLearn: "+openedLearn+"\nopenedAdd: "+openedAdd);
         handleGET();
     }
 
@@ -223,17 +241,6 @@ public class LearnActivity extends AppCompatActivity {
         Log.d(TAG,"onDestroy\nopenedLearn: "+openedLearn+"\nopenedAdd: "+openedAdd);
     }
 
-    public void callFragment(Fragment fragment, String type, int id) {
-        Bundle bundle = new Bundle();
-        bundle.putString("SELECT", type);
-        bundle.putInt("ID", id);
-        fragment.setArguments(bundle);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.replace(R.id.layoutFragmentTopic, fragment);
-        fragmentTransaction.commit();
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -246,40 +253,20 @@ public class LearnActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         cfRefresh = true;
-        if (!cfUpdate){
-            switch (MyAction.getActivityBulb(this)){
-                case MyAction.LIST_ACTIVITY:
-                    MyAction.setActivityBulb(this, MyAction.LEARN_ACTIVITY);
-                    IntentActivity.handleOpenListActivity(this);
-                    break;
-                case MyAction.TOPIC_ACTIVITY:
-                    MyAction.setFragmentNew(this, MyAction.NOTE_FRAGMENT);
-                    IntentActivity.handleOpenTopicActivy(this);
-                    break;
-                default:{
-                    MyAction.setActivityBulb(this, MyAction.LEARN_ACTIVITY);
-                    IntentActivity.handleOpenListActivity(this);
-                    break;
-                }
+        switch (MyAction.getActivityBulb(this)){
+            case MyAction.LIST_ACTIVITY:
+                MyAction.setActivityBulb(this, MyAction.LEARN_ACTIVITY);
+                IntentActivity.handleOpenListActivity(this);
+                break;
+            case MyAction.TOPIC_ACTIVITY:
+                MyAction.setFragmentNew(this, MyAction.NOTE_FRAGMENT);
+                IntentActivity.handleOpenTopicActivy(this);
+                break;
+            default:{
+                MyAction.setActivityBulb(this, MyAction.LEARN_ACTIVITY);
+                IntentActivity.handleOpenListActivity(this);
+                break;
             }
-        }else {
-            cfUpdate = false;
-            switch (MyAction.getActivityBulb(this)){
-                case MyAction.LIST_ACTIVITY:
-                    MyAction.setActivityBulb(this, MyAction.LEARN_ACTIVITY);
-                    IntentActivity.handleOpenListActivity(this);
-                    break;
-                case MyAction.TOPIC_ACTIVITY:
-                    MyAction.setFragmentNew(this, MyAction.TOPIC_FRAGMENT);
-                    IntentActivity.openAndUpdateTopicActivy(this);
-                    break;
-                default:{
-                    MyAction.setActivityBulb(this, MyAction.LEARN_ACTIVITY);
-                    IntentActivity.handleOpenListActivity(this);
-                    break;
-                }
-            }
-
         }
 
     }

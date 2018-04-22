@@ -79,12 +79,16 @@ public class ServerAPI {
 
                                 case Constants.BACKUP_TOPIC:
                                     specifyNotify(activity,response.getString("message"));
+                                    if(!cfErr)
+                                        MyAction.setLoadedTopic(activity, false);
                                     Log.d("Request","cfErr: "+cfErr +" cfSendBRC: "+cfSendBRC);
                                     if(cfSendBRC) handle.sendBroadCastToBackupTopicAdapter(activity, cfErr);
                                     break;
                                 case Constants.BACKUP_VOCABULARY:
                                 case Constants.INSERT_VOCABULARY:
                                     specifyNotify(activity,response.getString("message"));
+                                    if (!cfErr)
+                                        MyAction.setLoadedTopic(activity, false);
                                     break;
 
                                 case Constants.EDIT_VOCABULARY:

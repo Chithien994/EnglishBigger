@@ -51,6 +51,7 @@ public class NoteFragment extends Fragment {
 
     TopicActivity topicActivity;
     public static String MY_BRC_NOTE = "MY_BRC_NOTE";
+    private static String TAG = "NOTE_FRAGMENT";
     private ArrayList<NoteModels> noteModels;
     public int pst; //Current topic position
     public int idTopic; //Current topic id
@@ -61,8 +62,10 @@ public class NoteFragment extends Fragment {
     private ImageView imgBack;
     private ImageView imgAdd;
     private TextView txtNameTopic;
+    private TextView txtName;
     private ListView lvNote;
     private AppBarLayout appBarLayout;
+    private String nameUser = "";
     private boolean loadNote = true; //True: Download the vocabulary list of the topic
     public boolean touch = false; //True: When start scrolling listview. To start the function: check roll up or down
 
@@ -95,14 +98,14 @@ public class NoteFragment extends Fragment {
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("BACK", "Size: " + topicActivity.size + "\nNoteModels.size(): " + noteModels.size());
+                Log.i(TAG, "BACK: Size: " + topicActivity.size + "\nNoteModels.size(): " + noteModels.size());
                 if (topicActivity.size != noteModels.size() && topicActivity.size != -1){
                     topicActivity.cfRefresh = true;
-                    topicActivity.loadedTopic = false;
+                    MyAction.setLoadedTopic(topicActivity, false); //Correct conditions to reload the topic
                     MyAction.setFragmentNew(topicActivity, MyAction.TOPIC_FRAGMENT);
                     IntentActivity.handleOpenTopicActivy(topicActivity);
                 }else {
-                    if(topicActivity.type==MyAction.WDPL_FRAGMENT || topicActivity.type==MyAction.TOPIC_FRIEND_FRAGMENT) topicActivity.showFragmentBottom();
+                    if(MyAction.getFragmentBulb(topicActivity) == MyAction.WDPL_FRAGMENT) topicActivity.showFragmentBottom();
                     else {
                         MyAction.setFragmentNew(topicActivity, MyAction.TOPIC_FRAGMENT);
                         topicActivity.callFragment(topicActivity.fragmentBack);
@@ -115,8 +118,8 @@ public class NoteFragment extends Fragment {
         imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (topicActivity.type!=MyAction.WDPL_FRAGMENT && topicActivity.type!=MyAction.TOPIC_FRIEND_FRAGMENT) openActivityAdd();
-                else   handleBackupTopic(topicModes.get(pst));
+                if (MyAction.getFragmentBulb(topicActivity) ==  MyAction.WDPL_FRAGMENT) handleBackupTopic(topicModes.get(pst));
+                else openActivityAdd();
             }
         });
 
@@ -131,13 +134,20 @@ public class NoteFragment extends Fragment {
                 IntentActivity.handleOpenLearnActivity(topicActivity);
             }
         });
+
+        txtName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgAdd.performClick();
+            }
+        });
     }
 
     private void openActivityAdd() {
         loadNote = true;
         topicActivity.cfRefresh = true;
         topicActivity.size = noteModels.size();
-        Log.i("Add", "Size: " + topicActivity.size);
+        Log.i(TAG, "Add: Size: " + topicActivity.size);
         MyAction.setFragmentNew(topicActivity, MyAction.ADD_NEW_WORD_FRAGMENT);
         MyAction.setActivityBulb(topicActivity, MyAction.TOPIC_ACTIVITY);
         MyAction.setPosition(topicActivity, pst);
@@ -208,8 +218,17 @@ public class NoteFragment extends Fragment {
             public void onClick(View view) {
                 Handle.hideKeyboard(topicActivity, thisView);
 
-                if (radShowTXTNewName.isChecked())
+                if (radShowTXTNewName.isChecked()){
                     nameTopic = txtNewNameTopicDialog.getText().toString();
+
+                    for (int i = 0; i < topicActivity.topicYourModes.size(); i++){
+                        if (nameTopic.equalsIgnoreCase(topicActivity.topicYourModes.get(i).getName())){
+                            Toast.makeText(topicActivity, getString(R.string.topicAlreadyExists), Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                    }
+                }
+
                 if(!nameTopic.equalsIgnoreCase(getString(R.string.select_))){
                     JSONObject object = new JSONObject();
                     try {
@@ -220,8 +239,8 @@ public class NoteFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    MyAction.setRefreshTopic(topicActivity,true);
-                    topicActivity.loadedTopic = false;
+                    if (radShowSPNewName.isChecked())
+                        MyAction.setRefreshTopic(topicActivity,true);
                     alertDialog.cancel();
                 }else {
                     Toast.makeText(topicActivity, getString(R.string.msgPleaseSelectAValidTopicName), Toast.LENGTH_LONG).show();
@@ -246,6 +265,7 @@ public class NoteFragment extends Fragment {
         imgBack = v.findViewById(R.id.imgBack);
         imgAdd = v.findViewById(R.id.imgAdd);
         txtNameTopic = v.findViewById(R.id.txtNameTopic);
+        txtName = v.findViewById(R.id.txtName);
         lvNote = v.findViewById(R.id.lvNote);
         noteModels = new ArrayList<>();
         topicModes = new ArrayList<>();
@@ -264,7 +284,8 @@ public class NoteFragment extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
                 // Disallow the touch request for parent scroll on touch of child view
                 v.getParent().requestDisallowInterceptTouchEvent(true);
-                touch = true;
+                if (MyAction.getFragmentBulb(topicActivity) != MyAction.WDPL_FRAGMENT)
+                    touch = true;
                 return false;
             }
         });
@@ -322,16 +343,25 @@ public class NoteFragment extends Fragment {
                 if (MyAction.getPosition(topicActivity)==MyAction.TAB_BF_FRAGMENT){
                     topicModes = topicActivity.topicFriendsModes;
                 }else{
-                    topicModes = topicActivity.topicModes;
+                    topicModes = topicActivity.topicModes; //MyAction.TAB_BO_FRAGMENT
                 }
             }else if (topicActivity.type == MyAction.TOPIC_FRIEND_FRAGMENT){
                 topicModes = topicActivity.topicModes;
             }else{
                 topicModes = topicActivity.topicYourModes;
             }
+            nameUser = topicModes.get(pst).getNameUser();
+            if (nameUser.equals("")) {
+                txtName.setVisibility(View.GONE);
+                txtNameTopic.setText(topicModes.get(pst).getName());
+            } else {
+                txtName.setVisibility(View.VISIBLE);
+                txtNameTopic.setText(nameUser);
+                txtName.setText(topicModes.get(pst).getName());
+            }
             idTopic = topicModes.get(pst).getId();
-            txtNameTopic.setText(topicModes.get(pst).getName());
-            Log.i("ID_TOPIC", idTopic +"");
+
+            Log.i(TAG, "ID_TOPIC: "+idTopic);
 
         }
     }
@@ -373,19 +403,19 @@ public class NoteFragment extends Fragment {
         IntentFilter mIntentFilter = new IntentFilter();
         mIntentFilter.addAction(MY_BRC_NOTE);
         getActivity().registerReceiver(mReceiver,mIntentFilter);
-        Log.i("DK","mReceiver");
+        Log.i(TAG,"DK: mReceiver");
     }
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(MY_BRC_NOTE)) {
-                Log.d("unregisterReceiver","Unregister Receiver");
                 if (intent.getSerializableExtra("NOTE") != null){
                     noteModels = (ArrayList<NoteModels>) intent.getSerializableExtra("NOTE");
                     topicActivity.sizeNow = noteModels.size();
                     handleShowListNote();
                 }
                 getActivity().unregisterReceiver(mReceiver);
+                Log.d(TAG,"Unregister Receiver");
             }
         }
     };

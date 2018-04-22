@@ -57,6 +57,7 @@ import com.tcn.adapters.LanguageAdapter;
 import com.tcn.englishbigger.LearnActivity;
 import com.tcn.englishbigger.R;
 import com.tcn.handle.AdFast;
+import com.tcn.handle.MyAction;
 import com.tcn.models.LocaleModels;
 
 

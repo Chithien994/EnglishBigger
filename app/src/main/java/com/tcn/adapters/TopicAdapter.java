@@ -267,6 +267,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.ViewHolder> 
 
     private void handleManageVocabulary(int position) {
         MyAction.setFragmentNew(context, MyAction.NOTE_FRAGMENT);
+        MyAction.setFragmentBulb(context, MyAction.TOPIC_FRAGMENT);
         topicActivity.saveFragmen(new TopicFragment());
         topicActivity.callFragment(new NoteFragment(), "", position);
 

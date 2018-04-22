@@ -162,6 +162,8 @@ public class ListActivity extends AppCompatActivity {
                     }
                     myIntentFilter();
                     loginButton.performClick();
+                    MyAction.setLoadedTopic(ListActivity.this, false);
+                    MyAction.setRefreshTopic(ListActivity.this, true);
                 }
             }
         });

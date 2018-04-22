@@ -13,6 +13,20 @@
         android:orientation="vertical"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name User"
+            android:background="@drawable/layout_bgr_name_bottom"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/text_name"/>
+
         <ListView
             android:id="@+id/lvNote"
             android:layout_width="match_parent"
@@ -99,30 +113,32 @@
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/layoutView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/imgBack"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:layout_constraintRight_toRightOf="parent">
+                app:layout_constraintRight_toLeftOf="@+id/imgAdd">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/txtNameTopic"
-                    android:layout_marginRight="8dp"
                     android:text="Name Topic"
                     android:textColor="@color/colorWhite"
+                    android:gravity="center"
                     android:textStyle="bold"
                     android:textSize="@dimen/text_actionbar"
+                    app:layout_constraintVertical_bias="0.5"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginEnd="8dp" />
+                    app:layout_constraintRight_toRightOf="parent" />
 
             </android.support.constraint.ConstraintLayout>
 

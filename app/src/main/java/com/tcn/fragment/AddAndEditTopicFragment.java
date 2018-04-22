@@ -608,6 +608,7 @@ public class AddAndEditTopicFragment extends Fragment implements View.OnClickLis
                         //Close the dialog and restart TopicActivity, when added successfully
                         //Assign updated position
                         dialog.cancel();
+                        MyAction.setLoadedTopic(topicActivity, false);
                         MyAction.setRefreshTopic(topicActivity, true);
                         MyAction.setFragmentNew(topicActivity, MyAction.TOPIC_FRAGMENT);
                         topicActivity.startActivity(new Intent(topicActivity, TopicActivity.class).putExtra("position", position));
