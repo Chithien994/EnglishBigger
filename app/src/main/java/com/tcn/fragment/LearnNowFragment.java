@@ -392,7 +392,7 @@ public class LearnNowFragment extends Fragment implements View.OnClickListener{
 
     private void speakOutOnline(final String soundText, final String languageSpeak) {
         btnSound.setBackgroundResource(R.drawable.ic_sound2);
-        String url = "https://code.responsivevoice.org/getvoice.php?t="+soundText+"&tl="+languageSpeak+"&sv=&vn=&pitch=0.5&rate=0.5&vol=1";
+        String url = "https://code.responsivevoice.org /getvoice.php?t="+soundText+"&tl="+languageSpeak+"&sv=&vn=&pitch=0.5&rate=0.5&vol=1";
         final MediaPlayer mediaPlayer = new MediaPlayer();
 
         try {

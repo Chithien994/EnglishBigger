@@ -6,66 +6,64 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
-import com.facebook.login.LoginManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 import com.tcn.handle.Handle;
 import com.tcn.handle.IntentActivity;
 import com.tcn.handle.Language;
 import com.tcn.handle.MyAction;
 import com.tcn.handle.ServerAPI;
 import com.tcn.handle.Users;
-import com.tcn.handle.UsersFB;
-import com.tcn.models.TopicModels;
 
 public class SplashActivity extends AppCompatActivity {
 
     private static long SPLASH_DISPLAY_LENGTH = 10000;
     public static final String BROADCAST_ACTION_SPLASH = "BROADCAST_ACTION_SPLASH";
-    private Language language;
+
     private Toolbar toolbar;
     private String versionName;
-    private ServerAPI serverAPI;
-    private Handle handle;
     private Timer mTimer = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        language = new Language(SplashActivity.this);
-        language.setLanguageDivice(Locale.getDefault().getLanguage());
+        new Language(this).setLanguageDivice(Locale.getDefault().getLanguage());
         versionName = BuildConfig.VERSION_NAME;
-        serverAPI = new ServerAPI();
-        handle = new Handle();
         mTimer= new Timer();
-        handle.deleteCache(this);
+        new Handle().deleteCache(this);
         myIntentFilter();
-        Users users = new Users(this);
-        JSONObject object = new JSONObject();
+        //check version
         try {
-            object.put("idUser",users.getIdUser());
+            new ServerAPI().checkUpdateVersion(this,
+                    new JSONObject().put("idUser",
+                            new Users(this).getIdUser()));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //check version
-        serverAPI.checkUpdateVersion(SplashActivity.this, object);
+
+        FirebaseMessaging.getInstance().send(
+                new RemoteMessage.Builder("fHL0lV27gZE:APA91bGvSuVx2bgkZwHZ5gbEfNkREAOlIsoQziHkubJ5akY44anDrIfDqP642oDOgT94aVYvar02Xu2ZnrdvJaMR9-Oo_OlbR6Ygy2DoYYnUax6nP6auyx4TG43Q01mKv4UkuKJ8YpJH" + "@gcm.googleapis.com")
+                        .setMessageId("foLAvvrHHKo:APA91bF_MOCqJyIbbdcAtgnuOWA2tOQ3S5Dw9ulEVVrPa4D910o2nk1Q5vS6rHDTTgKBvzRHr_UkZBXKvhLX4b2KbYvmsa9L8UanPdvSAIviFCI9N-oHzaDKVNaq47dwzbMevRBLD4F3")
+                        .addData("123456", "Hello!")
+                        .build());
+
         MyAction.setAction(this,true);
         MyAction.setRefreshTopic(this, true);
         MyAction.setLoadedTopic(this, false);
