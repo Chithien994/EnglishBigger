@@ -659,9 +659,10 @@ public class AddFragment extends Fragment {
     private void speakOutOnline(String soundText, String languageSpeak) {
         switch (languageSpeak){
             case "vi":
-                languageSpeak = "en-GB";
+                languageSpeak = "vi";
                 break;
             case "ja":
+                languageSpeak = "ja";
                 break;
             case "zh":
                 languageSpeak = "zh-CN";

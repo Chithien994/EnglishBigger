@@ -1,14 +1,16 @@
 package com.tcn.myservice;
 
+import android.annotation.SuppressLint;
+import android.app.job.JobParameters;
+import android.app.job.JobService;
 import android.util.Log;
 
-import com.firebase.jobdispatcher.JobParameters;
-import com.firebase.jobdispatcher.JobService;
 
 /**
  * Created by MyPC on 26/12/2017.
  */
 
+@SuppressLint("NewApi")
 public class MyJobService extends JobService {
 
     private static final String TAG = "MyJobService";
