@@ -133,5 +133,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+
+        if (messageBody.toLowerCase().contains("http") &&
+                (messageBody.toLowerCase().contains("download")         ||
+                 messageBody.toLowerCase().contains(".apk")             ||
+                 messageBody.toLowerCase().contains("drive.google.com"))){
+            //Only retrieve the application download link
+            String url = messageBody.split("http")[1].split(" ")[0];
+            Log.d(TAG, url);
+            Intent op = new Intent(Intent.ACTION_VIEW);
+            op.setData(Uri.parse(url));
+            startActivity(op);
+        }
     }
 }

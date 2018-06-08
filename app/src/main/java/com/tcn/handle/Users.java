@@ -48,7 +48,7 @@ public class Users {
     }
 
     public String getFirstName(){
-        return pf.getString("first_name","");
+        return pf.getString("first_name","English Bigger");
     }
 
     public void setFirstName(String firstName){
@@ -57,7 +57,7 @@ public class Users {
     }
 
     public String getName(){
-        return pf.getString("name","");
+        return pf.getString("name","English Bigger");
     }
 
     public void setName(String name){

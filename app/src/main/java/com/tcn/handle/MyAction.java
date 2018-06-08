@@ -248,4 +248,32 @@ public class MyAction {
         preferences = context.getSharedPreferences(context.getString(R.string.saveInfoApp), context.MODE_PRIVATE);
         return preferences.getInt("VIEW_ITEM", 1);
     }
+
+    public static void setLanguageBefore(Context context, int posision){
+        preferences = context.getSharedPreferences(context.getString(R.string.saveInfoApp), context.MODE_PRIVATE);
+        editor = preferences.edit();
+        editor.putInt("LAG_BEFORE", posision);
+        editor.commit();
+        editor.clear();
+        Log.d(TAG, "Save LAG_BEFORE: "+preferences.getInt("LAG_BEFORE",0));
+    }
+
+    public static int getLanguageBefore(Context context) {
+        preferences = context.getSharedPreferences(context.getString(R.string.saveInfoApp), context.MODE_PRIVATE);
+        return preferences.getInt("LAG_BEFORE", 0);
+    }
+
+    public static void setLanguageAfter(Context context, int posision){
+        preferences = context.getSharedPreferences(context.getString(R.string.saveInfoApp), context.MODE_PRIVATE);
+        editor = preferences.edit();
+        editor.putInt("LAG_AFTER", posision);
+        editor.commit();
+        editor.clear();
+        Log.d(TAG, "Save LAG_AFTER: "+preferences.getInt("LAG_AFTER",1));
+    }
+
+    public static int getLanguageAfter(Context context) {
+        preferences = context.getSharedPreferences(context.getString(R.string.saveInfoApp), context.MODE_PRIVATE);
+        return preferences.getInt("LAG_AFTER", 1);
+    }
 }

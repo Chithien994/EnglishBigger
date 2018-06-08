@@ -384,6 +384,7 @@ public class AddFragment extends Fragment {
         spLanguage2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                MyAction.setLanguageAfter(getContext(),i);
                 languageAfter = dsLocaleModelses.get(i).getLanguage();
                 Log.d("TAB_SP","i = "+i + " iBefore = "+iBefore);
                 if (i == iBefore){
@@ -408,6 +409,7 @@ public class AddFragment extends Fragment {
         spLanguage1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                MyAction.setLanguageBefore(getContext(),i);
                 languageBefore = dsLocaleModelses.get(i).getLanguage();
                 Log.d("TAB_SP","iAfter = "+iAfter + " i = "+i);
                 if (i == iAfter){
@@ -783,6 +785,8 @@ public class AddFragment extends Fragment {
         languageAdapter = new LanguageAdapter(this.getActivity(), R.layout.item_language, dsLocaleModelses);
         spLanguage1.setAdapter(languageAdapter);
         spLanguage2.setAdapter(languageAdapter);
+        spLanguage1.setSelection(MyAction.getLanguageBefore(getContext()));
+        spLanguage2.setSelection(MyAction.getLanguageAfter(getContext()));
     }
 
 

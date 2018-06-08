@@ -1,9 +1,12 @@
 package com.tcn.handle;
 
 import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.util.Locale;
@@ -34,7 +37,7 @@ public class Language {
     }
 
     public String getLanguageDivice(){
-        return pf.getString("locale","");
+        return pf.getString("locale","en");
     }
 
     public void setLanguage(String lag){
@@ -42,9 +45,9 @@ public class Language {
         editor.commit();
     }
 
-    public String getLanguage(Activity activity){
-        pf = activity.getSharedPreferences(activity.getString(R.string.inforLocale), activity.MODE_PRIVATE);
-        return pf.getString("language","");
+    public String getLanguage(Context context){
+        pf = context.getSharedPreferences(context.getString(R.string.inforLocale), context.MODE_PRIVATE);
+        return pf.getString("language","en");
     }
 
     public void setCFLanguageDivice(boolean bool){
@@ -52,36 +55,33 @@ public class Language {
         editor.commit();
     }
 
-    public boolean getCFLanguageDivice(Activity activity){
-        pf = activity.getSharedPreferences(activity.getString(R.string.inforLocale), activity.MODE_PRIVATE);
+    public boolean getCFLanguageDivice(Context context){
+        pf = context.getSharedPreferences(context.getString(R.string.inforLocale), context.MODE_PRIVATE);
         return pf.getBoolean("divice",true);
     }
 
     public void settingLanguage(String lag){
-        Locale locale = new Locale(lag);
         Log.d("Language",lag);
         Configuration configuration = new Configuration();
-        configuration.locale = locale;
+        configuration.locale = new Locale(lag);
         activity.getBaseContext().getResources().updateConfiguration(
                 configuration,
                 activity.getResources().getDisplayMetrics()
         );
-        Intent intent = new Intent(activity, activity.getClass());
-        activity.startActivity(intent);
+        Intent intent = activity.getIntent();
         activity.finish();
+        activity.startActivity(intent);
     }
 
     public void settingLanguage(Activity activity){
-        if (pf.getBoolean("divice",false)==false){
-            Locale locale = new Locale(pf.getString("language","en"));
-            Log.d("Language",pf.getString("language","en"));
+        if (!getCFLanguageDivice(activity)){
+            Log.d("Language",getLanguage(activity));
             Configuration configuration = new Configuration();
-            configuration.locale = locale;
+            configuration.locale = new Locale(getLanguage(activity));
             activity.getBaseContext().getResources().updateConfiguration(
                     configuration,
                     activity.getResources().getDisplayMetrics()
             );
         }
-
     }
 }

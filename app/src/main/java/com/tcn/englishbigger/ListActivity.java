@@ -78,13 +78,12 @@ import java.util.Arrays;
 import java.util.Locale;
 
 
-public class ListActivity extends AppCompatActivity {
+public class ListActivity extends AppCompatActivity implements View.OnClickListener{
 
 
     public static String cfBroadcastAction = "CF_BROADCAST_ACTION";
 
     private CallbackManager callbackManager;
-    public SharedPreferences pf, spSV;
     private long mLastClickTime = 0;
     private boolean cfDeleteImgCache = true;
     public int position = -1;
@@ -115,8 +114,6 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        language = new Language();
-        checkSelectLanguage();
         setContentView(R.layout.activity_list);
         AdFast.loadAdView(this, (RelativeLayout) findViewById(R.id.totalLayout), getString(R.string.ad_id_small_1));
         addControns();
@@ -124,96 +121,78 @@ public class ListActivity extends AppCompatActivity {
     }
 
     private void addEvents() {
-
-        btnLearnByTopic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleLearnByTopic();
-            }
-        });
-        btnLeaarnNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleLearnNow();
-            }
-        });
-        btnWhatDoPeopleLearn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleWhatDoPeopleLearn();
-            }
-        });
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleAdd();
-            }
-        });
+        btnLearnByTopic.setOnClickListener(this);
+        btnLeaarnNow.setOnClickListener(this);
+        btnWhatDoPeopleLearn.setOnClickListener(this);
+        btnAdd.setOnClickListener(this);
         navigationViewLeft.setNavigationItemSelectedListener(mNavLeft);
-        layoutLogInFB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!usersFB.confirmLogin() || cfAutoLogin){
-                    cfAutoLogin = false;
-                    try {
-                        LoginManager.getInstance().logOut(); //logout facebook
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    myIntentFilter();
-                    loginButton.performClick();
-                    MyAction.setLoadedTopic(ListActivity.this, false);
-                    MyAction.setRefreshTopic(ListActivity.this, true);
-                }
-            }
-        });
-        imgAvatarMin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("Drawer","On");
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.openDrawer(GravityCompat.START);
-                drawerAdapter.notifyDataSetChanged();
-            }
-        });
-
-        txtInviteFriends.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        layoutLogInFB.setOnClickListener(this);
+        imgAvatarMin.setOnClickListener(this);
+        txtInviteFriends.setOnClickListener(this);
+        txtShare.setOnClickListener(this);
+    }
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btnLearnNow:
+                handleLearnNow();
+                break;
+            case R.id.btnLearnByTopic:
+                handleLearnByTopic();
+                break;
+            case R.id.btnWhatDoPeopleLearn:
+                handleWhatDoPeopleLearn();
+                break;
+            case R.id.btnAdd:
+                handleAdd();
+                break;
+            case R.id.layoutLoginFB:
+                handleLogIn();
+                break;
+            case R.id.imgAvatarMin:
+                openDrawerLeft();
+                break;
+            case R.id.txtInviteFriends:
                 serverAPI.getLink(ListActivity.this, Constants.INVITE);
-            }
-        });
-
-        txtShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case R.id.txtShare:
                 serverAPI.getLink(ListActivity.this, Constants.SHARE);
+                break;
+            default:break;
+        }
+    }
+
+    private void handleLogIn(){
+        if (!usersFB.confirmLogin() || cfAutoLogin){
+            cfAutoLogin = false;
+            try {
+                LoginManager.getInstance().logOut(); //logout facebook
+            }catch (Exception e){
+                e.printStackTrace();
             }
-        });
+            myIntentFilter();
+            loginButton.performClick();
+            MyAction.setLoadedTopic(ListActivity.this, false);
+            MyAction.setRefreshTopic(ListActivity.this, true);
+        }
     }
 
     public void handleLogOut() {
         if (usersFB.confirmLogin()) {
             new AlertDialog.Builder(ListActivity.this)
-                    .setMessage(getString(R.string.youAreAlreadyLoggedOnByTheAccount) + " " + spSV.getString("name", "English Bigger"))
+                    .setMessage(getString(R.string.youAreAlreadyLoggedOnByTheAccount) + "\n" + users.getName())
                     .setNegativeButton(getString(R.string.no), null)
                     .setPositiveButton(getString(R.string.logout), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            outUsers();
-
+                            myIntentFilter(); //Listen for the change of function "confirmLogin(Activity, boolean)" and if function "confirmLogin(Activity) = true" logout facebook
+                            usersFB.confirmLogin(false);
                         }
                     }).show();
         }else {
             Toast.makeText(ListActivity.this, getString(R.string.msgYouAreNotLoggedIn), Toast.LENGTH_SHORT).show();
         }
     }
-
-    private void outUsers(){
-        myIntentFilter(); //Listen for the change of function "confirmLogin(Activity, boolean)" and if function "confirmLogin(Activity) = true" logout facebook
-        usersFB.confirmLogin(false);
-    }
-
 
     private void handleWhatDoPeopleLearn() {
         if (usersFB.confirmLogin()){
@@ -257,16 +236,22 @@ public class ListActivity extends AppCompatActivity {
     }
 
     private void loginRequired(){
-        Toast.makeText(ListActivity.this, getString(R.string.msgPleaseLoginToUseThisFeature), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.msgPleaseLoginToUseThisFeature), Toast.LENGTH_LONG).show();
+        openDrawerLeft();
+    }
+
+    private void openDrawerLeft(){
         Log.d("Drawer","On");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.openDrawer(GravityCompat.START);
+        drawerAdapter.notifyDataSetChanged();
     }
 
     private void addControns() {
-        language = new Language(ListActivity.this);
-        usersFB = new UsersFB(ListActivity.this);
-        users = new Users(ListActivity.this);
+        language = new Language(this);
+        language.settingLanguage(this);
+        usersFB = new UsersFB(this);
+        users = new Users(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         appBarLayout = findViewById(R.id.appBarLayout);
@@ -304,8 +289,6 @@ public class ListActivity extends AppCompatActivity {
         layoutLogInFB = (ConstraintLayout) navigationViewLeft.findViewById(R.id.layoutLoginFB);
         pbLoadingMin = (ProgressBar) findViewById(R.id.pbLoadingMin);
         pbLoadingMax = (ProgressBar) findViewById(R.id.pbLoadingMax);
-        pf = getSharedPreferences(getString(R.string.saveInforLoginFB),MODE_PRIVATE);
-        spSV = getSharedPreferences(getString(R.string.saveInforUser),MODE_PRIVATE);
         FacebookSdk.sdkInitialize(FacebookSdk.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton) findViewById(R.id.login_button);
@@ -327,7 +310,7 @@ public class ListActivity extends AppCompatActivity {
         dsDrawerModelses.add(new DrawerModels(6, R.drawable.ic_feedback ,getString(R.string.feedback)));
         dsDrawerModelses.add(new DrawerModels(7, R.drawable.ic_logout ,getString(R.string.logout)));
         drawerAdapter = new DrawerAdapter(
-                ListActivity.this,
+                this,
                 R.layout.item_left_drawer,
                 dsDrawerModelses);
         lvLeftDrawer.setAdapter(drawerAdapter);
@@ -337,34 +320,23 @@ public class ListActivity extends AppCompatActivity {
         if (usersFB.confirmLogin()){
             pbLoadingMin.setVisibility(View.VISIBLE);
             pbLoadingMax.setVisibility(View.VISIBLE);
-
+            String url = users.getUrlAvatar();
+            String name = users.getFirstName();
+            //
+            loadAvatar(url);
+            txtNameMax.setText(name);
+            txtNameMin.setText(name);
         }else {
             pbLoadingMin.setVisibility(View.GONE);
             pbLoadingMax.setVisibility(View.GONE);
-
-        }
-        try{
-            String url = users.getUrlAvatar();
-            String name = users.getFirstName();
-
-            loadAvatar(url);
-
-            if (usersFB.confirmLogin()){
-                txtNameMax.setText(name);
-                txtNameMin.setText(name);
-            }else {
-                txtNameMin.setText(getString(R.string.app_name));
-                txtNameMax.setText(getString(R.string.app_name));
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+            txtNameMin.setText(getString(R.string.app_name));
+            txtNameMax.setText(getString(R.string.app_name));
         }
     }
 
     private void loadAvatar(String url) {
         if (cfDeleteImgCache){
             // Deletes the image in the buffer and loads the new image
-
             cfDeleteImgCache = false;
             Glide.with(this)
                     .load(url)
@@ -377,7 +349,6 @@ public class ListActivity extends AppCompatActivity {
                             pbLoadingMax.setVisibility(View.GONE);
                             return false;
                         }
-
                         @Override
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
                             pbLoadingMax.setVisibility(View.GONE);
@@ -577,18 +548,6 @@ public class ListActivity extends AppCompatActivity {
                 +"\nLINK_AVATAR: "+linkAvatar);
     }
 
-
-    private void checkSelectLanguage() {
-
-        Log.d("LAG", language.getLanguage(ListActivity.this)+" : "+language.getCFLanguageDivice(ListActivity.this));
-        if (language.getLanguage(ListActivity.this).equals("") && language.getCFLanguageDivice(ListActivity.this)){
-            handleSelectLocale();
-        }else {
-            language.settingLanguage(ListActivity.this);
-            Log.d("Divice",language.getCFLanguageDivice(ListActivity.this)+"");
-        }
-    }
-
     private void handleSelectLocale() {
         ArrayList<LocaleModels> dsLocaleModelses = new ArrayList<>();
         LocaleAdapter localeAdapter;
@@ -669,7 +628,6 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        language.settingLanguage(ListActivity.this);
     }
 
     @Override
@@ -730,7 +688,7 @@ public class ListActivity extends AppCompatActivity {
                     layoutLogInFB.setVisibility(View.VISIBLE);
                     users.setUser(null, null, getString(R.string.app_name), null, null, null, null, null, null);
                     usersFB.setUserFB(null, null, getString(R.string.app_name), null, null, null, null, null, null, null);
-                    Toast.makeText(ListActivity.this, getString(R.string.accountSuccessfullyLoggedOut), Toast.LENGTH_LONG).show();
+                    loadAvatar("");
                 }
                 handleShowInfor();
                 drawerAdapter.notifyDataSetChanged();

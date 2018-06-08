@@ -64,7 +64,7 @@ public class ServerAPI {
                     public void onResponse(JSONObject response) {
 
                         try {
-                            if(type != Constants.LOGIN) dialog.cancel();
+                            if(type != Constants.LOGIN || type != Constants.CHECK_UPDATE) dialog.cancel();
                         }catch (Exception e){
                             e.printStackTrace();
                         }

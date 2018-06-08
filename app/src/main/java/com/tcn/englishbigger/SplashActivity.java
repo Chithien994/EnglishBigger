@@ -44,7 +44,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        new Language(this).setLanguageDivice(Locale.getDefault().getLanguage());
+        setLanguage();
         versionName = BuildConfig.VERSION_NAME;
         mTimer= new Timer();
         new Handle().deleteCache(this);
@@ -90,6 +90,13 @@ public class SplashActivity extends AppCompatActivity {
             }
         },SPLASH_DISPLAY_LENGTH,1000);
     }
+
+    private void setLanguage() {
+        Language language = new Language(this);
+        language.setLanguageDivice(Locale.getDefault().getLanguage());
+        language.settingLanguage(this);
+    }
+
 
     public void myIntentFilter(){
         IntentFilter mIntentFilter = new IntentFilter();
